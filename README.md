@@ -1,8 +1,8 @@
 ﻿# Website học tập DAISY STUDY
 ## Dự án chuyên ngành
 ### IDE: Visual Studio, Visual Studio Code
-#### Cơ sở dữ liệu: Microsoft SQL Server 2019
-##### TỔNG KẾT TÍNH NĂNG
+### Cơ sở dữ liệu: Microsoft SQL Server 2019
+### TỔNG KẾT TÍNH NĂNG
 - Đăng nhập, đăng ký, quên mật khẩu, gửi email xác thực
 - Liên kết đăng nhập Google, Facebook
 - Thông tin tài khoản và thay đổi thông tin tài khoản
