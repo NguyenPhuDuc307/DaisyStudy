@@ -15,3 +15,4 @@
 - Chia sẻ lớp học
 - Thi trắc nghiệm
 - Thanh toán học phí online
+- Hiển thị lịch biểu của giảng viên và sinh viên
