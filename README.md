@@ -1,6 +1,16 @@
 ﻿# Website học tập DAISY STUDY
 ## Dự án chuyên ngành
 ### IDE: Visual Studio, Visual Studio Code
+
+### Công nghệ
+- ASP.NET CORE 6.0
+- Entity Framework Core 6.0
+
+### Packages
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Disign
+- Microsoft.EntityFrameworkCore.Tools
+
 ### Cơ sở dữ liệu: Microsoft SQL Server 2019
 ### TỔNG KẾT TÍNH NĂNG
 - Đăng nhập, đăng ký, quên mật khẩu, gửi email xác thực
