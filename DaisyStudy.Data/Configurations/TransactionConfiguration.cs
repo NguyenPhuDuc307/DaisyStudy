@@ -14,6 +14,8 @@ namespace DaisyStudy.Data.Configurations
             builder.HasKey(x => x.Transaction_ID);
 
             builder.Property(x => x.Transaction_ID).UseIdentityColumn();
+            builder.Property(x => x.Amount).IsRequired().HasColumnType("decimal(18,2)");
+            builder.Property(x => x.Fee).IsRequired().HasColumnType("decimal(18,2)");
         }
     }
 }
