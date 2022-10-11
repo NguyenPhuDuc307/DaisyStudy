@@ -5,7 +5,7 @@ namespace DaisyStudy.Data.Entities
 {
     public class Transaction
     {
-        public int ID { set; get; }
+        public int Transaction_ID { set; get; }
         public DateTime TransactionDate { set; get; }
         public string ExternalTransactionID { set; get; }
         public decimal Amount { set; get; }

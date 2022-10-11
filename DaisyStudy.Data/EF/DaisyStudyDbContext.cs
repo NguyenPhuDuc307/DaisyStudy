@@ -1,3 +1,4 @@
+using DaisyStudy.Data.Configurations;
 using DaisyStudy.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,27 @@ namespace DaisyStudy.Data.EF
     {
         public DaisyStudyDbContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AnswerConfiguration());
+            modelBuilder.ApplyConfiguration(new AppConfigConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatConfiguaration());
+            modelBuilder.ApplyConfiguration(new ClassConfiguration());
+            modelBuilder.ApplyConfiguration(new ClassDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguaration());
+            modelBuilder.ApplyConfiguration(new ContactConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamPaperConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamResultConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamResultDetailConfiguration());
+            modelBuilder.ApplyConfiguration(new ExamScheduleConfiguaration());
+            modelBuilder.ApplyConfiguration(new HomeworkConfiguration());
+            modelBuilder.ApplyConfiguration(new NotifycationConfiguration());
+            modelBuilder.ApplyConfiguration(new QuestionConfiguration());
+            modelBuilder.ApplyConfiguration(new SubmissionConfiguration());
+            modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+            //base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Answer> Answer { set; get; }

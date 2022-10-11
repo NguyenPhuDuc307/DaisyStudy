@@ -11,8 +11,8 @@ namespace DaisyStudy.Data.Entities
         public DateTime ExamDatetime { set; get; }
         public int ExamTime { set; get; }
         public String Image { set; get; }
-        List<ExamPaper> ExamPapers { set; get; }
-        List<StudentExam> StudentExams { set; get; }
+        public List<ExamPaper> ExamPapers { set; get; }
+        public List<StudentExam> StudentExams { set; get; }
     }
 }
 

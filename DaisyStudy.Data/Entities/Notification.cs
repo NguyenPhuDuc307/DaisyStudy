@@ -10,5 +10,7 @@ namespace DaisyStudy.Data.Entities
         public String Image { set; get; }
         public String Content { set; get; }
         public DateTime DatetimeCreated { set; get; }
+
+        public List<Comment> Comments { set; get; }
     }
 }
