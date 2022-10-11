@@ -15,12 +15,15 @@ namespace DaisyStudy.Data.Entities
         public String SEODescriptione { set; get; }
         public String SEOAlias { set; get; }
         public decimal Tuition { set; get; }
+        public DateTime DateCreated { set; get; }
+        public int ViewCount { set; get; }
         public Status Status { set; get; }
         public Public isPublic { set; get; }
         public List<ClassDetail> ClassDetails { set; get; }
         public List<Homework> Homeworks { set; get; }
         public List<Notification> Notifications { set; get; }
         public List<ExamSchedule> ExamSchedules { set; get; }
+        public List<Chat> Chats { set; get; }
     }
 }
 

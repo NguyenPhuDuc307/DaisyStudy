@@ -6,6 +6,7 @@ namespace DaisyStudy.Data.Entities
     public class Chat
     {
         public int Class_ID { set; get; }
+        public Class Class { set; get; }
         public Guid User_ID { set; get; }
         public String Content { set; get; }
         public DateTime DatetimeCreated { set; get; }
