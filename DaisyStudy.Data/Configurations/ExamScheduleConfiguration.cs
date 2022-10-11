@@ -20,7 +20,7 @@ namespace DaisyStudy.Data.Configurations
             builder.Property(x => x.ExamDatetime).IsRequired();
             builder.Property(x => x.ExamTime).IsRequired();
 
-            builder.HasOne(x => x.Class).WithMany(x => x.ExamSchedules).HasForeignKey(x => x.ExamSchedule_ID);
+            builder.HasOne(x => x.Class).WithMany(x => x.ExamSchedules).HasForeignKey(x => x.Class_ID);
         }
     }
 }

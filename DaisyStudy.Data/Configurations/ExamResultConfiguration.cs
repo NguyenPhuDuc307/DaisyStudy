@@ -14,6 +14,8 @@ namespace DaisyStudy.Data.Configurations
             builder.HasKey(x => x.ExamResult_ID);
 
             builder.Property(x => x.Mark).IsRequired();
+
+            builder.HasOne(x=> x.StudentExam).WithOne(x=> x.ExamResult).HasForeignKey<StudentExam>(x=>x.StudentExam_ID);
         }
     }
 }

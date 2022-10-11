@@ -19,13 +19,13 @@ namespace DaisyStudy.Data.EF
             modelBuilder.ApplyConfiguration(new ClassDetailConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguaration());
             modelBuilder.ApplyConfiguration(new ContactConfiguration());
-            modelBuilder.ApplyConfiguration(new ExamPaperConfiguration());
             modelBuilder.ApplyConfiguration(new ExamResultConfiguration());
             modelBuilder.ApplyConfiguration(new ExamResultDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ExamScheduleConfiguaration());
             modelBuilder.ApplyConfiguration(new HomeworkConfiguration());
             modelBuilder.ApplyConfiguration(new NotifycationConfiguration());
             modelBuilder.ApplyConfiguration(new QuestionConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentExamConfiguration());
             modelBuilder.ApplyConfiguration(new SubmissionConfiguration());
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             //base.OnModelCreating(modelBuilder);
@@ -37,7 +37,6 @@ namespace DaisyStudy.Data.EF
         public DbSet<Class> Class { set; get; }
         public DbSet<ClassDetail> ClassDetail { set; get; }
         public DbSet<Comment> Comment { set; get; }
-        public DbSet<ExamPaper> ExamPaper { set; get; }
         public DbSet<ExamResult> ExamResult { set; get; }
         public DbSet<ExamResultDetail> ClaExamResultDetailss { set; get; }
         public DbSet<ExamSchedule> ExamSchedule { set; get; }
