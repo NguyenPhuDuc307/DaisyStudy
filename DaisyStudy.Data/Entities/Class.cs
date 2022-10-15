@@ -5,7 +5,6 @@ namespace DaisyStudy.Data.Entities
     {
         public int ID { set; get; }
         public String Class_ID { set; get; }
-        public Guid Teacher_ID { set; get; }
         public String ClassName { set; get; }
         public String Topic { set; get; }
         public String Image { set; get; }

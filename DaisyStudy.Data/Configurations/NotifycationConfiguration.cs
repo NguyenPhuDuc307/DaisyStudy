@@ -9,7 +9,7 @@ namespace DaisyStudy.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Notification> builder)
         {
-            builder.ToTable("Notifycations");
+            builder.ToTable("Notifications");
 
             builder.HasKey(x => x.Notification_ID);
 

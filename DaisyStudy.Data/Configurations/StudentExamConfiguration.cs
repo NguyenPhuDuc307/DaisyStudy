@@ -9,12 +9,17 @@ namespace DaisyStudy.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<StudentExam> builder)
         {
-            builder.HasKey(x => new {x.StudentExam_ID });
+            builder.ToTable("StudentExams");
 
+            builder.HasKey(x => x.StudentExam_ID);
+
+            builder.Property(x => x.StudentExam_ID).UseIdentityColumn();
             builder.Property(x => x.ExamSchedule_ID).IsRequired();
             builder.Property(x => x.Student_ID).IsRequired();
+            builder.Property(x => x.Mark).IsRequired();
 
             builder.HasOne(x => x.ExamSchedule).WithMany(x => x.StudentExams).HasForeignKey(x => x.ExamSchedule_ID);
+            builder.HasOne(x => x.Student).WithMany(x => x.StudentExams).HasForeignKey(x => x.Student_ID);
         }
     }
 }
