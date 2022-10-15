@@ -13,6 +13,7 @@ namespace DaisyStudy.Data.Configurations
 
             builder.HasKey(x => x.Answer_ID);
 
+            builder.Property(x => x.Answer_ID).UseIdentityColumn();
             builder.Property(x => x.Question_ID).IsRequired();
             builder.Property(x => x.AnswerString).IsRequired();
             builder.Property(x => x.IsCorrect).IsRequired().HasDefaultValue(false);

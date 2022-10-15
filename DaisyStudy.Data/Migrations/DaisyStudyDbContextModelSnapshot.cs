@@ -17,7 +17,7 @@ namespace DaisyStudy.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -63,8 +63,112 @@ namespace DaisyStudy.Data.Migrations
                     b.ToTable("AppConfigs", (string)null);
                 });
 
+            modelBuilder.Entity("DaisyStudy.Data.Entities.AppRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppRoles", (string)null);
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("AccountBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Dob")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppUsers", (string)null);
+                });
+
             modelBuilder.Entity("DaisyStudy.Data.Entities.Chat", b =>
                 {
+                    b.Property<int>("Chat_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Chat_ID"), 1L, 1);
+
                     b.Property<int>("Class_ID")
                         .HasColumnType("int");
 
@@ -88,7 +192,11 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<Guid>("User_ID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Class_ID");
+                    b.HasKey("Chat_ID");
+
+                    b.HasIndex("Class_ID");
+
+                    b.HasIndex("User_ID");
 
                     b.ToTable("Chats", (string)null);
                 });
@@ -140,9 +248,6 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Teacher_ID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Topic")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -168,22 +273,27 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<int>("Class_ID")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("User_ID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("Student_ID")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("Class_ID", "User_ID");
 
-                    b.HasKey("Class_ID");
+                    b.HasIndex("User_ID");
 
                     b.ToTable("ClassDetails", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Comment", b =>
                 {
-                    b.Property<int>("Notification_ID")
+                    b.Property<int>("Comment_ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Comment_ID"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -202,10 +312,17 @@ namespace DaisyStudy.Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<int>("Notification_ID")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("User_ID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Notification_ID");
+                    b.HasKey("Comment_ID");
+
+                    b.HasIndex("Notification_ID");
+
+                    b.HasIndex("User_ID");
 
                     b.ToTable("Comments", (string)null);
                 });
@@ -243,55 +360,6 @@ namespace DaisyStudy.Data.Migrations
                     b.HasKey("Contact_ID");
 
                     b.ToTable("Contacts", (string)null);
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ExamResult", b =>
-                {
-                    b.Property<int>("ExamResult_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamResult_ID"), 1L, 1);
-
-                    b.Property<float>("Mark")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentExam_ID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ExamResult_ID");
-
-                    b.ToTable("ExamResults", (string)null);
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ExamResultDetail", b =>
-                {
-                    b.Property<int>("ExamResultDetail_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamResultDetail_ID"), 1L, 1);
-
-                    b.Property<int>("Answer_ID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ExamResult_ID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ExamResultDetail_ID");
-
-                    b.HasIndex("Answer_ID");
-
-                    b.HasIndex("ExamResult_ID");
-
-                    b.ToTable("ExamResultDetails", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.ExamSchedule", b =>
@@ -391,7 +459,7 @@ namespace DaisyStudy.Data.Migrations
 
                     b.HasIndex("Class_ID");
 
-                    b.ToTable("Notifycations", (string)null);
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Question", b =>
@@ -424,24 +492,12 @@ namespace DaisyStudy.Data.Migrations
             modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>
                 {
                     b.Property<int>("StudentExam_ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExam_ID"), 1L, 1);
 
                     b.Property<int>("ExamSchedule_ID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Student_ID")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentExam_ID");
-
-                    b.HasIndex("ExamSchedule_ID");
-
-                    b.ToTable("StudentExam");
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.Submission", b =>
-                {
-                    b.Property<int>("Homework_ID")
                         .HasColumnType("int");
 
                     b.Property<float>("Mark")
@@ -454,11 +510,65 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<Guid>("Student_ID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.HasKey("StudentExam_ID");
+
+                    b.HasIndex("ExamSchedule_ID");
+
+                    b.HasIndex("Student_ID");
+
+                    b.ToTable("StudentExams", (string)null);
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExamDetail", b =>
+                {
+                    b.Property<int>("StudentExamDetail_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExamDetail_ID"), 1L, 1);
+
+                    b.Property<int>("Answer_ID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentExam_ID")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentExamDetail_ID");
+
+                    b.HasIndex("Answer_ID");
+
+                    b.HasIndex("StudentExam_ID");
+
+                    b.ToTable("StudentExamDetails", (string)null);
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Submission", b =>
+                {
+                    b.Property<int>("Homework_ID")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Student_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTimeSubmission")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("Mark")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SubmissionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Homework_ID");
+                    b.HasKey("Homework_ID", "Student_ID");
+
+                    b.HasIndex("Student_ID");
 
                     b.ToTable("Submissions", (string)null);
                 });
@@ -499,9 +609,111 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Transaction_ID");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Transactions", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("AppUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("AppUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("AppUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Answer", b =>
@@ -523,6 +735,14 @@ namespace DaisyStudy.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "AppUser")
+                        .WithMany("Chats")
+                        .HasForeignKey("User_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
                     b.Navigation("Class");
                 });
 
@@ -534,7 +754,15 @@ namespace DaisyStudy.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "User")
+                        .WithMany("ClassDetails")
+                        .HasForeignKey("User_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Class");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Comment", b =>
@@ -545,26 +773,15 @@ namespace DaisyStudy.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "AppUser")
+                        .WithMany("Comments")
+                        .HasForeignKey("User_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
                     b.Navigation("Notification");
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ExamResultDetail", b =>
-                {
-                    b.HasOne("DaisyStudy.Data.Entities.Answer", "Answer")
-                        .WithMany("ExamResultDetails")
-                        .HasForeignKey("Answer_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DaisyStudy.Data.Entities.ExamResult", "ExamResult")
-                        .WithMany("ExamResultDetails")
-                        .HasForeignKey("ExamResult_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
-
-                    b.Navigation("ExamResult");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.ExamSchedule", b =>
@@ -619,15 +836,34 @@ namespace DaisyStudy.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DaisyStudy.Data.Entities.ExamResult", "ExamResult")
-                        .WithOne("StudentExam")
-                        .HasForeignKey("DaisyStudy.Data.Entities.StudentExam", "StudentExam_ID")
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "Student")
+                        .WithMany("StudentExams")
+                        .HasForeignKey("Student_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ExamResult");
-
                     b.Navigation("ExamSchedule");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExamDetail", b =>
+                {
+                    b.HasOne("DaisyStudy.Data.Entities.Answer", "Answer")
+                        .WithMany("StudentExamDetails")
+                        .HasForeignKey("Answer_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DaisyStudy.Data.Entities.StudentExam", "StudentExam")
+                        .WithMany("StudentExamDetails")
+                        .HasForeignKey("StudentExam_ID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("StudentExam");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Submission", b =>
@@ -638,12 +874,46 @@ namespace DaisyStudy.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "Student")
+                        .WithMany("Submissions")
+                        .HasForeignKey("Student_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Homework");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Transaction", b =>
+                {
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "AppUser")
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Answer", b =>
                 {
-                    b.Navigation("ExamResultDetails");
+                    b.Navigation("StudentExamDetails");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.AppUser", b =>
+                {
+                    b.Navigation("Chats");
+
+                    b.Navigation("ClassDetails");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("StudentExams");
+
+                    b.Navigation("Submissions");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Class", b =>
@@ -657,14 +927,6 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("Homeworks");
 
                     b.Navigation("Notifications");
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ExamResult", b =>
-                {
-                    b.Navigation("ExamResultDetails");
-
-                    b.Navigation("StudentExam")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.ExamSchedule", b =>
@@ -687,6 +949,11 @@ namespace DaisyStudy.Data.Migrations
             modelBuilder.Entity("DaisyStudy.Data.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>
+                {
+                    b.Navigation("StudentExamDetails");
                 });
 #pragma warning restore 612, 618
         }

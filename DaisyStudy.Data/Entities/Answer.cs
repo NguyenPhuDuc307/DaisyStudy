@@ -8,7 +8,6 @@ namespace DaisyStudy.Data.Entities
         public Question Question { set; get; }
         public String AnswerString { set; get; }
         public bool IsCorrect { set; get; }
-        public List<ExamResultDetail> ExamResultDetails { set; get; }
+        public List<StudentExamDetail> StudentExamDetails { set; get; }
     }
 }
-
