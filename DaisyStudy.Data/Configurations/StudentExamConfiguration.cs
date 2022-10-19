@@ -17,6 +17,7 @@ namespace DaisyStudy.Data.Configurations
             builder.Property(x => x.ExamSchedule_ID).IsRequired();
             builder.Property(x => x.Student_ID).IsRequired();
             builder.Property(x => x.Mark).IsRequired();
+            builder.Property(x => x.DateTimeStudentExam).IsRequired();
 
             builder.HasOne(x => x.ExamSchedule).WithMany(x => x.StudentExams).HasForeignKey(x => x.ExamSchedule_ID);
             builder.HasOne(x => x.Student).WithMany(x => x.StudentExams).HasForeignKey(x => x.Student_ID);
