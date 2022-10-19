@@ -10,6 +10,7 @@ namespace DaisyStudy.Data.Entities
         public AppUser Student { set; get; }
         public float Mark { set; get; }
         public String Note { set; get; }
+        public DateTime DateTimeStudentExam { set; get; }
         public List<StudentExamDetail> StudentExamDetails { set; get; }
     }
 }
