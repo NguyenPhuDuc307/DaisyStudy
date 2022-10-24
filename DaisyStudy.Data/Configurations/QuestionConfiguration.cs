@@ -11,12 +11,13 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Questions");
 
-            builder.HasKey(x => x.Question_ID);
+            builder.HasKey(x => x.QuestionID);
 
-            builder.Property(x => x.Question_ID).UseIdentityColumn();
+            builder.Property(x => x.QuestionID).UseIdentityColumn();
             builder.Property(x => x.QuestionString).IsRequired();
             builder.Property(x => x.Point).IsRequired().HasDefaultValue(0);
-            builder.HasOne(x => x.ExamSchedule).WithMany(x => x.Questions).HasForeignKey(x => x.ExamSchedule_ID);
+            builder.Property(x => x.ImagePath).HasMaxLength(200).IsRequired();
+            builder.HasOne(x => x.ExamSchedule).WithMany(x => x.Questions).HasForeignKey(x => x.ExamScheduleID);
         }
     }
 }

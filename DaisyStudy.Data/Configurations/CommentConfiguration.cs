@@ -11,15 +11,17 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Comments");
 
-            builder.HasKey(x => x.Comment_ID);
+            builder.HasKey(x => x.CommentID);
 
+            builder.Property(x => x.UserID).IsRequired();
+            builder.Property(x => x.NotificationID).IsRequired();
             builder.Property(x => x.Content).IsRequired();
             builder.Property(x => x.Likes).IsRequired().HasDefaultValue(0);
             builder.Property(x => x.Dislikes).IsRequired().HasDefaultValue(0);
-            builder.Property(x => x.DatetimeCreated).IsRequired();
+            builder.Property(x => x.DateTimeCreated).IsRequired();
 
-            builder.HasOne(x => x.Notification).WithMany(x => x.Comments).HasForeignKey(x => x.Notification_ID);
-            builder.HasOne(x => x.AppUser).WithMany(x => x.Comments).HasForeignKey(x => x.User_ID);
+            builder.HasOne(x => x.Notification).WithMany(x => x.Comments).HasForeignKey(x => x.NotificationID);
+            builder.HasOne(x => x.AppUser).WithMany(x => x.Comments).HasForeignKey(x => x.UserID);
         }
     }
 }

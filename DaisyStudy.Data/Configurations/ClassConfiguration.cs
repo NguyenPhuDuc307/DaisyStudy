@@ -14,7 +14,7 @@ namespace DaisyStudy.Data.Configurations
             builder.HasKey(x => x.ID);
 
             builder.Property(x=> x.ID).UseIdentityColumn();
-            builder.Property(x => x.Class_ID).IsUnicode(false).IsRequired();
+            builder.Property(x => x.ClassID).IsUnicode(false).IsRequired();
             builder.Property(x => x.ClassName).IsRequired();
             builder.Property(x => x.Tuition).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.Status).IsRequired();

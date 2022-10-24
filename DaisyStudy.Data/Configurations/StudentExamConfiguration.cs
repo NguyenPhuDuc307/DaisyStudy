@@ -11,16 +11,16 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("StudentExams");
 
-            builder.HasKey(x => x.StudentExam_ID);
+            builder.HasKey(x => x.StudentExamID);
 
-            builder.Property(x => x.StudentExam_ID).UseIdentityColumn();
-            builder.Property(x => x.ExamSchedule_ID).IsRequired();
-            builder.Property(x => x.Student_ID).IsRequired();
+            builder.Property(x => x.StudentExamID).UseIdentityColumn();
+            builder.Property(x => x.ExamScheduleID).IsRequired();
+            builder.Property(x => x.StudentID).IsRequired();
             builder.Property(x => x.Mark).IsRequired();
-            builder.Property(x => x.DateTimeStudentExam).IsRequired();
+            builder.Property(x => x.StudentExamDateTime).IsRequired();
 
-            builder.HasOne(x => x.ExamSchedule).WithMany(x => x.StudentExams).HasForeignKey(x => x.ExamSchedule_ID);
-            builder.HasOne(x => x.Student).WithMany(x => x.StudentExams).HasForeignKey(x => x.Student_ID);
+            builder.HasOne(x => x.ExamSchedule).WithMany(x => x.StudentExams).HasForeignKey(x => x.ExamScheduleID);
+            builder.HasOne(x => x.Student).WithMany(x => x.StudentExams).HasForeignKey(x => x.StudentID);
         }
     }
 }

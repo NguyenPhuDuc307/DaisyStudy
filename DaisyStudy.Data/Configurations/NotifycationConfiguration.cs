@@ -11,15 +11,15 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Notifications");
 
-            builder.HasKey(x => x.Notification_ID);
+            builder.HasKey(x => x.NotificationID);
 
-            builder.Property(x => x.Notification_ID).UseIdentityColumn();
-            builder.Property(x => x.Class_ID).IsRequired();
+            builder.Property(x => x.NotificationID).UseIdentityColumn();
+            builder.Property(x => x.ClassID).IsRequired();
             builder.Property(x => x.Title).IsRequired();
             builder.Property(x => x.Content).IsRequired();
-            builder.Property(x => x.DatetimeCreated).IsRequired();
+            builder.Property(x => x.DateTimeCreated).IsRequired();
 
-            builder.HasOne(x => x.Class).WithMany(x => x.Notifications).HasForeignKey(x => x.Class_ID);
+            builder.HasOne(x => x.Class).WithMany(x => x.Notifications).HasForeignKey(x => x.ClassID);
         }
     }
 }

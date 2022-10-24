@@ -11,15 +11,17 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Chats");
 
-            builder.HasKey(x => x.Chat_ID);
+            builder.HasKey(x => x.ChatID);
 
             builder.Property(x => x.Content).IsRequired();
+            builder.Property(x => x.ClassID).IsRequired();
+            builder.Property(x => x.UserID).IsRequired();
             builder.Property(x => x.Likes).IsRequired().HasDefaultValue(0);
             builder.Property(x => x.Dislikes).IsRequired().HasDefaultValue(0);
-            builder.Property(x => x.DatetimeCreated).IsRequired();
+            builder.Property(x => x.DateTimeCreated).IsRequired();
 
-            builder.HasOne(x => x.Class).WithMany(x => x.Chats).HasForeignKey(x => x.Class_ID);
-            builder.HasOne(x => x.AppUser).WithMany(x => x.Chats).HasForeignKey(x => x.User_ID);
+            builder.HasOne(x => x.Class).WithMany(x => x.Chats).HasForeignKey(x => x.ClassID);
+            builder.HasOne(x => x.AppUser).WithMany(x => x.Chats).HasForeignKey(x => x.UserID);
         }
     }
 }

@@ -3,14 +3,15 @@ namespace DaisyStudy.Data.Entities
 {
     public class Submission
     {
-        public int Homework_ID { set; get; }
+        public int HomeworkID { set; get; }
         public Homework Homework { set; get; }
-        public Guid Student_ID { set; get; }
+        public Guid StudentID { set; get; }
         public AppUser Student { set; get; }
         public String SubmissionName { set; get; }
         public float Mark { set; get; }
         public String Note { set; get; }
-        public DateTime DateTimeSubmission { set; get; }
+        public String Description { set; get; }
+        public DateTime SubmissionDateTime { set; get; }
     }
 }
 

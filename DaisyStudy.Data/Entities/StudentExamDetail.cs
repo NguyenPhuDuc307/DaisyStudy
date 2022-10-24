@@ -3,10 +3,10 @@ namespace DaisyStudy.Data.Entities
 {
     public class StudentExamDetail
     {
-        public int StudentExamDetail_ID { set; get; }
-        public int StudentExam_ID { set; get; }
+        public int StudentExamDetailID { set; get; }
+        public int StudentExamID { set; get; }
         public StudentExam StudentExam { set; get; }
-        public int Answer_ID { set; get; }
+        public int AnswerID { set; get; }
         public Answer Answer { set; get; }
     }
 }
