@@ -11,13 +11,13 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Transactions");
 
-            builder.HasKey(x => x.Transaction_ID);
+            builder.HasKey(x => x.TransactionID);
 
-            builder.Property(x => x.Transaction_ID).UseIdentityColumn();
+            builder.Property(x => x.TransactionID).UseIdentityColumn();
             builder.Property(x => x.Amount).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.Fee).IsRequired().HasColumnType("decimal(18,2)");
 
-            builder.HasOne(x => x.AppUser).WithMany(x => x.Transactions).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.AppUser).WithMany(x => x.Transactions).HasForeignKey(x => x.UserID);
         }
     }
 }

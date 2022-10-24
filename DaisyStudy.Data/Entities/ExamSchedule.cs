@@ -3,12 +3,12 @@ namespace DaisyStudy.Data.Entities
 {
     public class ExamSchedule
     {
-        public int ExamSchedule_ID { set; get; }
-        public int Class_ID { set; get; }
+        public int ExamScheduleID { set; get; }
+        public int ClassID { set; get; }
         public Class Class { set; get; }
         public String ExamScheduleName { set; get; }
-        public DateTime DatetimeCreated { set; get; }
-        public DateTime ExamDatetime { set; get; }
+        public DateTime DateTimeCreated { set; get; }
+        public DateTime ExamDateTime { set; get; }
         public int ExamTime { set; get; }
         public String Image { set; get; }
         public List<StudentExam> StudentExams { set; get; }

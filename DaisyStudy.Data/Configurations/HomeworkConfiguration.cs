@@ -11,14 +11,14 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Homeworks");
 
-            builder.HasKey(x => x.Homework_ID);
+            builder.HasKey(x => x.HomeworkID);
 
-            builder.Property(x => x.Homework_ID).UseIdentityColumn();
-            builder.Property(x => x.Class_ID).IsRequired();
+            builder.Property(x => x.HomeworkID).UseIdentityColumn();
+            builder.Property(x => x.ClassID).IsRequired();
             builder.Property(x => x.Deadline).IsRequired();
-            builder.Property(x => x.DatetimeCreated).IsRequired();
+            builder.Property(x => x.DateTimeCreated).IsRequired();
 
-            builder.HasOne(x => x.Class).WithMany(x=> x.Homeworks).HasForeignKey(x => x.Class_ID);
+            builder.HasOne(x => x.Class).WithMany(x=> x.Homeworks).HasForeignKey(x => x.ClassID);
         }
     }
 }

@@ -11,9 +11,9 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Contacts");
 
-            builder.HasKey(x => x.Contact_ID);
+            builder.HasKey(x => x.ContactID);
 
-            builder.Property(x => x.Contact_ID).UseIdentityColumn();
+            builder.Property(x => x.ContactID).UseIdentityColumn();
             builder.Property(x => x.CustomerName).HasMaxLength(200).IsRequired();
             builder.Property(x => x.Email).HasMaxLength(200).IsRequired();
             builder.Property(x => x.PhoneNumber).HasMaxLength(200).IsRequired();

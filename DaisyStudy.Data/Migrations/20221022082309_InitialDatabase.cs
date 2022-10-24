@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DaisyStudy.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -142,7 +142,7 @@ namespace DaisyStudy.Data.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_ID = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
+                    ClassID = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false),
                     ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Topic = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -166,7 +166,7 @@ namespace DaisyStudy.Data.Migrations
                 name: "Contacts",
                 columns: table => new
                 {
-                    Contact_ID = table.Column<int>(type: "int", nullable: false)
+                    ContactID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CustomerName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -176,16 +176,16 @@ namespace DaisyStudy.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contacts", x => x.Contact_ID);
+                    table.PrimaryKey("PK_Contacts", x => x.ContactID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
-                    Transaction_ID = table.Column<int>(type: "int", nullable: false)
+                    TransactionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExternalTransactionID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -197,10 +197,10 @@ namespace DaisyStudy.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Transaction_ID);
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionID);
                     table.ForeignKey(
-                        name: "FK_Transactions_AppUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Transactions_AppUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -210,27 +210,27 @@ namespace DaisyStudy.Data.Migrations
                 name: "Chats",
                 columns: table => new
                 {
-                    Chat_ID = table.Column<int>(type: "int", nullable: false)
+                    ChatID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_ID = table.Column<int>(type: "int", nullable: false),
-                    User_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatetimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Dislikes = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chats", x => x.Chat_ID);
+                    table.PrimaryKey("PK_Chats", x => x.ChatID);
                     table.ForeignKey(
-                        name: "FK_Chats_AppUsers_User_ID",
-                        column: x => x.User_ID,
+                        name: "FK_Chats_AppUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Chats_Classes_Class_ID",
-                        column: x => x.Class_ID,
+                        name: "FK_Chats_Classes_ClassID",
+                        column: x => x.ClassID,
                         principalTable: "Classes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -240,22 +240,43 @@ namespace DaisyStudy.Data.Migrations
                 name: "ClassDetails",
                 columns: table => new
                 {
-                    Class_ID = table.Column<int>(type: "int", nullable: false),
-                    User_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClassDetails", x => new { x.Class_ID, x.User_ID });
+                    table.PrimaryKey("PK_ClassDetails", x => new { x.ClassID, x.UserID });
                     table.ForeignKey(
-                        name: "FK_ClassDetails_AppUsers_User_ID",
-                        column: x => x.User_ID,
+                        name: "FK_ClassDetails_AppUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClassDetails_Classes_Class_ID",
-                        column: x => x.Class_ID,
+                        name: "FK_ClassDetails_Classes_ClassID",
+                        column: x => x.ClassID,
+                        principalTable: "Classes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClassImages",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassImages", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_ClassImages_Classes_ClassID",
+                        column: x => x.ClassID,
                         principalTable: "Classes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -265,21 +286,21 @@ namespace DaisyStudy.Data.Migrations
                 name: "ExamSchedules",
                 columns: table => new
                 {
-                    ExamSchedule_ID = table.Column<int>(type: "int", nullable: false)
+                    ExamScheduleID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_ID = table.Column<int>(type: "int", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
                     ExamScheduleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatetimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExamDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExamDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExamTime = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamSchedules", x => x.ExamSchedule_ID);
+                    table.PrimaryKey("PK_ExamSchedules", x => x.ExamScheduleID);
                     table.ForeignKey(
-                        name: "FK_ExamSchedules_Classes_Class_ID",
-                        column: x => x.Class_ID,
+                        name: "FK_ExamSchedules_Classes_ClassID",
+                        column: x => x.ClassID,
                         principalTable: "Classes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -289,20 +310,20 @@ namespace DaisyStudy.Data.Migrations
                 name: "Homeworks",
                 columns: table => new
                 {
-                    Homework_ID = table.Column<int>(type: "int", nullable: false)
+                    HomeworkID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_ID = table.Column<int>(type: "int", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
                     HomeworkName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatetimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Homeworks", x => x.Homework_ID);
+                    table.PrimaryKey("PK_Homeworks", x => x.HomeworkID);
                     table.ForeignKey(
-                        name: "FK_Homeworks_Classes_Class_ID",
-                        column: x => x.Class_ID,
+                        name: "FK_Homeworks_Classes_ClassID",
+                        column: x => x.ClassID,
                         principalTable: "Classes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -312,22 +333,43 @@ namespace DaisyStudy.Data.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Notification_ID = table.Column<int>(type: "int", nullable: false)
+                    NotificationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_ID = table.Column<int>(type: "int", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatetimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.Notification_ID);
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationID);
                     table.ForeignKey(
-                        name: "FK_Notifications_Classes_Class_ID",
-                        column: x => x.Class_ID,
+                        name: "FK_Notifications_Classes_ClassID",
+                        column: x => x.ClassID,
                         principalTable: "Classes",
                         principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatImages",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ChatID = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatImages", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_ChatImages_Chats_ChatID",
+                        column: x => x.ChatID,
+                        principalTable: "Chats",
+                        principalColumn: "ChatID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -335,20 +377,22 @@ namespace DaisyStudy.Data.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    Question_ID = table.Column<int>(type: "int", nullable: false)
+                    QuestionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamSchedule_ID = table.Column<int>(type: "int", nullable: false),
+                    ExamScheduleID = table.Column<int>(type: "int", nullable: false),
                     QuestionString = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Point = table.Column<float>(type: "real", nullable: false, defaultValue: 0f)
+                    Point = table.Column<float>(type: "real", nullable: false, defaultValue: 0f),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.Question_ID);
+                    table.PrimaryKey("PK_Questions", x => x.QuestionID);
                     table.ForeignKey(
-                        name: "FK_Questions_ExamSchedules_ExamSchedule_ID",
-                        column: x => x.ExamSchedule_ID,
+                        name: "FK_Questions_ExamSchedules_ExamScheduleID",
+                        column: x => x.ExamScheduleID,
                         principalTable: "ExamSchedules",
-                        principalColumn: "ExamSchedule_ID",
+                        principalColumn: "ExamScheduleID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -356,27 +400,28 @@ namespace DaisyStudy.Data.Migrations
                 name: "StudentExams",
                 columns: table => new
                 {
-                    StudentExam_ID = table.Column<int>(type: "int", nullable: false)
+                    StudentExamID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamSchedule_ID = table.Column<int>(type: "int", nullable: false),
-                    Student_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExamScheduleID = table.Column<int>(type: "int", nullable: false),
+                    StudentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Mark = table.Column<float>(type: "real", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudentExamDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentExams", x => x.StudentExam_ID);
+                    table.PrimaryKey("PK_StudentExams", x => x.StudentExamID);
                     table.ForeignKey(
-                        name: "FK_StudentExams_AppUsers_Student_ID",
-                        column: x => x.Student_ID,
+                        name: "FK_StudentExams_AppUsers_StudentID",
+                        column: x => x.StudentID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentExams_ExamSchedules_ExamSchedule_ID",
-                        column: x => x.ExamSchedule_ID,
+                        name: "FK_StudentExams_ExamSchedules_ExamScheduleID",
+                        column: x => x.ExamScheduleID,
                         principalTable: "ExamSchedules",
-                        principalColumn: "ExamSchedule_ID",
+                        principalColumn: "ExamScheduleID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -384,27 +429,28 @@ namespace DaisyStudy.Data.Migrations
                 name: "Submissions",
                 columns: table => new
                 {
-                    Homework_ID = table.Column<int>(type: "int", nullable: false),
-                    Student_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HomeworkID = table.Column<int>(type: "int", nullable: false),
+                    StudentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SubmissionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mark = table.Column<float>(type: "real", nullable: false, defaultValue: 0f),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateTimeSubmission = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubmissionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Submissions", x => new { x.Homework_ID, x.Student_ID });
+                    table.PrimaryKey("PK_Submissions", x => new { x.HomeworkID, x.StudentID });
                     table.ForeignKey(
-                        name: "FK_Submissions_AppUsers_Student_ID",
-                        column: x => x.Student_ID,
+                        name: "FK_Submissions_AppUsers_StudentID",
+                        column: x => x.StudentID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Submissions_Homeworks_Homework_ID",
-                        column: x => x.Homework_ID,
+                        name: "FK_Submissions_Homeworks_HomeworkID",
+                        column: x => x.HomeworkID,
                         principalTable: "Homeworks",
-                        principalColumn: "Homework_ID",
+                        principalColumn: "HomeworkID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -412,29 +458,50 @@ namespace DaisyStudy.Data.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Comment_ID = table.Column<int>(type: "int", nullable: false)
+                    CommentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Notification_ID = table.Column<int>(type: "int", nullable: false),
-                    User_ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NotificationID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DatetimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Dislikes = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Comment_ID);
+                    table.PrimaryKey("PK_Comments", x => x.CommentID);
                     table.ForeignKey(
-                        name: "FK_Comments_AppUsers_User_ID",
-                        column: x => x.User_ID,
+                        name: "FK_Comments_AppUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Notifications_Notification_ID",
-                        column: x => x.Notification_ID,
+                        name: "FK_Comments_Notifications_NotificationID",
+                        column: x => x.NotificationID,
                         principalTable: "Notifications",
-                        principalColumn: "Notification_ID",
+                        principalColumn: "NotificationID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NotificationImages",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NotificationID = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationImages", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_NotificationImages_Notifications_NotificationID",
+                        column: x => x.NotificationID,
+                        principalTable: "Notifications",
+                        principalColumn: "NotificationID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -442,20 +509,43 @@ namespace DaisyStudy.Data.Migrations
                 name: "Answers",
                 columns: table => new
                 {
-                    Answer_ID = table.Column<int>(type: "int", nullable: false)
+                    AnswerID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Question_ID = table.Column<int>(type: "int", nullable: false),
+                    QuestionID = table.Column<int>(type: "int", nullable: false),
                     AnswerString = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsCorrect = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answers", x => x.Answer_ID);
+                    table.PrimaryKey("PK_Answers", x => x.AnswerID);
                     table.ForeignKey(
-                        name: "FK_Answers_Questions_Question_ID",
-                        column: x => x.Question_ID,
+                        name: "FK_Answers_Questions_QuestionID",
+                        column: x => x.QuestionID,
                         principalTable: "Questions",
-                        principalColumn: "Question_ID",
+                        principalColumn: "QuestionID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CommentImages",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CommentID = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ImageFileSize = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentImages", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_CommentImages_Comments_CommentID",
+                        column: x => x.CommentID,
+                        principalTable: "Comments",
+                        principalColumn: "CommentID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -463,106 +553,126 @@ namespace DaisyStudy.Data.Migrations
                 name: "StudentExamDetails",
                 columns: table => new
                 {
-                    StudentExamDetail_ID = table.Column<int>(type: "int", nullable: false)
+                    StudentExamDetailID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentExam_ID = table.Column<int>(type: "int", nullable: false),
-                    Answer_ID = table.Column<int>(type: "int", nullable: false)
+                    StudentExamID = table.Column<int>(type: "int", nullable: false),
+                    AnswerID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentExamDetails", x => x.StudentExamDetail_ID);
+                    table.PrimaryKey("PK_StudentExamDetails", x => x.StudentExamDetailID);
                     table.ForeignKey(
-                        name: "FK_StudentExamDetails_Answers_Answer_ID",
-                        column: x => x.Answer_ID,
+                        name: "FK_StudentExamDetails_Answers_AnswerID",
+                        column: x => x.AnswerID,
                         principalTable: "Answers",
-                        principalColumn: "Answer_ID",
+                        principalColumn: "AnswerID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentExamDetails_StudentExams_StudentExam_ID",
-                        column: x => x.StudentExam_ID,
+                        name: "FK_StudentExamDetails_StudentExams_StudentExamID",
+                        column: x => x.StudentExamID,
                         principalTable: "StudentExams",
-                        principalColumn: "StudentExam_ID");
+                        principalColumn: "StudentExamID");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_Question_ID",
+                name: "IX_Answers_QuestionID",
                 table: "Answers",
-                column: "Question_ID");
+                column: "QuestionID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_Class_ID",
+                name: "IX_ChatImages_ChatID",
+                table: "ChatImages",
+                column: "ChatID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_ClassID",
                 table: "Chats",
-                column: "Class_ID");
+                column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_User_ID",
+                name: "IX_Chats_UserID",
                 table: "Chats",
-                column: "User_ID");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassDetails_User_ID",
+                name: "IX_ClassDetails_UserID",
                 table: "ClassDetails",
-                column: "User_ID");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_Notification_ID",
+                name: "IX_ClassImages_ClassID",
+                table: "ClassImages",
+                column: "ClassID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentImages_CommentID",
+                table: "CommentImages",
+                column: "CommentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_NotificationID",
                 table: "Comments",
-                column: "Notification_ID");
+                column: "NotificationID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_User_ID",
+                name: "IX_Comments_UserID",
                 table: "Comments",
-                column: "User_ID");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamSchedules_Class_ID",
+                name: "IX_ExamSchedules_ClassID",
                 table: "ExamSchedules",
-                column: "Class_ID");
+                column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Homeworks_Class_ID",
+                name: "IX_Homeworks_ClassID",
                 table: "Homeworks",
-                column: "Class_ID");
+                column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_Class_ID",
+                name: "IX_NotificationImages_NotificationID",
+                table: "NotificationImages",
+                column: "NotificationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ClassID",
                 table: "Notifications",
-                column: "Class_ID");
+                column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_ExamSchedule_ID",
+                name: "IX_Questions_ExamScheduleID",
                 table: "Questions",
-                column: "ExamSchedule_ID");
+                column: "ExamScheduleID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentExamDetails_Answer_ID",
+                name: "IX_StudentExamDetails_AnswerID",
                 table: "StudentExamDetails",
-                column: "Answer_ID");
+                column: "AnswerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentExamDetails_StudentExam_ID",
+                name: "IX_StudentExamDetails_StudentExamID",
                 table: "StudentExamDetails",
-                column: "StudentExam_ID");
+                column: "StudentExamID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentExams_ExamSchedule_ID",
+                name: "IX_StudentExams_ExamScheduleID",
                 table: "StudentExams",
-                column: "ExamSchedule_ID");
+                column: "ExamScheduleID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentExams_Student_ID",
+                name: "IX_StudentExams_StudentID",
                 table: "StudentExams",
-                column: "Student_ID");
+                column: "StudentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Submissions_Student_ID",
+                name: "IX_Submissions_StudentID",
                 table: "Submissions",
-                column: "Student_ID");
+                column: "StudentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_UserId",
+                name: "IX_Transactions_UserID",
                 table: "Transactions",
-                column: "UserId");
+                column: "UserID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -589,16 +699,22 @@ namespace DaisyStudy.Data.Migrations
                 name: "AppUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "ChatImages");
 
             migrationBuilder.DropTable(
                 name: "ClassDetails");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "ClassImages");
+
+            migrationBuilder.DropTable(
+                name: "CommentImages");
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "NotificationImages");
 
             migrationBuilder.DropTable(
                 name: "StudentExamDetails");
@@ -610,7 +726,10 @@ namespace DaisyStudy.Data.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
+                name: "Chats");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Answers");
@@ -620,6 +739,9 @@ namespace DaisyStudy.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Homeworks");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Questions");

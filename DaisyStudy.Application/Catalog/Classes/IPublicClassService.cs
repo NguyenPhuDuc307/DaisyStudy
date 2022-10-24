@@ -1,12 +1,10 @@
-﻿using System;
-using DaisyStudy.Application.Catalog.Classes.Dtos;
+﻿using DaisyStudy.ViewModel.Catalog.Classes;
+using DaisyStudy.ViewModel.Common;
 
-namespace DaisyStudy.Application.Catalog.Classes
+namespace DaisyStudy.ViewModel.Catalog.Classes
 {
-    public interface IClassService
+    public interface IPublicClassService
     {
-        int Create(ClassCreateRequest request);
-        int Update(ClassUpdateRequest request);
-        int Delete(int ClassID);
+        Task<PagedResult<ClassViewModel>> GetAll(GetClassPagingRequest request);
     }
 }

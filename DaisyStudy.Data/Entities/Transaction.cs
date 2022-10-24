@@ -5,8 +5,8 @@ namespace DaisyStudy.Data.Entities
 {
     public class Transaction
     {
-        public int Transaction_ID { set; get; }
-        public Guid UserId { get; set; }
+        public int TransactionID { set; get; }
+        public Guid UserID { get; set; }
         public AppUser AppUser { get; set; }
         public DateTime TransactionDate { set; get; }
         public string ExternalTransactionID { set; get; }

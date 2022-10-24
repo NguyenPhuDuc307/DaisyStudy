@@ -11,10 +11,10 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("ClassDetails");
 
-            builder.HasKey(x => new { x.Class_ID , x.User_ID});
+            builder.HasKey(x => new { x.ClassID , x.UserID});
 
-            builder.HasOne(x => x.Class).WithMany(x => x.ClassDetails).HasForeignKey(x => x.Class_ID);
-            builder.HasOne(x => x.User).WithMany(x => x.ClassDetails).HasForeignKey(x => x.User_ID);
+            builder.HasOne(x => x.Class).WithMany(x => x.ClassDetails).HasForeignKey(x => x.ClassID);
+            builder.HasOne(x => x.User).WithMany(x => x.ClassDetails).HasForeignKey(x => x.UserID);
         }
     }
 }

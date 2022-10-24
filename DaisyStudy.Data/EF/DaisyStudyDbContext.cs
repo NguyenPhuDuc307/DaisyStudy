@@ -31,6 +31,10 @@ namespace DaisyStudy.Data.EF
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new ClassImageConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatImageConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentImageConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationImageConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
@@ -41,20 +45,24 @@ namespace DaisyStudy.Data.EF
             //base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Answer> Answer { set; get; }
-        public DbSet<AppConfig> AppConfig { set; get; }
-        public DbSet<Chat> Chat { set; get; }
-        public DbSet<Class> Class { set; get; }
-        public DbSet<ClassDetail> ClassDetail { set; get; }
-        public DbSet<Comment> Comment { set; get; }
-        public DbSet<Contact> Contact { set; get; }
-        public DbSet<ExamSchedule> ExamSchedule { set; get; }
-        public DbSet<Homework> Homework { set; get; }
-        public DbSet<Notification> Notification { set; get; }
-        public DbSet<Question> Question { set; get; }
-        public DbSet<StudentExam> StudentExam { set; get; }
-        public DbSet<StudentExamDetail> StudentExamDetail { set; get; }
-        public DbSet<Submission> Submission { set; get; }
-        public DbSet<Transaction> Transaction { set; get; }
+        public DbSet<Answer> Answers { set; get; }
+        public DbSet<AppConfig> AppConfigs { set; get; }
+        public DbSet<Chat> Chats { set; get; }
+        public DbSet<Class> Classes { set; get; }
+        public DbSet<ClassDetail> ClassDetails { set; get; }
+        public DbSet<Comment> Comments { set; get; }
+        public DbSet<Contact> Contacts { set; get; }
+        public DbSet<ExamSchedule> ExamSchedules { set; get; }
+        public DbSet<Homework> Homeworks { set; get; }
+        public DbSet<Notification> Notifications { set; get; }
+        public DbSet<Question> Questions { set; get; }
+        public DbSet<StudentExam> StudentExams { set; get; }
+        public DbSet<StudentExamDetail> StudentExamDetails { set; get; }
+        public DbSet<Submission> Submissions { set; get; }
+        public DbSet<Transaction> Transactions { set; get; }
+        public DbSet<ClassImage> ClassImages { set; get; }
+        public DbSet<ChatImage> ChatImages { set; get; }
+        public DbSet<CommentImage> CommentImages { set; get; }
+        public DbSet<NotificationImage> NotificationImages { set; get; }
     }
 }

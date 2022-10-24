@@ -1,6 +1,6 @@
 namespace DaisyStudy.Data.Entities
 {
-    public enum Public
+    public enum IsPublic
     {
         NotPublic,
         Public
