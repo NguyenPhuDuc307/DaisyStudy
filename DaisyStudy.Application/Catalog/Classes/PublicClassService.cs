@@ -49,4 +49,29 @@ public class PublicClassService : IPublicClassService
         };
         return pageResult;
     }
+
+    public async Task<List<ClassViewModel>> GetAllClass()
+    {
+        var query = from c in _context.Classes select c;
+
+        var data = await query.Select(x => new ClassViewModel()
+        {
+            ID = x.ID,
+            ClassName = x.ClassName,
+            Topic = x.Topic,
+            Image = x.Image,
+            ClassRoom = x.ClassRoom,
+            Description = x.Description,
+            SEOClassName = x.SEOClassName,
+            SEODescriptione = x.SEODescriptione,
+            SEOAlias = x.SEOAlias,
+            Tuition = x.Tuition,
+            DateCreated = x.DateCreated,
+            ViewCount = x.ViewCount,
+            Status = x.Status,
+            isPublic = x.isPublic
+        }).ToListAsync();
+
+        return data;
+    }
 }
