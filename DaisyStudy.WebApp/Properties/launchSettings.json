@@ -11,7 +11,7 @@
     "DaisyStudy.WebApp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7126;http://localhost:5078",
+      "applicationUrl": "http://localhost:44937",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
