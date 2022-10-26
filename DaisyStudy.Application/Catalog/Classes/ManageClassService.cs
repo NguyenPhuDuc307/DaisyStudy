@@ -16,9 +16,10 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
         private readonly DaisyStudyDbContext _context;
         private readonly IStorageService _storageService;
 
-        public ManageClassService(DaisyStudyDbContext context)
+        public ManageClassService(DaisyStudyDbContext context, IStorageService storageService)
         {
             _context = context;
+            _storageService = storageService;
         }
 
         public async Task<int> AddImage(int ClassID, ClassImageCreateRequest request)

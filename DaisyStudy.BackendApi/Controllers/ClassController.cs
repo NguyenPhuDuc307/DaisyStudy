@@ -11,20 +11,18 @@ namespace DaisyStudy.BackendApi.Controllers
     //[Authorize]
     public class ClassController : ControllerBase
     {
-        //private readonly IPublicClassService _publicClassService;
-        //private readonly IManageClassService _manageClassService;
-
-        //public ClassController(IPublicClassService publicClassService,
-        //    IManageClassService manageClassService)
-        //{
-        //    _publicClassService = publicClassService;
-        //    _manageClassService = manageClassService;
-        //}
+        private readonly IPublicClassService _publicClassService;
+        
+        public ClassController(IPublicClassService publicClassService)
+        {
+           _publicClassService = publicClassService;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok("Test Ok");
+            var classes = await _publicClassService.GetAllClass();
+            return Ok(classes);
         }
     }
 }
