@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DaisyStudy.Data\DaisyStudy.Data.csproj" />
     <ProjectReference Include="..\DaisyStudy.Ultilities\DaisyStudy.Ultilities.csproj" />
     <ProjectReference Include="..\DaisyStudy.ViewModel\DaisyStudy.ViewModel.csproj" />
   </ItemGroup>

@@ -1,24 +1,17 @@
-﻿using DaisyStudy.Data.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace DaisyStudy.ViewModel.Catalog.Classes;
 
-public interface ClassCreateRequest
+public class ClassCreateRequest
 {
-    public String Class_ID { set; get; }
-    public String ClassName { set; get; }
-    public String Topic { set; get; }
-    public String Image { set; get; }
-    public String ClassRoom { set; get; }
-    public String Description { set; get; }
-    public String SEOClassName { set; get; }
-    public String SEODescriptione { set; get; }
-    public String SEOAlias { set; get; }
+    public string ClassName { set; get; }
+    public string Topic { set; get; }
+    public string ClassRoom { set; get; }
+    public string Description { set; get; }
+    public string SEOClassName { set; get; }
+    public string SEODescriptione { set; get; }
+    public string SEOAlias { set; get; }
     public decimal Tuition { set; get; }
-    public DateTime DateCreated { set; get; }
-    public int ViewCount { set; get; }
-    public Status Status { set; get; }
-    public IsPublic isPublic { set; get; }
     public IFormFile ThumbnailImage { get; set; }
 }
 
