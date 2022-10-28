@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DaisyStudy.ViewModel.Catalog.ClassImages;
 
-public interface ClassImageCreateRequest
+public class ClassImageCreateRequest
 {
     public IFormFile ImageFile { get; set; }
 }

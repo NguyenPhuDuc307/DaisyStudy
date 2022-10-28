@@ -1,4 +1,5 @@
 ﻿using DaisyStudy.Data.EF;
+using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModel.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,66 +13,39 @@ public class PublicClassService : IPublicClassService
     {
         _context = context;
     }
-    public async Task<PagedResult<ClassViewModel>> GetAll(GetClassPagingRequest request)
+    public async Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request)
     {
         //1. Select
         var query = from c in _context.Classes select c;
 
-        //2. Filter
-
-        //3. Paging
+        //2. Paging
         int totalRow = await query.CountAsync();
         var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-        .Take(request.PageSize)
-        .Select(x => new ClassViewModel()
-        {
-            ID = x.ID,
-            ClassName = x.ClassName,
-            Topic = x.Topic,
-            Image = x.Image,
-            ClassRoom = x.ClassRoom,
-            Description = x.Description,
-            SEOClassName = x.SEOClassName,
-            SEODescriptione = x.SEODescriptione,
-            SEOAlias = x.SEOAlias,
-            Tuition = x.Tuition,
-            DateCreated = x.DateCreated,
-            ViewCount = x.ViewCount,
-            Status = x.Status,
-            isPublic = x.isPublic
-        }).ToListAsync();
+            .Take(request.PageSize)
+            .Select(x => new ClassViewModel()
+            {
+                ID = x.ID,
+                ClassID = x.ClassID,
+                ClassName = x.ClassName,
+                Topic = x.Topic,
+                ClassRoom = x.ClassRoom,
+                Description = x.Description,
+                SEOClassName = x.SEOClassName,
+                SEODescriptione = x.SEODescriptione,
+                SEOAlias = x.SEOAlias,
+                Tuition = x.Tuition,
+                DateCreated = x.DateCreated,
+                ViewCount = x.ViewCount,
+                Status = x.Status,
+                isPublic = x.isPublic
+            }).ToListAsync();
 
-        //4. Select and projection
+        //3. Select and projection
         var pageResult = new PagedResult<ClassViewModel>()
         {
             TotalRecord = totalRow,
             Items = data
         };
         return pageResult;
-    }
-
-    public async Task<List<ClassViewModel>> GetAllClass()
-    {
-        var query = from c in _context.Classes select c;
-
-        var data = await query.Select(x => new ClassViewModel()
-        {
-            ID = x.ID,
-            ClassName = x.ClassName,
-            Topic = x.Topic,
-            Image = x.Image,
-            ClassRoom = x.ClassRoom,
-            Description = x.Description,
-            SEOClassName = x.SEOClassName,
-            SEODescriptione = x.SEODescriptione,
-            SEOAlias = x.SEOAlias,
-            Tuition = x.Tuition,
-            DateCreated = x.DateCreated,
-            ViewCount = x.ViewCount,
-            Status = x.Status,
-            isPublic = x.isPublic
-        }).ToListAsync();
-
-        return data;
     }
 }
