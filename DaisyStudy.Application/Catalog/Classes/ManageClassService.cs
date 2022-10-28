@@ -1,4 +1,5 @@
-﻿using DaisyStudy.ViewModel.Catalog.Classes;
+﻿using Microsoft.VisualBasic;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.Data.EF;
 using DaisyStudy.Data.Entities;
@@ -8,6 +9,7 @@ using System.Net.Http.Headers;
 using DaisyStudy.Application.Common;
 using DaisyStudy.ViewModel.Common;
 using DaisyStudy.ViewModel.Catalog.ClassImages;
+using DaisyStudy.Utilities.Constants;
 
 namespace DaisyStudy.ViewModel.Catalog.Classes
 {
@@ -39,21 +41,43 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             return classImage.ImageID;
         }
 
+        public async Task<int> UpdateImage(int imageId, ClassImageUpdateRequest request)
+        {
+            var productImage = await _context.ClassImages.FindAsync(imageId);
+            if (productImage == null) throw new DaisyStudyException($"Cannot find an image with id {imageId}");
+
+            if (request.ImageFile != null)
+            {
+                productImage.ImagePath = await this.SaveFile(request.ImageFile);
+                productImage.ImageFileSize = request.ImageFile.Length;
+            }
+            _context.ClassImages.Update(productImage);
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task AddViewCount(int ID)
         {
             var _class = await _context.Classes.FindAsync(ID);
+            if (_class == null) throw new DaisyStudyException($"Cannot find a class {ID}");
             _class.ViewCount += 1;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ChangeClassID(int ID)
+        {
+            var _class = await _context.Classes.FindAsync(ID);
+            if (_class == null) throw new DaisyStudyException($"Cannot find a class {ID}");
+            _class.ClassID = SystemVariable.GetRanDomClassID(7);
+            return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<int> Create(ClassCreateRequest request)
         {
             var _class = new Class()
             {
-                ClassID = request.Class_ID,
+                ClassID = SystemVariable.GetRanDomClassID(7),
                 ClassName = request.ClassName,
                 Topic = request.Topic,
-                Image = request.Image,
                 ClassRoom = request.ClassRoom,
                 Description = request.Description,
                 SEOClassName = request.SEOClassName,
@@ -67,7 +91,7 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             };
 
             // Save file
-            if(request.ThumbnailImage !=null)
+            if (request.ThumbnailImage != null)
             {
                 _class.ClassImages = new List<ClassImage>()
                 {
@@ -79,7 +103,8 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
                 };
             }
             _context.Classes.Add(_class);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return _class.ID;
         }
 
         public async Task<int> Delete(int ID)
@@ -87,8 +112,8 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             var _class = await _context.Classes.FindAsync(ID);
             if (_class == null) throw new DaisyStudyException($"Cannot find a class {ID}");
 
-            var images =  _context.ClassImages.Where(i => i.ClassID == ID);
-            foreach(var image in images)
+            var images = _context.ClassImages.Where(i => i.ClassID == ID);
+            foreach (var image in images)
             {
                 await _storageService.DeleteFileAsync(image.ImagePath);
             }
@@ -115,9 +140,9 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             .Select(x => new ClassViewModel()
             {
                 ID = x.ID,
+                ClassID = x.ClassID,
                 ClassName = x.ClassName,
                 Topic = x.Topic,
-                Image = x.Image,
                 ClassRoom = x.ClassRoom,
                 Description = x.Description,
                 SEOClassName = x.SEOClassName,
@@ -137,6 +162,44 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
                 Items = data
             };
             return pageResult;
+        }
+
+        public async Task<ClassViewModel> GetById(int ID)
+        {
+            var _class = await _context.Classes.FindAsync(ID);
+            if (_class == null) throw new DaisyStudyException($"Cannot find a class {ID}");
+            var classViewModel = new ClassViewModel()
+            {
+                ID = _class.ID,
+                ClassID = _class.ClassID,
+                ClassName = _class.ClassName,
+                Topic = _class.Topic,
+                ClassRoom = _class.ClassRoom,
+                Description = _class.Description,
+                SEOClassName = _class.SEOClassName,
+                SEODescriptione = _class.SEODescriptione,
+                SEOAlias = _class.SEOAlias,
+                Tuition = _class.Tuition,
+                DateCreated = _class.DateCreated,
+                ViewCount = _class.ViewCount,
+                Status = _class.Status,
+                isPublic = _class.isPublic
+            };
+            return classViewModel;
+        }
+
+        public async Task<ClassImageViewModel> GetImageById(int imageId)
+        {
+            var image = await _context.ClassImages.FindAsync(imageId);
+            if (image == null) throw new DaisyStudyException($"Cannot find an image with id {imageId}");
+            var viewModel = new ClassImageViewModel()
+            {
+                ImageFileSize = image.ImageFileSize,
+                    ImageID = image.ImageID,
+                    ImagePath = image.ImagePath,
+                    ClassID = image.ClassID
+            };
+            return viewModel;
         }
 
         public async Task<List<ClassImageViewModel>> GetListImage(int ClassID)
@@ -166,7 +229,6 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             if (_class == null) throw new DaisyStudyException($"Cannot find a class {request.ID}");
             _class.ClassName = request.ClassName;
             _class.Topic = request.Topic;
-            _class.Image = request.Image;
             _class.ClassRoom = request.ClassRoom;
             _class.Description = request.Description;
             _class.SEOClassName = request.SEOClassName;
@@ -176,8 +238,8 @@ namespace DaisyStudy.ViewModel.Catalog.Classes
             //Save image
             if (request.ThumbnailImage != null)
             {
-                var thumbnailImage = await _context.ClassImages.FirstOrDefaultAsync(x=> x.ClassID == request.ID);
-                if(thumbnailImage != null)
+                var thumbnailImage = await _context.ClassImages.FirstOrDefaultAsync(x => x.ClassID == request.ID);
+                if (thumbnailImage != null)
                 {
                     thumbnailImage.ImageFileSize = request.ThumbnailImage.Length;
                     thumbnailImage.ImagePath = await this.SaveFile(request.ThumbnailImage);

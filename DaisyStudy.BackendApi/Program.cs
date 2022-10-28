@@ -1,9 +1,10 @@
 ﻿
-using DaisyStudy.Utilities.Constants;
 using DaisyStudy.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.ViewModel.Catalog.Classes;
 using Microsoft.OpenApi.Models;
+using DaisyStudy.Application.Common;
+using DaisyStudy.Utilities.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,9 @@ builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString) ?? throw new InvalidOperationException("Connection string 'DaisyStudyDbContext' not found.")));
 
 // Declare DI
+builder.Services.AddTransient<IStorageService, FileStorageService>();
 builder.Services.AddTransient<IPublicClassService, PublicClassService>();
+builder.Services.AddTransient<IManageClassService, ManageClassService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

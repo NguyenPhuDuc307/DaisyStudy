@@ -7,7 +7,6 @@ namespace DaisyStudy.Data.Entities
         public String ClassID { set; get; }
         public String ClassName { set; get; }
         public String Topic { set; get; }
-        public String Image { set; get; }
         public String ClassRoom { set; get; }
         public String Description { set; get; }
         public String SEOClassName { set; get; }
