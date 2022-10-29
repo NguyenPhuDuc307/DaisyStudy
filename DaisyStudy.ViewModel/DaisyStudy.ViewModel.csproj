@@ -19,6 +19,7 @@
     <Folder Include="Catalog\Class\Manage\" />
     <Folder Include="Catalog\Class\Public\" />
     <Folder Include="Common\" />
+    <Folder Include="System\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DaisyStudy.Data\DaisyStudy.Data.csproj" />
