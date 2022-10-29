@@ -16,7 +16,9 @@ using DaisyStudy.Application.Catalog.Classes;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString) ?? throw new InvalidOperationException("Connection string 'DaisyStudyDbContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString)
+    ?? throw new InvalidOperationException("Connection string 'DaisyStudyDbContext' not found.")));
+
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<DaisyStudyDbContext>()
     .AddDefaultTokenProviders();
@@ -34,11 +36,9 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
+// Add services to the container.
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-
-// Add services to the container.
-builder.Services.AddControllers().AddFluentValidation();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -111,19 +111,28 @@ if (!app.Environment.IsDevelopment())
 
 }
 
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger DaisyStudy v1"));
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger DaisyStudy V1");
+});
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();
 
