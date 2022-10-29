@@ -1,7 +1,4 @@
-using System;
-using DaisyStudy.Data.Entities;
-
-namespace DaisyStudy.ViewModel.Catalog.ClassImages;
+namespace DaisyStudy.ViewModels.Catalog.ClassImages;
 
 public class ClassImageViewModel
 {

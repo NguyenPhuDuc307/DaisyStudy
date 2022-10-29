@@ -1,18 +1,17 @@
 ﻿using DaisyStudy.Data.EF;
 using Microsoft.EntityFrameworkCore;
-using DaisyStudy.ViewModel.Catalog.Classes;
 using Microsoft.OpenApi.Models;
 using DaisyStudy.Application.Common;
 using DaisyStudy.Utilities.Constants;
 using Microsoft.AspNetCore.Identity;
 using DaisyStudy.Data.Entities;
 using DaisyStudy.Application.System.Users;
-using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
 using FluentValidation;
-using DaisyStudy.ViewModel.System.Users;
+using DaisyStudy.ViewModels.System.Users;
+using DaisyStudy.Application.Catalog.Classes;
 
 var builder = WebApplication.CreateBuilder(args);
 
