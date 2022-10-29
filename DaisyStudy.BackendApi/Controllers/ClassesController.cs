@@ -1,15 +1,16 @@
+using System.Net;
 using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModel.Catalog.Classes;
 using DaisyStudy.ViewModel.Catalog.ClassImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace DaisyStudy.BackendApi.Controllers
 {
     // api/classes
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClassesController : ControllerBase
     {
         private readonly IPublicClassService _publicClassService;
