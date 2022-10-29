@@ -9,8 +9,9 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DaisyStudy.Ultilities\DaisyStudy.Ultilities.csproj" />
     <ProjectReference Include="..\DaisyStudy.ViewModel\DaisyStudy.ViewModel.csproj" />
+    <ProjectReference Include="..\DaisyStudy.Utilities\DaisyStudy.Utilities.csproj" />
+    <ProjectReference Include="..\DaisyStudy.Data\DaisyStudy.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />

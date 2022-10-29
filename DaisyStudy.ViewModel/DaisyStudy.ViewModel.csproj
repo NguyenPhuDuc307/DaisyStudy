@@ -22,8 +22,8 @@
     <Folder Include="System\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DaisyStudy.Data\DaisyStudy.Data.csproj" />
     <ProjectReference Include="..\DaisyStudy.Ultilities\DaisyStudy.Ultilities.csproj" />
+    <ProjectReference Include="..\DaisyStudy.Data\DaisyStudy.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
