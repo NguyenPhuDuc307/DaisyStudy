@@ -28,11 +28,16 @@ namespace DaisyStudy.Application.System.Users
         public async Task<string> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return null;
+            if (user == null)
+            {
+                return null;
+            }
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
+            {
                 return null;
+            }
 
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]

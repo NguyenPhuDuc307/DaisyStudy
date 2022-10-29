@@ -28,7 +28,7 @@ namespace DaisyStudy.BackendApi.Controllers
             if (string.IsNullOrEmpty(resultToken))
                 return BadRequest("Username or password is incorrect.");
 
-            return Ok(new { token = request });
+            return Ok(new { token = resultToken });
         }
 
         [HttpPost("register")]
