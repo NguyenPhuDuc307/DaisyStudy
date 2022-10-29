@@ -10,13 +10,11 @@ namespace DaisyStudy.Utilities.Exceptions
         {
         }
 
-        public DaisyStudyException(string message)
-            : base(message)
+        public DaisyStudyException(string message) : base(message)
         {
         }
 
-        public DaisyStudyException(string message, Exception inner)
-            : base(message, inner)
+        public DaisyStudyException(string message, Exception inner) : base(message, inner)
         {
         }
     }
