@@ -1,9 +1,9 @@
 ﻿using DaisyStudy.Data.EF;
-using DaisyStudy.Data.Entities;
-using DaisyStudy.ViewModel.Common;
+using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes;
+namespace DaisyStudy.Application.Catalog.Classes;
 
 public class PublicClassService : IPublicClassService
 {

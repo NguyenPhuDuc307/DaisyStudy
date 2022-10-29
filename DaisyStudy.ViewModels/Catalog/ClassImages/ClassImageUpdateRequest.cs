@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DaisyStudy.ViewModel.Catalog.ClassImages
+namespace DaisyStudy.ViewModels.Catalog.ClassImages
 {
     public class ClassImageUpdateRequest
     {

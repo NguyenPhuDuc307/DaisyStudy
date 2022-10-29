@@ -1,8 +1,9 @@
 ﻿using DaisyStudy.Data.Entities;
-using DaisyStudy.ViewModel.Catalog.ClassImages;
-using DaisyStudy.ViewModel.Common;
+using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Catalog.ClassImages;
+using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes
+namespace DaisyStudy.Application.Catalog.Classes
 {
     public interface IManageClassService
     {

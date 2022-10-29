@@ -1,7 +1,7 @@
 ﻿using System;
 using DaisyStudy.Data.Entities;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes;
+namespace DaisyStudy.ViewModels.Catalog.Classes;
 
 public class ClassViewModel
 {

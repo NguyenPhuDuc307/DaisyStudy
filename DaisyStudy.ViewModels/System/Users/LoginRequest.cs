@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DaisyStudy.ViewModel.System.Users
+﻿namespace DaisyStudy.ViewModels.System.Users
 {
     public class LoginRequest
     {
