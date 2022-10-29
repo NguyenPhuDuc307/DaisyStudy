@@ -10,12 +10,17 @@ using DaisyStudy.Application.System.Users;
 using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using DaisyStudy.ViewModel.System.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString) ?? throw new InvalidOperationException("Connection string 'DaisyStudyDbContext' not found.")));
-builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<DaisyStudyDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<AppUser, AppRole>()
+    .AddEntityFrameworkStores<DaisyStudyDbContext>()
+    .AddDefaultTokenProviders();
 
 // Declare DI
 builder.Services.AddTransient<IStorageService, FileStorageService>();
@@ -27,8 +32,14 @@ builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 builder.Services.AddTransient<IUserService, UserService>();
 
+builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
+builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
+
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
 
 builder.Services.AddSwaggerGen(c =>
 {
