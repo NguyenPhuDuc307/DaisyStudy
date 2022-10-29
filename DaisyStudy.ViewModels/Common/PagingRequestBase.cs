@@ -1,10 +1,8 @@
-﻿using System;
-namespace DaisyStudy.ViewModel.Common
+﻿namespace DaisyStudy.ViewModels.Common;
+
+public class PagingRequestBase
 {
-    public class PagingRequestBase
-    {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
-    }
+    public int PageIndex { get; set; }
+    public int PageSize { get; set; }
 }
 

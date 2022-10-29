@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes;
+namespace DaisyStudy.ViewModels.Catalog.Classes;
 
 public class ClassCreateRequest
 {

@@ -1,6 +1,6 @@
-﻿using DaisyStudy.ViewModel.Common;
+﻿using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes;
+namespace DaisyStudy.ViewModels.Catalog.Classes;
 
 public class GetPublicClassPagingRequest : PagingRequestBase
 {

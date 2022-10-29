@@ -6,11 +6,12 @@ using DaisyStudy.Utilities.Exceptions;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using DaisyStudy.Application.Common;
-using DaisyStudy.ViewModel.Common;
-using DaisyStudy.ViewModel.Catalog.ClassImages;
+using DaisyStudy.ViewModels.Common;
+using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.Utilities.Constants;
+using DaisyStudy.ViewModels.Catalog.Classes;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes
+namespace DaisyStudy.Application.Catalog.Classes
 {
     public class ManageClassService : IManageClassService
     {

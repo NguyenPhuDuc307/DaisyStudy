@@ -1,4 +1,4 @@
-using DaisyStudy.ViewModel.System.Users;
+using DaisyStudy.ViewModels.System.Users;
 
 namespace DaisyStudy.Application.System.Users
 {

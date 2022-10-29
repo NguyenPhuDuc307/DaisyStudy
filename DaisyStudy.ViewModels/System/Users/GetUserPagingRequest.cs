@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DaisyStudy.ViewModel.Common;
+﻿using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ViewModel.System.Users
+namespace DaisyStudy.ViewModels.System.Users
 {
     public class GetUserPagingRequest : PagingRequestBase
     {

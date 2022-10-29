@@ -1,5 +1,5 @@
 using DaisyStudy.Application.System.Users;
-using DaisyStudy.ViewModel.System.Users;
+using DaisyStudy.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

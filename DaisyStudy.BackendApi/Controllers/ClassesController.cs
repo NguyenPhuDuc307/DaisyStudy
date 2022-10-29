@@ -1,7 +1,7 @@
-using System.Net;
+using DaisyStudy.Application.Catalog.Classes;
 using DaisyStudy.Data.Entities;
-using DaisyStudy.ViewModel.Catalog.Classes;
-using DaisyStudy.ViewModel.Catalog.ClassImages;
+using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Catalog.ClassImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

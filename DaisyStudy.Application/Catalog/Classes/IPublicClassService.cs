@@ -1,7 +1,7 @@
-﻿using DaisyStudy.ViewModel.Catalog.Classes;
-using DaisyStudy.ViewModel.Common;
+﻿using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ViewModel.Catalog.Classes
+namespace DaisyStudy.Application.Catalog.Classes
 {
     public interface IPublicClassService
     {
