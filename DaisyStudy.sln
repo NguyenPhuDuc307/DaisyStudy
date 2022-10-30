@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaisyStudy.Utilities", "Dai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaisyStudy.ViewModels", "DaisyStudy.ViewModels\DaisyStudy.ViewModels.csproj", "{FD562C62-3039-4732-BCB8-65152CBF7D66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaisyStudy.AdminApp", "DaisyStudy.AdminApp\DaisyStudy.AdminApp.csproj", "{D53B5C02-4894-495B-A4D5-A6F73FE3DABB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{FD562C62-3039-4732-BCB8-65152CBF7D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD562C62-3039-4732-BCB8-65152CBF7D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD562C62-3039-4732-BCB8-65152CBF7D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D53B5C02-4894-495B-A4D5-A6F73FE3DABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D53B5C02-4894-495B-A4D5-A6F73FE3DABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D53B5C02-4894-495B-A4D5-A6F73FE3DABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D53B5C02-4894-495B-A4D5-A6F73FE3DABB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
