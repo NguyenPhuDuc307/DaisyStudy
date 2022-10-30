@@ -1,17 +1,24 @@
 ﻿using DaisyStudy.AdminApp.Service;
 using DaisyStudy.ViewModels.System.Users;
 using FluentValidation.AspNetCore;
-
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpClient();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/User/Login/";
+        options.AccessDeniedPath = "/User/Forbidden/";
+    });
+
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+builder.Services.AddFluentValidation(options => 
+    options.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
 builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 
