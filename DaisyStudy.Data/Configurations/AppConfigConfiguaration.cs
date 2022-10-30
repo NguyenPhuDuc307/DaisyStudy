@@ -7,13 +7,13 @@ namespace DaisyStudy.Data.Configurations
 {
     public class AppConfigConfiguration: IEntityTypeConfiguration<AppConfig>
     {
-        public void Configure(EntityTypeBuilder<AppConfig> buider)
+        public void Configure(EntityTypeBuilder<AppConfig> builder)
         {
-            buider.ToTable("AppConfigs");
+            builder.ToTable("AppConfigs");
 
-            buider.HasKey(x => x.Key);
+            builder.HasKey(x => x.Key);
 
-            buider.Property(x => x.Value).IsRequired();
+            builder.Property(x => x.Value).IsRequired();
         }
     }
 }
