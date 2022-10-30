@@ -1,13 +1,3 @@
 {
-    "cSpell.words": [
-        "ASPNETCORE",
-        "DAISYSTUDY",
-        "Descriptione",
-        "Hmac",
-        "Hsts",
-        "Phuduc",
-        "userservice"
-    ],
-    "liveServer.settings.port": 5501
-    
+    "liveServer.settings.port": 5501   
 }
