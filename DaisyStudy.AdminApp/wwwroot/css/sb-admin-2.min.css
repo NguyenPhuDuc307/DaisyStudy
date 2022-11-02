@@ -12608,3 +12608,8 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
     width: 100%
 }
+
+.logo-white{
+    height: 3rem;
+    width: 3rem;
+}
