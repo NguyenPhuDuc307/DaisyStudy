@@ -13,20 +13,18 @@ namespace DaisyStudy.BackendApi.Controllers
     [Authorize]
     public class ClassesController : ControllerBase
     {
-        private readonly IPublicClassService _publicClassService;
-        private readonly IManageClassService _manageClassService;
+        private readonly IClassService _classService;
 
-        public ClassesController(IPublicClassService publicClassService, IManageClassService manageClassService)
+        public ClassesController(IClassService classService)
         {
-            _publicClassService = publicClassService;
-            _manageClassService = manageClassService;
+            _classService = classService;
         }
 
         // http://localhost:post/classes?pageIndex=1&pageSize=10
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetPublicClassPagingRequest request)
         {
-            var classes = await _publicClassService.GetAll(request);
+            var classes = await _classService.GetAll(request);
             return Ok(classes);
         }
 
@@ -34,7 +32,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpGet("{classId}")]
         public async Task<IActionResult> GetById(int classId)
         {
-            var classes = await _manageClassService.GetById(classId);
+            var classes = await _classService.GetById(classId);
             if (classes == null)
                 return BadRequest("Cannot find class");
             return Ok(classes);
@@ -47,11 +45,11 @@ namespace DaisyStudy.BackendApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var id = await _manageClassService.Create(request);
+            var id = await _classService.Create(request);
             if (id == 0)
                 return BadRequest();
 
-            var _class = await _manageClassService.GetById(id);
+            var _class = await _classService.GetById(id);
 
             return CreatedAtAction(nameof(GetById), new { id = id }, _class);
         }
@@ -63,7 +61,7 @@ namespace DaisyStudy.BackendApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var affectedResult = await _manageClassService.Update(request);
+            var affectedResult = await _classService.Update(request);
             if (affectedResult == 0)
                 return BadRequest();
             return Ok();
@@ -72,7 +70,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpDelete("{classId}")]
         public async Task<IActionResult> Delete(int classId)
         {
-            var affectedResult = await _manageClassService.Delete(classId);
+            var affectedResult = await _classService.Delete(classId);
             if (affectedResult == 0)
                 return BadRequest();
             return Ok();
@@ -81,7 +79,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpPatch("tuition/{classId}/{newTuition}")]
         public async Task<IActionResult> UpdateTuition(int classId, decimal newTuition)
         {
-            var isSuccessful = await _manageClassService.UpdateTuition(classId, newTuition);
+            var isSuccessful = await _classService.UpdateTuition(classId, newTuition);
             if (isSuccessful)
                 return Ok();
             return BadRequest();
@@ -90,7 +88,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpPatch("status/{classId}/{newStatus}")]
         public async Task<IActionResult> UpdateStatus(int classId, Status newStatus)
         {
-            var isSuccessful = await _manageClassService.UpdateStatus(classId, newStatus);
+            var isSuccessful = await _classService.UpdateStatus(classId, newStatus);
             if (isSuccessful)
                 return Ok();
             return BadRequest();
@@ -99,7 +97,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpPatch("public/{classId}/{isPublic}")]
         public async Task<IActionResult> UpdateIsPublic(int classId, IsPublic isPublic)
         {
-            var isSuccessful = await _manageClassService.UpdateIsPublic(classId, isPublic);
+            var isSuccessful = await _classService.UpdateIsPublic(classId, isPublic);
             if (isSuccessful)
                 return Ok();
             return BadRequest();
@@ -108,7 +106,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpPatch("change-class-id/{id}")]
         public async Task<IActionResult> ChangeClassID(int id)
         {
-            var isSuccessful = await _manageClassService.ChangeClassID(id);
+            var isSuccessful = await _classService.ChangeClassID(id);
             if (isSuccessful)
                 return Ok();
             return BadRequest();
@@ -122,11 +120,11 @@ namespace DaisyStudy.BackendApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var imageId = await _manageClassService.AddImage(classId, request);
+            var imageId = await _classService.AddImage(classId, request);
             if (imageId == 0)
                 return BadRequest();
 
-            var image = await _manageClassService.GetImageById(imageId);
+            var image = await _classService.GetImageById(imageId);
 
             return CreatedAtAction(nameof(GetImageById), new { id = imageId }, image);
         }
@@ -138,7 +136,7 @@ namespace DaisyStudy.BackendApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _manageClassService.UpdateImage(imageId, request);
+            var result = await _classService.UpdateImage(imageId, request);
             if (result == 0)
                 return BadRequest();
 
@@ -152,7 +150,7 @@ namespace DaisyStudy.BackendApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _manageClassService.RemoveImage(imageId);
+            var result = await _classService.RemoveImage(imageId);
             if (result == 0)
                 return BadRequest();
 
@@ -162,7 +160,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpGet("images/{imageId}")]
         public async Task<IActionResult> GetImageById(int imageId)
         {
-            var image = await _manageClassService.GetImageById(imageId);
+            var image = await _classService.GetImageById(imageId);
             if (image == null)
                 return BadRequest("Cannot find product");
             return Ok(image);

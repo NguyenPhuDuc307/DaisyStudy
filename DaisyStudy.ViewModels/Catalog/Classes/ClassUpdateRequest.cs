@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
+
 public class ClassUpdateRequest
 {
 public int ID { set; get; }

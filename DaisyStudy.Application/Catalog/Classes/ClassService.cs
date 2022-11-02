@@ -13,12 +13,12 @@ using DaisyStudy.ViewModels.Catalog.Classes;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
-    public class ManageClassService : IManageClassService
+    public class ClassService : IClassService
     {
         private readonly DaisyStudyDbContext _context;
         private readonly IStorageService _storageService;
 
-        public ManageClassService(DaisyStudyDbContext context, IStorageService storageService)
+        public ClassService(DaisyStudyDbContext context, IStorageService storageService)
         {
             _context = context;
             _storageService = storageService;
@@ -163,6 +163,42 @@ namespace DaisyStudy.Application.Catalog.Classes
             };
             return pageResult;
         }
+
+        public async Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request)
+    {
+        //1. Select
+        var query = from c in _context.Classes select c;
+
+        //2. Paging
+        int totalRow = await query.CountAsync();
+        var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(x => new ClassViewModel()
+            {
+                ID = x.ID,
+                ClassID = x.ClassID,
+                ClassName = x.ClassName,
+                Topic = x.Topic,
+                ClassRoom = x.ClassRoom,
+                Description = x.Description,
+                SEOClassName = x.SEOClassName,
+                SEODescriptione = x.SEODescriptione,
+                SEOAlias = x.SEOAlias,
+                Tuition = x.Tuition,
+                DateCreated = x.DateCreated,
+                ViewCount = x.ViewCount,
+                Status = x.Status,
+                isPublic = x.isPublic
+            }).ToListAsync();
+
+        //3. Select and projection
+        var pageResult = new PagedResult<ClassViewModel>()
+        {
+            TotalRecord = totalRow,
+            Items = data
+        };
+        return pageResult;
+    }
 
         public async Task<ClassViewModel> GetById(int ID)
         {

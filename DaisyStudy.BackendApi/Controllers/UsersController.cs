@@ -1,3 +1,4 @@
+using System.Net;
 using DaisyStudy.Application.System.Users;
 using DaisyStudy.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -9,12 +10,13 @@ namespace DaisyStudy.BackendApi.Controllers
     // api/users
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userservice;
-        public UsersController(IUserService userservice)
+        private readonly IUserService _userService;
+        public UsersController(IUserService userService)
         {
-            _userservice = userservice;
+            _userService = userService;
         }
 
         [HttpPost("authenticate")]
@@ -24,25 +26,33 @@ namespace DaisyStudy.BackendApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var resultToken = await _userservice.Authenticate(request);
+            var resultToken = await _userService.Authenticate(request);
             if (string.IsNullOrEmpty(resultToken))
                 return BadRequest("Username or password is incorrect.");
-
+                
             return Ok(resultToken);
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
                 
-            var result = await _userservice.Register(request);
+            var result = await _userService.Register(request);
             if (!result)
                 return BadRequest("Register in unsuccessful.");
 
             return Ok();
+        }
+
+        //http://localhost/api/users/paging?pageIndex=1&pageSize=10&keyword=
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetUserPagingRequest request)
+        {
+            var users = await _userService.GetUsersPaging(request);
+            return Ok(users);
         }
 
     }

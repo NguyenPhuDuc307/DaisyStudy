@@ -1,5 +1,4 @@
-﻿using System;
-using DaisyStudy.Data.Entities;
+﻿using DaisyStudy.Data.Entities;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
 

@@ -20,6 +20,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidation(options => 
     options.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
+builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
+
 builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
@@ -47,6 +49,8 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

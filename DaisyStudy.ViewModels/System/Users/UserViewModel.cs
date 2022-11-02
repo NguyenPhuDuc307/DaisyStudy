@@ -2,7 +2,7 @@
 
 namespace DaisyStudy.ViewModels.System.Users;
 
-public class UserVm
+public class UserViewModel
 {
     public Guid Id { get; set; }
 

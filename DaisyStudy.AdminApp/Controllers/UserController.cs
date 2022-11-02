@@ -24,9 +24,19 @@ public class UserController : Controller
         _configuration = configuration;
         //_roleApiClient = roleApiClient;
     }
-    public IActionResult Index()
+    public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
     {
-        return View();
+        var sessions = HttpContext.Session.GetString("Token");
+
+        var request = new GetUserPagingRequest()
+        {
+            BearerToken = sessions,
+            Keyword = keyword,
+            PageIndex = pageIndex,
+            PageSize = pageSize
+        };
+        var data = await _userApiClient.GetUsersPaging(request);
+        return View(data);
     }
 
     [HttpGet]
@@ -44,11 +54,12 @@ public class UserController : Controller
         var token = await _userApiClient.Authenticate(request);
 
         var userPrincipal = this.ValidateToken(token);
-        var authProperties = new AuthenticationProperties{
+        var authProperties = new AuthenticationProperties
+        {
             ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
             IsPersistent = false
         };
-
+        HttpContext.Session.SetString("Token", token);
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
             userPrincipal,
@@ -57,11 +68,12 @@ public class UserController : Controller
     }
 
     [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "User");
-        }
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.Session.Remove("Token");
+        return RedirectToAction("Login", "User");
+    }
 
     private ClaimsPrincipal ValidateToken(string jwtToken)
     {
