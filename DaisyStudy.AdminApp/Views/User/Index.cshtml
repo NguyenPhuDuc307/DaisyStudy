@@ -5,6 +5,13 @@
     ViewData["Title"] = "Danh sách người dùng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts{
+<script>
+    setTimeout(function () {
+        $('#msgAlert').fadeOut('slow');
+    }, 2000);
+</script>
+}
 <div class="container-fluid">
     <h1 class="mt-4">Danh sách người dùng</h1>
     <ol class="breadcrumb mb-4">
@@ -19,11 +26,43 @@
             <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
         </div>
         <div class="card-header">
-            <a class="btn btn-success" asp-action="Create" asp-controller="User">Tạo mới</a>
+            <div style="padding: 0;" class="col-md-6 col-xs-12">
+                <a class="btn btn-success" asp-action="Create" asp-controller="User">Tạo mới</a>
+            </div>
         </div>
-        <div class="card-body">
+
+        <div class="card-body" style="padding-top: 0;">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <form asp-action="Index" method="get">
+                    <div class="col-sm-12 col-md-6 my-3">
+                        <div class="row">
+                            @if (ViewBag.SuccessMsg != null)
+                            {
+                                <div id="msgAlert" class="alert alert-success" role="alert">
+                                    @ViewBag.SuccessMsg
+                                </div>
+                            }
+                        </div>
+                        <div class="dataTables_filter">
+                            <div class="input-group">
+                                <input value="@ViewBag.Keyword" name="keyword" type="search"
+                                    class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+                                    aria-controls="dataTable">
+                                <div class="input-group-append">
+                                    <a href="/User" class="btn btn-secondary" type="submit">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                    </a>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Họ</th>
@@ -56,13 +95,16 @@
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
                                     <td>
-                                        <a style="text-decoration: none;" class="mx-2" href="@Url.Action("Details", "User", new { id = item.Id })">
+                                        <a style="text-decoration: none;" class="mx-2"
+                                    href="@Url.Action("Details", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-circle-info"></i>
                                         </a>
-                                        <a style="text-decoration: none;" class="mx-2" href="@Url.Action("Edit", "User", new { id = item.Id })">
+                                        <a style="text-decoration: none;" class="mx-2"
+                                    href="@Url.Action("Edit", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-user-pen"></i>
                                         </a>
-                                        <a style="text-decoration: none;" href="@Url.Action("Delete", "User", new { id = item.Id })">
+                                        <a style="text-decoration: none;"
+                                    href="@Url.Action("Delete", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>

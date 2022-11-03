@@ -97,7 +97,11 @@ namespace DaisyStudy.Application.System.Users
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.UserName.Contains(request.Keyword) || x.PhoneNumber.Contains(request.Keyword));
+                query = query.Where(x => x.UserName.Contains(request.Keyword) 
+                || x.PhoneNumber.Contains(request.Keyword)
+                || x.Email.Contains(request.Keyword)
+                || x.FirstName.Contains(request.Keyword)
+                || x.LastName.Contains(request.Keyword));
             }
 
             //3. Paging
