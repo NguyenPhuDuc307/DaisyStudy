@@ -4,10 +4,10 @@ namespace DaisyStudy.ViewModels.System.Users;
 
 public class RegisterRequest
 {
-    [Display(Name = "Tên")]
+    [Display(Name = "Họ")]
     public string FirstName { get; set; }
 
-    [Display(Name = "Họ")]
+    [Display(Name = "Tên")]
     public string LastName { get; set; }
 
     [Display(Name = "Ngày sinh")]

@@ -22,6 +22,7 @@ public class UserViewModel
     public string Email { get; set; }
 
     [Display(Name = "Ngày sinh")]
+    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime Dob { get; set; }
 
     public IList<string> Roles { get; set; }
