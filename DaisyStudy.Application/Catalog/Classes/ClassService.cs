@@ -158,7 +158,9 @@ namespace DaisyStudy.Application.Catalog.Classes
             //4. Select and projection
             var pageResult = new PagedResult<ClassViewModel>()
             {
-                TotalRecord = totalRow,
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 Items = data
             };
             return pageResult;
@@ -194,7 +196,9 @@ namespace DaisyStudy.Application.Catalog.Classes
         //3. Select and projection
         var pageResult = new PagedResult<ClassViewModel>()
         {
-            TotalRecord = totalRow,
+            TotalRecords= totalRow,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
             Items = data
         };
         return pageResult;

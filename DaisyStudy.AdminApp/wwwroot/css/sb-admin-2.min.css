@@ -12613,3 +12613,7 @@ body.sidebar-toggled footer.sticky-footer {
     height: 3rem;
     width: 3rem;
 }
+
+.link-decoration--none{
+    text-decoration: none;
+}
