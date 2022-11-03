@@ -11,7 +11,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/User/Login/";
+        options.LoginPath = "/Login/";
         options.AccessDeniedPath = "/User/Forbidden/";
     });
 
@@ -19,6 +19,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddFluentValidation(options => 
     options.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 
@@ -47,6 +51,8 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

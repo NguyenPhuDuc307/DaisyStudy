@@ -1,84 +1,142 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DaisyStudy.ViewModels.System.Users;
 using DaisyStudy.AdminApp.Service;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DaisyStudy.AdminApp.Controllers;
 
-public class UserController : Controller
+public class UserController : BaseController
 {
     private readonly IUserApiClient _userApiClient;
     private readonly IConfiguration _configuration;
-    //private readonly IRoleApiClient _roleApiClient;
-    public UserController(IUserApiClient userApiClient,
-        //IRoleApiClient roleApiClient,
-        IConfiguration configuration)
+
+    public UserController(IUserApiClient userApiClient, IConfiguration configuration)
     {
         _userApiClient = userApiClient;
         _configuration = configuration;
-        //_roleApiClient = roleApiClient;
     }
-    public IActionResult Index()
+
+    public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
     {
-        return View();
+        var request = new GetUserPagingRequest()
+        {
+            Keyword = keyword,
+            PageIndex = pageIndex,
+            PageSize = pageSize
+        };
+        var data = await _userApiClient.GetUsersPaging(request);
+        return View(data.ResultObj);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Login()
+    public IActionResult Create()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Create(RegisterRequest request)
     {
         if (!ModelState.IsValid)
-            return View(ModelState);
-        var token = await _userApiClient.Authenticate(request);
+            return View();
 
-        var userPrincipal = this.ValidateToken(token);
-        var authProperties = new AuthenticationProperties{
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-            IsPersistent = false
-        };
+        var result = await _userApiClient.RegisterUser(request);
+        if (result.IsSuccessed)
+            return RedirectToAction("Index");
 
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            userPrincipal,
-            authProperties);
-        return RedirectToAction("Index", "Home");
+        ModelState.AddModelError("", result.Message);
+        return View(request);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var result = await _userApiClient.GetById(id);
+        if (result.IsSuccessed)
+        {
+            var user = result.ResultObj;
+            if (user != null)
+            {
+                var updateRequest = new UserUpdateRequest()
+                {
+                    Dob = user.Dob,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    Id = id
+                };
+                return View(updateRequest);
+            }
+        }
+        return RedirectToAction("Error", "Home");
     }
 
     [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "User");
-        }
-
-    private ClaimsPrincipal ValidateToken(string jwtToken)
+    public async Task<IActionResult> Edit(UserUpdateRequest request)
     {
-        IdentityModelEventSource.ShowPII = true;
+        if (!ModelState.IsValid)
+            return View();
 
-        SecurityToken validatedToken;
-        TokenValidationParameters validationParameters = new TokenValidationParameters();
+        var result = await _userApiClient.UpdateUser(request.Id, request);
+        if (result.IsSuccessed)
+            return RedirectToAction("Index");
 
-        validationParameters.ValidateLifetime = true;
+        ModelState.AddModelError("", result.Message);
+        return View(request);
+    }
 
-        validationParameters.ValidAudience = _configuration["Tokens:Issuer"];
-        validationParameters.ValidIssuer = _configuration["Tokens:Issuer"];
-        validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+    [HttpGet]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _userApiClient.GetById(id);
+        if (result.IsSuccessed)
+        {
+            var user = result.ResultObj;
+            if (user != null)
+            {
+                var deleteRequest = new UserDeleteRequest()
+                {
+                    Dob = user.Dob,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    Id = id
+                };
+                return View(deleteRequest);
+            }
+        }
+        return RedirectToAction("Error", "Home");
+    }
 
-        ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
+    [HttpPost]
+    public async Task<IActionResult> Delete(UserDeleteRequest request)
+    {
+        if (!ModelState.IsValid)
+            return View();
 
-        return principal;
+        var result = await _userApiClient.Delete(request.Id);
+        if (result.IsSuccessed)
+            return RedirectToAction("Index");
+
+        ModelState.AddModelError("", result.Message);
+        return View(request);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var result = await _userApiClient.GetById(id);
+        return View(result.ResultObj);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.Session.Remove("Token");
+        return RedirectToAction("Index", "Login");
     }
 }
-

@@ -5,7 +5,7 @@ using DaisyStudy.ViewModels.Common;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
-    public interface IManageClassService
+    public interface IClassService
     {
         Task<int> Create(ClassCreateRequest request);
         Task<int> Update(ClassUpdateRequest request);
@@ -16,6 +16,7 @@ namespace DaisyStudy.Application.Catalog.Classes
         Task<bool> UpdateIsPublic(int ID, IsPublic isPublic);
         Task AddViewCount(int ID);
         Task<PagedResult<ClassViewModel>> GetAllPaging(GetClassPagingRequest request);
+        Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request);
         Task<int> AddImage(int ClassID, ClassImageCreateRequest request);
         Task<int> UpdateImage(int imageId, ClassImageUpdateRequest request);
         Task<int> RemoveImage(int imageID );

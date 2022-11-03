@@ -1,0 +1,78 @@
+@using DaisyStudy.ViewModels.Common;
+@model PagedResult<DaisyStudy.ViewModels.System.Users.UserViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <h1 class="mt-4">Danh sách người dùng</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="/User/">Người dùng</a></li>
+        <li class="breadcrumb-item active">Danh sách người dùng</li>
+    </ol>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+        </div>
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Create" asp-controller="User">Tạo mới</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Họ</th>
+                            <th>Tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Tài khoản</th>
+                            <th>Địa chỉ email</th>
+                            <th>Tuỳ chọn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Items != null)
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        <a style="text-decoration: none;" class="mx-2" href="@Url.Action("Details", "User", new { id = item.Id })">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </a>
+                                        <a style="text-decoration: none;" class="mx-2" href="@Url.Action("Edit", "User", new { id = item.Id })">
+                                            <i class="fa-solid fa-user-pen"></i>
+                                        </a>
+                                        <a style="text-decoration: none;" href="@Url.Action("Delete", "User", new { id = item.Id })">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                @await Component.InvokeAsync("Pager", Model)
+            </div>
+        </div>
+    </div>
+</div>

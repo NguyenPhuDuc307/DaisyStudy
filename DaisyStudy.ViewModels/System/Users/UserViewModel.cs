@@ -2,7 +2,7 @@
 
 namespace DaisyStudy.ViewModels.System.Users;
 
-public class UserVm
+public class UserViewModel
 {
     public Guid Id { get; set; }
 
@@ -22,6 +22,7 @@ public class UserVm
     public string Email { get; set; }
 
     [Display(Name = "Ngày sinh")]
+    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime Dob { get; set; }
 
     public IList<string> Roles { get; set; }
