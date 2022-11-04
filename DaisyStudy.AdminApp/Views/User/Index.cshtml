@@ -95,17 +95,20 @@
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
                                     <td>
-                                        <a style="text-decoration: none;" class="mx-2"
+                                        <a style="text-decoration: none;"
                                     href="@Url.Action("Details", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-circle-info"></i>
                                         </a>
-                                        <a style="text-decoration: none;" class="mx-2"
+                                        <a style="text-decoration: none;"
                                     href="@Url.Action("Edit", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-user-pen"></i>
                                         </a>
                                         <a style="text-decoration: none;"
                                     href="@Url.Action("Delete", "User", new { id = item.Id })">
                                             <i class="fa-solid fa-trash"></i>
+                                        </a>|
+                                        <a href="@Url.Action("RoleAssign", "User", new { id = item.Id })">
+                                            Quyền truy cập
                                         </a>
                                     </td>
                                 </tr>

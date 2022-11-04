@@ -1,11 +1,10 @@
-﻿namespace eShopSolution.ViewModels.System.Roles
+﻿namespace DaisyStudy.ViewModels.System.Roles;
+
+public class RoleViewModel
 {
-    public class RoleViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string Description { get; set; }
-    }
+    public string Description { get; set; }
 }
