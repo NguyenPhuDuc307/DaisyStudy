@@ -1,5 +1,5 @@
-﻿using DaisyStudy.ViewModels.System.Roles;
-using eShopSolution.ViewModels.Common;
+﻿using DaisyStudy.ViewModels.Common;
+using DaisyStudy.ViewModels.System.Roles;
 
 namespace DaisyStudy.AdminApp.Service
 {

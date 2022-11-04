@@ -1,10 +1,10 @@
 ﻿using DaisyStudy.AdminApp.Service;
+using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Roles;
-using eShopSolution.ViewModels.Common;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 
-namespace eShopSolution.AdminApp.Services
+namespace DaisyStudy.AdminApp.Service
 {
     public class RoleApiClient : IRoleApiClient
     {
