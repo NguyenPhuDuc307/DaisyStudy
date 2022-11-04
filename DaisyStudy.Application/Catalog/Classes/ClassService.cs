@@ -81,7 +81,7 @@ namespace DaisyStudy.Application.Catalog.Classes
                 ClassRoom = request.ClassRoom,
                 Description = request.Description,
                 SEOClassName = request.SEOClassName,
-                SEODescriptione = request.SEODescriptione,
+                SEODescriptione = request.SEODescription,
                 SEOAlias = request.SEOAlias,
                 Tuition = request.Tuition,
                 DateCreated = DateTime.Now,
@@ -122,7 +122,7 @@ namespace DaisyStudy.Application.Catalog.Classes
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ClassViewModel>> GetAllPaging(GetClassPagingRequest request)
+        public async Task<PagedResult<ClassViewModel>> GetAllPaging(GetManageClassPagingRequest request)
         {
             //1. Select
             var query = from c in _context.Classes select c;
@@ -130,7 +130,9 @@ namespace DaisyStudy.Application.Catalog.Classes
             //2. Filter
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.ClassName.Contains(request.Keyword));
+                query = query.Where(x => x.ClassName.Contains(request.Keyword)
+                    ||x.ClassID.Contains(request.Keyword)
+                    ||x.Topic.Contains(request.Keyword));
             }
 
             //3. Paging
@@ -167,42 +169,42 @@ namespace DaisyStudy.Application.Catalog.Classes
         }
 
         public async Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request)
-    {
-        //1. Select
-        var query = from c in _context.Classes select c;
-
-        //2. Paging
-        int totalRow = await query.CountAsync();
-        var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .Select(x => new ClassViewModel()
-            {
-                ID = x.ID,
-                ClassID = x.ClassID,
-                ClassName = x.ClassName,
-                Topic = x.Topic,
-                ClassRoom = x.ClassRoom,
-                Description = x.Description,
-                SEOClassName = x.SEOClassName,
-                SEODescriptione = x.SEODescriptione,
-                SEOAlias = x.SEOAlias,
-                Tuition = x.Tuition,
-                DateCreated = x.DateCreated,
-                ViewCount = x.ViewCount,
-                Status = x.Status,
-                isPublic = x.isPublic
-            }).ToListAsync();
-
-        //3. Select and projection
-        var pageResult = new PagedResult<ClassViewModel>()
         {
-            TotalRecords= totalRow,
-            PageIndex = request.PageIndex,
-            PageSize = request.PageSize,
-            Items = data
-        };
-        return pageResult;
-    }
+            //1. Select
+            var query = from c in _context.Classes select c;
+
+            //2. Paging
+            int totalRow = await query.CountAsync();
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new ClassViewModel()
+                {
+                    ID = x.ID,
+                    ClassID = x.ClassID,
+                    ClassName = x.ClassName,
+                    Topic = x.Topic,
+                    ClassRoom = x.ClassRoom,
+                    Description = x.Description,
+                    SEOClassName = x.SEOClassName,
+                    SEODescriptione = x.SEODescriptione,
+                    SEOAlias = x.SEOAlias,
+                    Tuition = x.Tuition,
+                    DateCreated = x.DateCreated,
+                    ViewCount = x.ViewCount,
+                    Status = x.Status,
+                    isPublic = x.isPublic
+                }).ToListAsync();
+
+            //3. Select and projection
+            var pageResult = new PagedResult<ClassViewModel>()
+            {
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
+            };
+            return pageResult;
+        }
 
         public async Task<ClassViewModel> GetById(int ID)
         {
@@ -235,9 +237,9 @@ namespace DaisyStudy.Application.Catalog.Classes
             var viewModel = new ClassImageViewModel()
             {
                 ImageFileSize = image.ImageFileSize,
-                    ImageID = image.ImageID,
-                    ImagePath = image.ImagePath,
-                    ClassID = image.ClassID
+                ImageID = image.ImageID,
+                ImagePath = image.ImagePath,
+                ClassID = image.ClassID
             };
             return viewModel;
         }

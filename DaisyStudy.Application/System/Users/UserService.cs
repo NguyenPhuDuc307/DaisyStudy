@@ -1,7 +1,6 @@
 using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
-using eShopSolution.ViewModels.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace eShopSolution.ViewModels.Common
+﻿namespace DaisyStudy.ViewModels.Common
 {
     public class ApiErrorResult<T> : ApiResult<T>
     {

@@ -1,6 +1,5 @@
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
-using eShopSolution.ViewModels.Common;
 
 namespace DaisyStudy.AdminApp.Service;
 
@@ -10,8 +9,7 @@ public class UserApiClient : BaseApiClient, IUserApiClient
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
-        : base(httpClientFactory, httpContextAccessor, configuration)
+    public UserApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, IConfiguration configuration) : base(httpClientFactory, httpContextAccessor, configuration)
     {
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;

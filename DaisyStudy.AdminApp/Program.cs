@@ -1,6 +1,5 @@
 ﻿using DaisyStudy.AdminApp.Service;
 using DaisyStudy.ViewModels.System.Users;
-using eShopSolution.AdminApp.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -27,6 +26,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 builder.Services.AddTransient<IRoleApiClient, RoleApiClient>();
+builder.Services.AddTransient<IClassApiClient, ClassApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
 
