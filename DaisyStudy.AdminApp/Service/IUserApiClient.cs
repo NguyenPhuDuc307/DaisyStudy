@@ -1,4 +1,5 @@
 using DaisyStudy.ViewModels.Common;
+using DaisyStudy.ViewModels.System.Roles;
 using DaisyStudy.ViewModels.System.Users;
 using eShopSolution.ViewModels.Common;
 
@@ -11,4 +12,5 @@ public interface IUserApiClient
     Task<ApiResult<bool>> UpdateUser(Guid id, UserUpdateRequest request);
     Task<ApiResult<UserViewModel>> GetById(Guid id);
     Task<ApiResult<bool>> Delete(Guid id);
+    Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request);
 }
