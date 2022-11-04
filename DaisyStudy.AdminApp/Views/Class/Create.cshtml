@@ -1,0 +1,102 @@
+﻿@model DaisyStudy.ViewModels.Catalog.Classes.ClassCreateRequest;
+
+@{
+    ViewData["Title"] = "Tạo mới lớp học";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts{
+<script src="https://cdn.ckeditor.com/ckeditor5/35.2.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+}
+
+<style>
+    .ck-editor__editable[role="textbox"] {
+        /* editing area */
+        min-height: 200px;
+    }
+
+    .ck-content .image {
+        /* block images */
+        max-width: 80%;
+        margin: 20px auto;
+    }
+</style>
+
+<div class="container-fluid">
+    <h1 class="mt-4">Tạo mới lớp học</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="/Class">Lớp học</a></li>
+        <li class="breadcrumb-item active">Tạo mới lớp học</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tạo mới lớp học</h6>
+        </div>
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Class">Về danh sách</a>
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-12">
+                <form asp-action="Create" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="ClassName" class="control-label"></label>
+                        <input asp-for="ClassName" class="form-control" />
+                        <span asp-validation-for="ClassName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Topic" class="control-label"></label>
+                        <input asp-for="Topic" class="form-control" />
+                        <span asp-validation-for="Topic" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ClassRoom" class="control-label"></label>
+                        <input asp-for="ClassRoom" type="text" class="form-control" />
+                        <span asp-validation-for="ClassRoom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input id="editor" asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SEODescription" class="control-label"></label>
+                        <input asp-for="SEODescription" class="form-control" />
+                        <span asp-validation-for="SEODescription" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SEOClassName" class="control-label"></label>
+                        <input asp-for="SEOClassName" class="form-control" />
+                        <span asp-validation-for="SEOClassName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SEOAlias" class="control-label"></label>
+                        <input asp-for="SEOAlias" class="form-control" />
+                        <span asp-validation-for="SEOAlias" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Tuition" class="control-label"></label>
+                        <input asp-for="Tuition" value="0" type="number" class="form-control" />
+                        <span asp-validation-for="Tuition" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ThumbnailImage" class="control-label"></label>
+                        <input asp-for="ThumbnailImage" type="file" class="form-control" />
+                        <span asp-validation-for="ThumbnailImage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,5 @@
 using DaisyStudy.ViewModels.Common;
-using DaisyStudy.ViewModels.System.Roles;
 using DaisyStudy.ViewModels.System.Users;
-using eShopSolution.ViewModels.Common;
 
 namespace DaisyStudy.AdminApp.Service;
 public interface IUserApiClient

@@ -55,7 +55,7 @@
     ],
     "compounds": [
         {
-            "name": "BackendApi-AdminApp",
+            "name": "BackendApi | AdminApp",
             "configurations": ["BackendApi", "AdminApp"]
         }
     ]

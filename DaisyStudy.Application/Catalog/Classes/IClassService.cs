@@ -15,7 +15,7 @@ namespace DaisyStudy.Application.Catalog.Classes
         Task<bool> UpdateStatus(int ID, Status status);
         Task<bool> UpdateIsPublic(int ID, IsPublic isPublic);
         Task AddViewCount(int ID);
-        Task<PagedResult<ClassViewModel>> GetAllPaging(GetClassPagingRequest request);
+        Task<PagedResult<ClassViewModel>> GetAllPaging(GetManageClassPagingRequest request);
         Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request);
         Task<int> AddImage(int ClassID, ClassImageCreateRequest request);
         Task<int> UpdateImage(int imageId, ClassImageUpdateRequest request);

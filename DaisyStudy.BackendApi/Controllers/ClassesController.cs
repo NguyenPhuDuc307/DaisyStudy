@@ -20,12 +20,12 @@ namespace DaisyStudy.BackendApi.Controllers
             _classService = classService;
         }
 
-        // http://localhost:post/classes?pageIndex=1&pageSize=10
-        [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetPublicClassPagingRequest request)
+        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery]GetManageClassPagingRequest request)
         {
-            var classes = await _classService.GetAll(request);
-            return Ok(classes);
+            var products = await _classService.GetAllPaging(request);
+            return Ok(products);
         }
 
         // http://localhost:post/classes/1
@@ -39,6 +39,7 @@ namespace DaisyStudy.BackendApi.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ClassCreateRequest request)
         {
             if (!ModelState.IsValid)

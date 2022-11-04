@@ -1,6 +1,5 @@
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
-using eShopSolution.ViewModels.Common;
 
 namespace DaisyStudy.Application.System.Users
 {
