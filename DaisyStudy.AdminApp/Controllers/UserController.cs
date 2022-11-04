@@ -175,7 +175,7 @@ public class UserController : BaseController
 
         if (result.IsSuccessed)
         {
-            TempData["result"] = "Cập nhật quyền thành công";
+            TempData["result"] = "Cập nhật quyền truy cập thành công";
             return RedirectToAction("Index");
         }
 
