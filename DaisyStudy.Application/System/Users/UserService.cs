@@ -29,8 +29,9 @@ namespace DaisyStudy.Application.System.Users
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null){
-                return new ApiErrorResult<string>("Người dùng không tồn tại");
+            if (user == null)
+            {
+                return new ApiErrorResult<string>("Tài khoản không tồn tại");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
@@ -63,7 +64,7 @@ namespace DaisyStudy.Application.System.Users
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
-                return new ApiErrorResult<bool>("Người dùng không tồn tại");
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
@@ -77,7 +78,7 @@ namespace DaisyStudy.Application.System.Users
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
-                return new ApiErrorResult<UserViewModel>("Người dùng không tồn tại");
+                return new ApiErrorResult<UserViewModel>("Taì khoản không tồn tại");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var userViewModel = new UserViewModel()
@@ -99,7 +100,7 @@ namespace DaisyStudy.Application.System.Users
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.UserName.Contains(request.Keyword) 
+                query = query.Where(x => x.UserName.Contains(request.Keyword)
                 || x.PhoneNumber.Contains(request.Keyword)
                 || x.Email.Contains(request.Keyword)
                 || x.FirstName.Contains(request.Keyword)
