@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DaisyStudy.Data.Configurations
 {
-    public class ExamScheduleConfiguaration : IEntityTypeConfiguration<ExamSchedule>
+    public class ExamScheduleConfiguration : IEntityTypeConfiguration<ExamSchedule>
     {
         public void Configure(EntityTypeBuilder<ExamSchedule> builder)
         {

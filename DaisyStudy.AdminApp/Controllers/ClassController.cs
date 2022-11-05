@@ -1,5 +1,6 @@
 ﻿using DaisyStudy.AdminApp.Service;
 using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Catalog.ClassImages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaisyStudy.AdminApp.Controllers
@@ -55,6 +56,28 @@ namespace DaisyStudy.AdminApp.Controllers
 
             ModelState.AddModelError("", "Thêm lớp học thất bại");
             return View(request);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadImage()
+        {
+            string filePath = "";
+            if (!ModelState.IsValid)
+                return View();
+            List<ClassImageCreateRequest> list = new List<ClassImageCreateRequest>() ;
+            foreach (IFormFile image in Request.Form.Files)
+            {
+                ClassImageCreateRequest classImageCreateRequest = new ClassImageCreateRequest();
+                classImageCreateRequest.ImageFile = image;
+                list.Add(classImageCreateRequest);
+            }
+
+            foreach (ClassImageCreateRequest classImageCreateRequest in list)
+            {
+                filePath = _configuration["BaseAddress"] +  await _classApiClient.UploadImage(classImageCreateRequest);
+            }
+            return Json(new { url = filePath });
         }
     }
 }

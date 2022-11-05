@@ -16,15 +16,15 @@ namespace DaisyStudy.Data.EF
         {
             modelBuilder.ApplyConfiguration(new AnswerConfiguration());
             modelBuilder.ApplyConfiguration(new AppConfigConfiguration());
-            modelBuilder.ApplyConfiguration(new ChatConfiguaration());
+            modelBuilder.ApplyConfiguration(new ChatConfiguration());
             modelBuilder.ApplyConfiguration(new ClassConfiguration());
             modelBuilder.ApplyConfiguration(new ClassDetailConfiguration());
-            modelBuilder.ApplyConfiguration(new CommentConfiguaration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
             modelBuilder.ApplyConfiguration(new ContactConfiguration());
             modelBuilder.ApplyConfiguration(new StudentExamDetailConfiguration());
-            modelBuilder.ApplyConfiguration(new ExamScheduleConfiguaration());
+            modelBuilder.ApplyConfiguration(new ExamScheduleConfiguration());
             modelBuilder.ApplyConfiguration(new HomeworkConfiguration());
-            modelBuilder.ApplyConfiguration(new NotifycationConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
             modelBuilder.ApplyConfiguration(new QuestionConfiguration());
             modelBuilder.ApplyConfiguration(new StudentExamConfiguration());
             modelBuilder.ApplyConfiguration(new SubmissionConfiguration());

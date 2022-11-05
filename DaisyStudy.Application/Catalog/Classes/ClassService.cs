@@ -17,6 +17,7 @@ namespace DaisyStudy.Application.Catalog.Classes
     {
         private readonly DaisyStudyDbContext _context;
         private readonly IStorageService _storageService;
+        private const string USER_CONTENT_FOLDER_NAME = "user-content";
 
         public ClassService(DaisyStudyDbContext context, IStorageService storageService)
         {
@@ -131,8 +132,8 @@ namespace DaisyStudy.Application.Catalog.Classes
             if (!string.IsNullOrEmpty(request.Keyword))
             {
                 query = query.Where(x => x.ClassName.Contains(request.Keyword)
-                    ||x.ClassID.Contains(request.Keyword)
-                    ||x.Topic.Contains(request.Keyword));
+                    || x.ClassID.Contains(request.Keyword)
+                    || x.Topic.Contains(request.Keyword));
             }
 
             //3. Paging
@@ -320,7 +321,16 @@ namespace DaisyStudy.Application.Catalog.Classes
             var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
-            return fileName;
+            return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
+        }
+
+        public async Task<string> UploadImage(ClassImageCreateRequest request)
+        {
+            if (request != null)
+            {
+                return await this.SaveFile(request.ImageFile);
+            }
+            return null;
         }
     }
 }

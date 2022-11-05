@@ -5,8 +5,8 @@ namespace DaisyStudy.Data.Entities
     {
         public int ImageID { set; get; }
         public int CommentID { set; get; }
-        public Comment Comment { set; get; }
-        public string ImagePath { set; get; }
+        public Comment? Comment { set; get; }
+        public string? ImagePath { set; get; }
         public long ImageFileSize { set; get; }
     }
 }

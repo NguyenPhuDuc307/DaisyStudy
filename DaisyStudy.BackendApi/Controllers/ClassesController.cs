@@ -55,6 +55,21 @@ namespace DaisyStudy.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = id }, _class);
         }
 
+        [HttpPost("uploadImage")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadImage([FromForm] ClassImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string result = await _classService.UploadImage(request);
+            if (result!= null)
+                return Ok(result);
+
+            return BadRequest();
+        }
+
         [HttpPut]
         public async Task<IActionResult> Update([FromForm] ClassUpdateRequest request)
         {
