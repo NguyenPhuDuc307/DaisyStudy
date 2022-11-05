@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DaisyStudy.Data.Configurations
 {
-    public class CommentConfiguaration : IEntityTypeConfiguration<Comment>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {

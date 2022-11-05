@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DaisyStudy.Data.Configurations
 {
-    public class ChatConfiguaration : IEntityTypeConfiguration<Chat>
+    public class ChatConfiguration : IEntityTypeConfiguration<Chat>
     {
         public void Configure(EntityTypeBuilder<Chat> builder)
         {

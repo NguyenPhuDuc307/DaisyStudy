@@ -8,28 +8,28 @@ public class ClassViewModel
     public Int32 ID { set; get; }
 
     [Display(Name = "Mã lớp học")]
-    public string ClassID { set; get; }
+    public string? ClassID { set; get; }
 
     [Display(Name = "Tên lớp học")]
-    public string ClassName { set; get; }
+    public string? ClassName { set; get; }
 
     [Display(Name = "Chủ đề")]
-    public string Topic { set; get; }
+    public string? Topic { set; get; }
 
     [Display(Name = "Phòng học")]
-    public string ClassRoom { set; get; }
+    public string? ClassRoom { set; get; }
 
     [Display(Name = "Mô tả")]
-    public string Description { set; get; }
+    public string? Description { set; get; }
 
     [Display(Name = "SEO class name")]
-    public string SEOClassName { set; get; }
+    public string? SEOClassName { set; get; }
 
     [Display(Name = "SEO mô tả")]
-    public string SEODescriptione { set; get; }
+    public string? SEODescriptione { set; get; }
 
     [Display(Name = "SEO Alias")]
-    public string SEOAlias { set; get; }
+    public string? SEOAlias { set; get; }
 
     [Display(Name = "Học phí")]
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N1}")]

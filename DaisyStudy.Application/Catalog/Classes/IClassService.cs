@@ -2,12 +2,14 @@
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
     public interface IClassService
     {
         Task<int> Create(ClassCreateRequest request);
+        Task<string> UploadImage(ClassImageCreateRequest request);
         Task<int> Update(ClassUpdateRequest request);
         Task<int> Delete(int ID);
         Task<ClassViewModel> GetById(int ID);
