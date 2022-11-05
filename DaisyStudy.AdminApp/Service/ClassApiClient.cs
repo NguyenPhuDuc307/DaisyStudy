@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
+using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
 
 namespace DaisyStudy.AdminApp.Service;
@@ -49,7 +50,6 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
         client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
         var response = await client.PostAsync("/api/classes/", requestContent);
-        var body = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
         {
@@ -65,5 +65,35 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
             $"&pageSize={request.PageSize}" +
             $"&keyword={request.Keyword}");
         return data;
+    }
+
+    public async Task<string> UploadImage(ClassImageCreateRequest request)
+    {
+        var requestContent = new MultipartFormDataContent();
+
+        if (request.ImageFile != null)
+        {
+            byte[] data;
+            using (var br = new BinaryReader(request.ImageFile.OpenReadStream()))
+            {
+                data = br.ReadBytes((int)request.ImageFile.OpenReadStream().Length);
+            }
+            ByteArrayContent bytes = new ByteArrayContent(data);
+            requestContent.Add(bytes, "imageFile", request.ImageFile.FileName);
+        }
+
+        var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
+        var client = _httpClientFactory.CreateClient();
+
+        client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+        var response = await client.PostAsync("/api/classes/uploadImage", requestContent);
+        var body = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            return body;
+        }
+        return null;
     }
 }

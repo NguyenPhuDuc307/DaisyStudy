@@ -39,11 +39,13 @@ namespace DaisyStudy.AdminApp.Service
 
         protected async Task<TResponse> PostAsync<TResponse>(string url, object? request)
         {
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
             var client = _httpClientFactory.CreateClient();
 
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.PostAsync(url, httpContent);
             var body = await response.Content.ReadAsStringAsync();
 
