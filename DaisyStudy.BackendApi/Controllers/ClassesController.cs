@@ -32,10 +32,10 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpGet("{classId}")]
         public async Task<IActionResult> GetById(int classId)
         {
-            var classes = await _classService.GetById(classId);
-            if (classes == null)
+            var _class = await _classService.GetById(classId);
+            if (_class == null)
                 return BadRequest("Cannot find class");
-            return Ok(classes);
+            return Ok(_class);
         }
 
         [HttpPost]
