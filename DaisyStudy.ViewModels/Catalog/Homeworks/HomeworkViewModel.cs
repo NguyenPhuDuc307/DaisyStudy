@@ -10,6 +10,9 @@ public class HomeworkViewModel
     [Display(Name = "Mã lớp học")]
     public string? ClassID { set; get; }
 
+    [Display(Name = "Tên lớp học")]
+    public string? ClassName { set; get; }
+
     [Display(Name = "Tên bài tập")]
     public string? HomeworkName { set; get; }
 

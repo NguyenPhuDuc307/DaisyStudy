@@ -1,77 +1,120 @@
-﻿using System.Data;
-using Microsoft.EntityFrameworkCore;
-using DaisyStudy.Data.EF;
+﻿using DaisyStudy.Data.EF;
 using DaisyStudy.Data.Entities;
 using DaisyStudy.Utilities.Exceptions;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
-using DaisyStudy.Application.Common;
 using DaisyStudy.ViewModels.Common;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
-using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.Homeworks;
+using Microsoft.EntityFrameworkCore;
 
-namespace DaisyStudy.Application.Catalog.Homeworks
+namespace DaisyStudy.Application.Catalog.Homeworks;
+
+public class HomeworkService : IHomeworkService
 {
-    public class HomeworkService : IHomeworkService
+    private readonly DaisyStudyDbContext _context;
+    private const string USER_CONTENT_FOLDER_NAME = "user-content";
+
+    public HomeworkService(DaisyStudyDbContext context)
     {
-        private readonly DaisyStudyDbContext _context;
-        private const string USER_CONTENT_FOLDER_NAME = "user-content";
+        _context = context;
+    }
 
-        public HomeworkService(DaisyStudyDbContext context)
+    public async Task<int> Update(HomeworkUpdateRequest request)
+    {
+        var homework = await _context.Homeworks.FindAsync(request.HomeworkID);
+        if (homework == null) throw new DaisyStudyException($"Cannot find a homework {request.HomeworkID}");
+        homework.HomeworkName = request.HomeworkName;
+        homework.Description = request.Description;
+        homework.Deadline = request.Deadline;
+        return await _context.SaveChangesAsync();
+    }
+
+    public async Task<HomeworkViewModel> GetById(int HomeworkID)
+    {
+        var homework = await _context.Homeworks.FindAsync(HomeworkID);
+        if (homework == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
+
+        var _class = await _context.Classes.FindAsync(homework.ClassID);
+        if (_class == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
+
+        var homeworkViewModel = new HomeworkViewModel()
         {
-            _context = context;
+            HomeworkID = homework.HomeworkID,
+            ClassID = _class.ClassID,
+            ClassName = _class.ClassName,
+            HomeworkName = homework.HomeworkName,
+            Description = homework.Description,
+            DateTimeCreated = homework.DateTimeCreated,
+            Deadline = homework.Deadline
+        };
+        return homeworkViewModel;
+    }
+
+    public async Task<int> Create(HomeworkCreateRequest request)
+    {
+        var homework = new Homework()
+        {
+            ClassID = request.ClassID,
+            HomeworkName = request.HomeworkName,
+            Description = request.Description,
+            DateTimeCreated = DateTime.Now,
+            Deadline = request.Deadline
+        };
+        _context.Homeworks.Add(homework);
+        await _context.SaveChangesAsync();
+        return homework.HomeworkID;
+    }
+
+    public async Task<int> Delete(int HomeworkID)
+    {
+        var homework = await _context.Homeworks.FindAsync(HomeworkID);
+        if (homework == null) throw new DaisyStudyException($"Cannot find a class {HomeworkID}");
+
+        _context.Homeworks.Remove(homework);
+        return await _context.SaveChangesAsync();
+    }
+
+    public async Task<PagedResult<HomeworkViewModel>> GetAllPaging(GetManageHomeworkPagingRequest request)
+    {
+        //1. Select join
+        var query = from hw in _context.Homeworks
+                    join c in _context.Classes on hw.ClassID equals c.ID into hwc
+                    from c in hwc.DefaultIfEmpty()
+                    select new { hw, c };
+        //2. filter
+        if (!string.IsNullOrEmpty(request.Keyword))
+            query = query.Where(x => x.hw.HomeworkName.Contains(request.Keyword)
+                || x.c.ClassID.Contains(request.Keyword));
+
+        if (request.ClassID != null && request.ClassID != 0)
+        {
+            query = query.Where(p => p.hw.ClassID == request.ClassID);
         }
 
-        public async Task<int> Update(HomeworkUpdateRequest request)
-        {
-            var homework = await _context.Homeworks.FindAsync(request.HomeworkID);
-            if (homework == null) throw new DaisyStudyException($"Cannot find a homework {request.HomeworkID}");
-            homework.HomeworkName = request.HomeworkName;
-            homework.Description = request.Description;
-            homework.Deadline = request.Deadline;
-            return await _context.SaveChangesAsync();
-        }
+        //3. Paging
+        int totalRow = await query.CountAsync();
 
-        public async Task<HomeworkViewModel> GetById(int HomeworkID)
-        {
-            var homework = await _context.Homeworks.FindAsync(HomeworkID);
-            if (homework == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
-
-            var _class = await _context.Classes.FindAsync(homework.ClassID);
-            if (_class == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
-
-            var homeworkViewModel = new HomeworkViewModel()
+        var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(x => new HomeworkViewModel()
             {
-                HomeworkID = homework.HomeworkID,
-                ClassID = _class.ClassID,
-                HomeworkName = homework.HomeworkName,
-                Description = homework.Description,
-                DateTimeCreated = homework.DateTimeCreated,
-                Deadline = homework.Deadline
-            };
-            return homeworkViewModel;
-        }
+                HomeworkID = x.hw.HomeworkID,
+                ClassID = x.c.ClassID,
+                ClassName = x.c.ClassName,
+                HomeworkName = x.hw.HomeworkName,
+                Description = x.hw.Description,
+                DateTimeCreated = x.hw.DateTimeCreated,
+                Deadline = x.hw.Deadline
+            }).ToListAsync();
 
-        public async Task<int> Create(HomeworkCreateRequest request)
+        //4. Select and projection
+        var pagedResult = new PagedResult<HomeworkViewModel>()
         {
-            var homework = new Homework(){
-                ClassID = request.ClassID,
-                HomeworkName = request.HomeworkName,
-                Description = request.Description,
-                DateTimeCreated = DateTime.Now,
-                Deadline = request.Deadline
-            };
-            _context.Homeworks.Add(homework);
-            await _context.SaveChangesAsync();
-            return homework.HomeworkID;
-        }
-
-        public async Task<int> Delete(int ID)
-        {
-            throw new NotImplementedException();
-        }
+            TotalRecords = totalRow,
+            PageSize = request.PageSize,
+            PageIndex = request.PageIndex,
+            Items = data
+        };
+        return pagedResult;
     }
 }
 

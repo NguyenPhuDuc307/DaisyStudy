@@ -8,5 +8,6 @@ namespace DaisyStudy.Data.Entities
         public Guid UserID { set; get; }
         public AppUser? User { set; get; }
         public String? Note { set; get; }
+        public Teacher IsTeacher { set; get; }
     }
 }

@@ -4,6 +4,7 @@ using DaisyStudy.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DaisyStudy.Data.Migrations
 {
     [DbContext(typeof(DaisyStudyDbContext))]
-    partial class DaisyStudyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221106033828_UpdateClassDetail")]
+    partial class UpdateClassDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,11 +301,11 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IsTeacher")
-                        .HasColumnType("int");
-
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("isTeacher")
+                        .HasColumnType("int");
 
                     b.HasKey("ClassID", "UserID");
 
@@ -659,12 +661,6 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<Guid>("StudentID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DateTimeUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Delay")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -678,6 +674,9 @@ namespace DaisyStudy.Data.Migrations
 
                     b.Property<DateTime>("SubmissionDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("SubmissionName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("HomeworkID", "StudentID");
 

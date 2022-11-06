@@ -5,7 +5,7 @@ namespace DaisyStudy.ViewModels.Catalog.Classes;
 
 public class ClassViewModel
 {
-    public Int32 ID { set; get; }
+    public int ID { set; get; }
 
     [Display(Name = "Mã lớp học")]
     public string? ClassID { set; get; }

@@ -10,6 +10,8 @@ using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
+using Microsoft.AspNetCore.Identity;
+using DaisyStudy.ViewModels.System.Users;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
@@ -17,12 +19,14 @@ namespace DaisyStudy.Application.Catalog.Classes
     {
         private readonly DaisyStudyDbContext _context;
         private readonly IStorageService _storageService;
+        private readonly UserManager<AppUser> _userManager;
         private const string USER_CONTENT_FOLDER_NAME = "user-content";
 
-        public ClassService(DaisyStudyDbContext context, IStorageService storageService)
+        public ClassService(DaisyStudyDbContext context, IStorageService storageService, UserManager<AppUser> userManager)
         {
             _context = context;
             _storageService = storageService;
+            _userManager = userManager;
         }
 
         public async Task<int> AddImage(int ClassID, ClassImageCreateRequest request)
@@ -105,6 +109,19 @@ namespace DaisyStudy.Application.Catalog.Classes
             }
             _context.Classes.Add(_class);
             await _context.SaveChangesAsync();
+
+            var user = await _userManager.FindByNameAsync(request.UserName);
+
+            // Add teacher
+            var classDetail = new ClassDetail()
+            {
+                ClassID = _class.ID,
+                UserID = user.Id,
+                IsTeacher = Teacher.Teacher
+            };
+            _context.ClassDetails.Add(classDetail);
+            await _context.SaveChangesAsync();
+
             return _class.ID;
         }
 
@@ -123,7 +140,7 @@ namespace DaisyStudy.Application.Catalog.Classes
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ClassViewModel>> GetAllPaging(GetManageClassPagingRequest request)
+        public async Task<PagedResult<ClassViewModel>> GetAllClassPaging(GetManageClassPagingRequest request)
         {
             //1. Select
             var query = from c in _context.Classes select c;
@@ -331,6 +348,69 @@ namespace DaisyStudy.Application.Catalog.Classes
                 return await this.SaveFile(request.ImageFile);
             }
             return null;
+        }
+
+        public async Task<bool> AddStudent(string ClassID, string UserName)
+        {
+
+            var _class = await _context.Classes.FirstOrDefaultAsync(x => x.ClassID == ClassID);
+            if (_class == null) throw new DaisyStudyException($"Cannot find a class {ClassID}");
+
+            var user = await _userManager.FindByNameAsync(UserName);
+
+            var classDetailCheck = _context.ClassDetails.FirstOrDefault(x => x.ClassID == _class.ID && x.UserID == user.Id);
+            if (classDetailCheck != null) throw new DaisyStudyException($"Student {UserName} already exist");
+
+            // Add student
+            var classDetail = new ClassDetail()
+            {
+                ClassID = _class.ID,
+                UserID = user.Id,
+                IsTeacher = Teacher.Student
+            };
+            _context.ClassDetails.Add(classDetail);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<PagedResult<UserViewModel>> GetAllStudentByClassIDPaging(GetAllStudentInClassPagingRequest request)
+        {
+            //1. Select join
+            var query = from st in _userManager.Users
+                    join cd in _context.ClassDetails on st.Id equals cd.UserID into cdst
+                    from cd in cdst.DefaultIfEmpty()
+                    join c in _context.Classes on cd.ClassID equals c.ID
+                    select new { cd, st, c };
+
+            if (request.ClassID != null)
+            {
+                query = query.Where(x => x.cd.ClassID == request.ClassID);
+            }
+
+            //3. Paging
+            int totalRow = await query.CountAsync();
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new UserViewModel()
+                {
+                    Email = x.st.Email,
+                    PhoneNumber = x.st.PhoneNumber,
+                    UserName = x.st.UserName,
+                    FirstName = x.st.FirstName,
+                    Id = x.st.Id,
+                    Dob = x.st.Dob,
+                    LastName = x.st.LastName
+                }).ToListAsync();
+
+            //4. Select and projection
+            var pagedResult = new PagedResult<UserViewModel>()
+            {
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
+            };
+            return pagedResult;
         }
     }
 }

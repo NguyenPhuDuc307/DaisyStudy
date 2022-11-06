@@ -2,7 +2,7 @@
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
-using Microsoft.AspNetCore.Http;
+using DaisyStudy.ViewModels.System.Users;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
@@ -17,7 +17,8 @@ namespace DaisyStudy.Application.Catalog.Classes
         Task<bool> UpdateStatus(int ID, Status status);
         Task<bool> UpdateIsPublic(int ID, IsPublic isPublic);
         Task AddViewCount(int ID);
-        Task<PagedResult<ClassViewModel>> GetAllPaging(GetManageClassPagingRequest request);
+        Task<PagedResult<ClassViewModel>> GetAllClassPaging(GetManageClassPagingRequest request);
+        Task<PagedResult<UserViewModel>> GetAllStudentByClassIDPaging(GetAllStudentInClassPagingRequest request);
         Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request);
         Task<int> AddImage(int ClassID, ClassImageCreateRequest request);
         Task<int> UpdateImage(int imageId, ClassImageUpdateRequest request);
@@ -25,5 +26,6 @@ namespace DaisyStudy.Application.Catalog.Classes
         Task<List<ClassImageViewModel>> GetListImage(int ClassID);
         Task<ClassImageViewModel> GetImageById(int imageId);
         Task<bool> ChangeClassID(int ID);
+        Task<bool> AddStudent(string ClassID, string UserName);
     }
 }
