@@ -44,6 +44,7 @@ namespace DaisyStudy.AdminApp.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ClassCreateRequest request)
         {
+            request.UserName = User.Identity.Name;
             if (!ModelState.IsValid)
                 return View(request);
 

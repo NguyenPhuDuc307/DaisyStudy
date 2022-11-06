@@ -52,7 +52,7 @@ public class UserController : BaseController
             return View();
 
         var result = await _userApiClient.RegisterUser(request);
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             TempData["result"] = "Thêm mới người dùng thành công";
             return RedirectToAction("Index");
@@ -66,7 +66,7 @@ public class UserController : BaseController
     public async Task<IActionResult> Edit(Guid id)
     {
         var result = await _userApiClient.GetById(id);
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             var user = result.ResultObj;
             if (user != null)
@@ -93,7 +93,7 @@ public class UserController : BaseController
             return View();
 
         var result = await _userApiClient.UpdateUser(request.Id, request);
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             TempData["result"] = "Cập nhật người dùng thành công";
             return RedirectToAction("Index");
@@ -106,7 +106,7 @@ public class UserController : BaseController
     public async Task<IActionResult> Delete(Guid id)
     {
         var result = await _userApiClient.GetById(id);
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             var user = result.ResultObj;
             if (user != null)
@@ -133,7 +133,7 @@ public class UserController : BaseController
             return View();
 
         var result = await _userApiClient.Delete(request.Id);
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             TempData["result"] = "Xoá người dùng thành công";
             return RedirectToAction("Index");
@@ -173,7 +173,7 @@ public class UserController : BaseController
 
         var result = await _userApiClient.RoleAssign(request.Id, request);
 
-        if (result.IsSuccessed)
+        if (result.IsSuccess)
         {
             TempData["result"] = "Cập nhật quyền truy cập thành công";
             return RedirectToAction("Index");

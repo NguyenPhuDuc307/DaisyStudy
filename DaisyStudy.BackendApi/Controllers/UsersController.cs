@@ -43,7 +43,7 @@ namespace DaisyStudy.BackendApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _userService.Register(request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
@@ -57,7 +57,7 @@ namespace DaisyStudy.BackendApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _userService.RoleAssign(id, request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
@@ -72,7 +72,7 @@ namespace DaisyStudy.BackendApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _userService.Update(id, request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }

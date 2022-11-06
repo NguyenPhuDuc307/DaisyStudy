@@ -77,7 +77,7 @@ namespace DaisyStudy.Application.System.Users
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
-                return new ApiErrorResult<UserViewModel>("Taì khoản không tồn tại");
+                return new ApiErrorResult<UserViewModel>("Tài khoản không tồn tại");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var userViewModel = new UserViewModel()
