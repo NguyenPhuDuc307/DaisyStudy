@@ -5,6 +5,9 @@ namespace DaisyStudy.ViewModels.Catalog.Classes;
 
 public class ClassCreateRequest
 {
+    [Display(Name = "UserName")]
+    public string? UserName { set; get; }
+    
     [Display(Name = "Tên lớp học")]
     public string ClassName { set; get; }
 

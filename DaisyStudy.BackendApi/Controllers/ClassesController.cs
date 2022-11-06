@@ -22,20 +22,28 @@ namespace DaisyStudy.BackendApi.Controllers
 
         // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
         [HttpGet("paging")]
-        public async Task<IActionResult> GetAllPaging([FromQuery]GetManageClassPagingRequest request)
+        public async Task<IActionResult> GetAllClassPaging([FromQuery] GetManageClassPagingRequest request)
         {
-            var products = await _classService.GetAllPaging(request);
-            return Ok(products);
+            var classes = await _classService.GetAllClassPaging(request);
+            return Ok(classes);
+        }
+
+        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
+        [HttpGet("student/paging")]
+        public async Task<IActionResult> GetAllStudentByClassIDPaging([FromQuery] GetAllStudentInClassPagingRequest request)
+        {
+            var students = await _classService.GetAllStudentByClassIDPaging(request);
+            return Ok(students);
         }
 
         // http://localhost:post/classes/1
         [HttpGet("{classId}")]
         public async Task<IActionResult> GetById(int classId)
         {
-            var classes = await _classService.GetById(classId);
-            if (classes == null)
+            var _class = await _classService.GetById(classId);
+            if (_class == null)
                 return BadRequest("Cannot find class");
-            return Ok(classes);
+            return Ok(_class);
         }
 
         [HttpPost]
@@ -55,6 +63,20 @@ namespace DaisyStudy.BackendApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = id }, _class);
         }
 
+        [HttpPost("addStudent")]
+        public async Task<IActionResult> AddStudent(string ClassID, string UserName)
+        {
+            if (ClassID == null || UserName == null)
+            {
+                return BadRequest();
+            }
+            var affectedResult = await _classService.AddStudent(ClassID, UserName);
+
+            if (affectedResult != true)
+                return BadRequest();
+            return Ok();
+        }
+
         [HttpPost("uploadImage")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage([FromForm] ClassImageCreateRequest request)
@@ -64,7 +86,7 @@ namespace DaisyStudy.BackendApi.Controllers
                 return BadRequest(ModelState);
             }
             string result = await _classService.UploadImage(request);
-            if (result!= null)
+            if (result != null)
                 return Ok(result);
 
             return BadRequest();
@@ -178,7 +200,7 @@ namespace DaisyStudy.BackendApi.Controllers
         {
             var image = await _classService.GetImageById(imageId);
             if (image == null)
-                return BadRequest("Cannot find product");
+                return BadRequest("Cannot find class");
             return Ok(image);
         }
     }

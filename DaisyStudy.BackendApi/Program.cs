@@ -13,6 +13,8 @@ using FluentValidation;
 using DaisyStudy.ViewModels.System.Users;
 using DaisyStudy.Application.Catalog.Classes;
 using DaisyStudy.Application.System.Roles;
+using DaisyStudy.Application.Catalog.Homeworks;
+using DaisyStudy.Application.Catalog.Submissions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,8 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 builder.Services.AddTransient<IStorageService, FileStorageService>();
 
 builder.Services.AddTransient<IClassService, ClassService>();
+builder.Services.AddTransient<IHomeworkService, HomeworkService>();
+builder.Services.AddTransient<ISubmissionService, SubmissionService>();
 builder.Services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

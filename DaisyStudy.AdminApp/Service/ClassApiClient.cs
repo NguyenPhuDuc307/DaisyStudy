@@ -34,6 +34,7 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
             requestContent.Add(bytes, "thumbnailImage", request.ThumbnailImage.FileName);
         }
 
+        requestContent.Add(new StringContent(request.UserName.ToString()), "userName");
         requestContent.Add(new StringContent(request.ClassName.ToString()), "className");
         requestContent.Add(new StringContent(request.Topic.ToString()), "topic");
         requestContent.Add(new StringContent(request.Description.ToString()), "description");
