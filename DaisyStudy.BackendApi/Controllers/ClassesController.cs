@@ -93,6 +93,7 @@ namespace DaisyStudy.BackendApi.Controllers
         }
 
         [HttpPut]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromForm] ClassUpdateRequest request)
         {
             if (!ModelState.IsValid)

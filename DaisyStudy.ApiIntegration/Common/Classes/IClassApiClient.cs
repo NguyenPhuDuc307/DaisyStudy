@@ -2,7 +2,7 @@
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.AdminApp.Service;
+namespace DaisyStudy.ApiIntegration.Common.Classes;
 
 public interface IClassApiClient
 {

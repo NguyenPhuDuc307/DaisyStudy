@@ -34,6 +34,6 @@ public class ClassCreateRequest
     public decimal Tuition { set; get; }
 
     [Display(Name = "Hình ảnh")]
-    public IFormFile ThumbnailImage { get; set; }
+    public IFormFile? ThumbnailImage { get; set; }
 }
 

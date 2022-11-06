@@ -12,7 +12,6 @@ public class SubmissionService : ISubmissionService
 {
     private readonly DaisyStudyDbContext _context;
     private readonly UserManager<AppUser> _userManager;
-    private const string USER_CONTENT_FOLDER_NAME = "user-content";
 
     public SubmissionService(DaisyStudyDbContext context, UserManager<AppUser> userManager)
     {
@@ -170,6 +169,20 @@ public class SubmissionService : ISubmissionService
             Items = data
         };
         return pagedResult;
+    }
+
+    public async Task<ApiResult<bool>> UpdateMark(SubmissionUpdateMarkRequest request)
+    {
+        var submission = _context.Submissions.FirstOrDefault(x => x.HomeworkID == request.HomeworkID && x.StudentID == request.StudentID);
+        if (submission == null) throw new DaisyStudyException($"Cannot find a submission {request.HomeworkID}");
+        submission.Mark = request.Mark;
+        submission.Note = request.Note;
+        var result = await _context.SaveChangesAsync();
+        if (result > 0)
+        {
+            return new ApiSuccessResult<bool>();
+        }
+        return new ApiErrorResult<bool>("Cập nhật không thành công");
     }
 }
 

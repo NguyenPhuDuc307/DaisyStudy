@@ -11,8 +11,6 @@ namespace DaisyStudy.Application.Catalog.Homeworks;
 public class HomeworkService : IHomeworkService
 {
     private readonly DaisyStudyDbContext _context;
-    private const string USER_CONTENT_FOLDER_NAME = "user-content";
-
     public HomeworkService(DaisyStudyDbContext context)
     {
         _context = context;
@@ -34,7 +32,7 @@ public class HomeworkService : IHomeworkService
         if (homework == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
 
         var _class = await _context.Classes.FindAsync(homework.ClassID);
-        if (_class == null) throw new DaisyStudyException($"Cannot find a homework {HomeworkID}");
+        if (_class == null) throw new DaisyStudyException($"Cannot find a class {homework.ClassID}");
 
         var homeworkViewModel = new HomeworkViewModel()
         {
