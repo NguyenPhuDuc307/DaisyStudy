@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DaisyStudy.AdminApp.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DaisyStudy.ViewModels.System.Users;
@@ -8,6 +7,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using DaisyStudy.ApiIntegration.System.Users;
 
 namespace eShopSolution.AdminApp.Controllers;
 

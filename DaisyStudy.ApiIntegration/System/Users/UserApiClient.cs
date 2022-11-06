@@ -1,7 +1,10 @@
+using DaisyStudy.ApiIntegration.Catalog;
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
-namespace DaisyStudy.AdminApp.Service;
+namespace DaisyStudy.ApiIntegration.System.Users;
 
 public class UserApiClient : BaseApiClient, IUserApiClient
 {

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DaisyStudy.BackendApi.Controllers;
 
-// api/homeworks
+// api/submissions
 [Route("api/[controller]")]
 [ApiController]
-// [Authorize]
+[Authorize]
 public class SubmissionsController : ControllerBase
 {
     private readonly ISubmissionService _submissionService;
@@ -53,6 +53,21 @@ public class SubmissionsController : ControllerBase
             return BadRequest(ModelState);
         }
         var result = await _submissionService.Update(request);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result);
+        }
+        return Ok(result);
+    }
+
+    [HttpPut("mark")]
+    public async Task<IActionResult> Update([FromForm] SubmissionUpdateMarkRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _submissionService.UpdateMark(request);
         if (!result.IsSuccess)
         {
             return BadRequest(result);

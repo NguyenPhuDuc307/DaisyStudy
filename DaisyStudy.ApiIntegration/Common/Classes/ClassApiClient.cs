@@ -1,11 +1,13 @@
 ﻿using System.Net.Http.Headers;
+using DaisyStudy.ApiIntegration.Catalog;
 using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
-namespace DaisyStudy.AdminApp.Service;
-
+namespace DaisyStudy.ApiIntegration.Common.Classes;
 public class ClassApiClient : BaseApiClient, IClassApiClient
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

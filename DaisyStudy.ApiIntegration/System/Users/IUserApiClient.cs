@@ -1,7 +1,7 @@
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
 
-namespace DaisyStudy.AdminApp.Service;
+namespace DaisyStudy.ApiIntegration.System.Users;
 public interface IUserApiClient
 {
     Task<ApiResult<string>> Authenticate(LoginRequest request);
