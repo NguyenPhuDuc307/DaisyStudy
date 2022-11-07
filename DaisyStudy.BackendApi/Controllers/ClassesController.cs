@@ -32,7 +32,7 @@ namespace DaisyStudy.BackendApi.Controllers
         [HttpGet("paging")]
         public async Task<IActionResult> GetPublicAllClassPaging([FromQuery] GetManageClassPagingRequest request)
         {
-            var classes = await _classService.GetManageAllClassPaging(request);
+            var classes = await _classService.GetPublicAllClassPaging(request);
             return Ok(classes);
         }
 

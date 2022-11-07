@@ -10,6 +10,15 @@ public class ClassViewModel
     [Display(Name = "Mã lớp học")]
     public string? ClassID { set; get; }
 
+    [Display(Name = "Giáo viên")]
+    public string? Teacher { set; get; }
+
+    [Display(Name = "Số học viên")]
+    public int StudentNumber { set; get; }
+
+    [Display(Name = "Hình ảnh")]
+    public string? Image { set; get; }
+
     [Display(Name = "Tên lớp học")]
     public string? ClassName { set; get; }
 
@@ -32,7 +41,7 @@ public class ClassViewModel
     public string? SEOAlias { set; get; }
 
     [Display(Name = "Học phí")]
-    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N1}")]
+    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N0} đ")]
     public decimal Tuition { set; get; }
 
     [Display(Name = "Ngày tạo")]

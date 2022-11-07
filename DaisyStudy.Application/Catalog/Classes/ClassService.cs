@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Data;
+﻿using System.Data;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.Data.EF;
 using DaisyStudy.Data.Entities;
@@ -13,6 +12,7 @@ using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using Microsoft.AspNetCore.Identity;
 using DaisyStudy.ViewModels.System.Users;
+using Microsoft.Extensions.Configuration;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
@@ -93,7 +93,7 @@ namespace DaisyStudy.Application.Catalog.Classes
                 DateCreated = DateTime.Now,
                 ViewCount = 0,
                 Status = Status.Active,
-                isPublic = IsPublic.Public,
+                isPublic = IsPublic.NotPublic,
             };
 
             // Save file
@@ -145,14 +145,19 @@ namespace DaisyStudy.Application.Catalog.Classes
         public async Task<ApiResult<PagedResult<ClassViewModel>>> GetManageAllClassPaging(GetManageClassPagingRequest request)
         {
             //1. Select
-            var query = from c in _context.Classes select c;
+            var query = from c in _context.Classes
+                        join ci in _context.ClassImages on c.ID equals ci.ClassID
+                        join cd in _context.ClassDetails on c.ID equals cd.ClassID
+                        join us in _userManager.Users on cd.UserID equals us.Id
+                        where cd.IsTeacher == Teacher.Teacher
+                        select new { c, ci, cd, us };
 
             //2. Filter
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.ClassName.Contains(request.Keyword)
-                    || x.ClassID.Contains(request.Keyword)
-                    || x.Topic.Contains(request.Keyword));
+                query = query.Where(x => x.c.ClassName.Contains(request.Keyword)
+                    || x.c.ClassID.Contains(request.Keyword)
+                    || x.c.Topic.Contains(request.Keyword));
             }
 
             //3. Paging
@@ -161,20 +166,24 @@ namespace DaisyStudy.Application.Catalog.Classes
             .Take(request.PageSize)
             .Select(x => new ClassViewModel()
             {
-                ID = x.ID,
-                ClassID = x.ClassID,
-                ClassName = x.ClassName,
-                Topic = x.Topic,
-                ClassRoom = x.ClassRoom,
-                Description = x.Description,
-                SEOClassName = x.SEOClassName,
-                SEODescriptione = x.SEODescriptione,
-                SEOAlias = x.SEOAlias,
-                Tuition = x.Tuition,
-                DateCreated = x.DateCreated,
-                ViewCount = x.ViewCount,
-                Status = x.Status,
-                isPublic = x.isPublic
+                ID = x.c.ID,
+                ClassID = x.c.ClassID,
+                ClassName = x.c.ClassName,
+                Topic = x.c.Topic,
+                ClassRoom = x.c.ClassRoom,
+                Description = x.c.Description,
+                SEOClassName = x.c.SEOClassName,
+                SEODescriptione = x.c.SEODescriptione,
+                SEOAlias = x.c.SEOAlias,
+                Tuition = x.c.Tuition,
+                DateCreated = x.c.DateCreated,
+                ViewCount = x.c.ViewCount,
+                Status = x.c.Status,
+                isPublic = x.c.isPublic,
+                Teacher = x.us.FirstName + " " + x.us.LastName,
+                Image = "https://localhost:5001/" + x.ci.ImagePath,
+                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()
+
             }).ToListAsync();
 
             //4. Select and projection
@@ -191,14 +200,19 @@ namespace DaisyStudy.Application.Catalog.Classes
         public async Task<ApiResult<PagedResult<ClassViewModel>>> GetPublicAllClassPaging(GetManageClassPagingRequest request)
         {
             //1. Select
-            var query = from c in _context.Classes where c.isPublic == IsPublic.Public select c;
+            var query = from c in _context.Classes
+                        join ci in _context.ClassImages on c.ID equals ci.ClassID
+                        join cd in _context.ClassDetails on c.ID equals cd.ClassID
+                        join us in _userManager.Users on cd.UserID equals us.Id
+                        where cd.IsTeacher == Teacher.Teacher && c.isPublic == IsPublic.Public
+                        select new { c, ci, cd, us };
 
             //2. Filter
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.ClassName.Contains(request.Keyword)
-                    || x.ClassID.Contains(request.Keyword)
-                    || x.Topic.Contains(request.Keyword));
+                query = query.Where(x => x.c.ClassName.Contains(request.Keyword)
+                    || x.c.ClassID.Contains(request.Keyword)
+                    || x.c.Topic.Contains(request.Keyword));
             }
 
             //3. Paging
@@ -207,20 +221,24 @@ namespace DaisyStudy.Application.Catalog.Classes
             .Take(request.PageSize)
             .Select(x => new ClassViewModel()
             {
-                ID = x.ID,
-                ClassID = x.ClassID,
-                ClassName = x.ClassName,
-                Topic = x.Topic,
-                ClassRoom = x.ClassRoom,
-                Description = x.Description,
-                SEOClassName = x.SEOClassName,
-                SEODescriptione = x.SEODescriptione,
-                SEOAlias = x.SEOAlias,
-                Tuition = x.Tuition,
-                DateCreated = x.DateCreated,
-                ViewCount = x.ViewCount,
-                Status = x.Status,
-                isPublic = x.isPublic
+                ID = x.c.ID,
+                ClassID = x.c.ClassID,
+                ClassName = x.c.ClassName,
+                Topic = x.c.Topic,
+                ClassRoom = x.c.ClassRoom,
+                Description = x.c.Description,
+                SEOClassName = x.c.SEOClassName,
+                SEODescriptione = x.c.SEODescriptione,
+                SEOAlias = x.c.SEOAlias,
+                Tuition = x.c.Tuition,
+                DateCreated = x.c.DateCreated,
+                ViewCount = x.c.ViewCount,
+                Status = x.c.Status,
+                isPublic = x.c.isPublic,
+                Teacher = x.us.FirstName + " " + x.us.LastName,
+                Image = "https://localhost:5001/" + x.ci.ImagePath,
+                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()
+
             }).ToListAsync();
 
             //4. Select and projection
@@ -405,6 +423,7 @@ namespace DaisyStudy.Application.Catalog.Classes
             if (_class == null) throw new DaisyStudyException($"Cannot find a class {ClassID}");
 
             var user = await _userManager.FindByNameAsync(UserName);
+            if (user == null) throw new DaisyStudyException($"Cannot find a user {UserName}");
 
             var classDetailCheck = _context.ClassDetails.FirstOrDefault(x => x.ClassID == _class.ID && x.UserID == user.Id);
             if (classDetailCheck != null) throw new DaisyStudyException($"Student {UserName} already exist");
@@ -424,10 +443,10 @@ namespace DaisyStudy.Application.Catalog.Classes
         {
             //1. Select join
             var query = from st in _userManager.Users
-                    join cd in _context.ClassDetails on st.Id equals cd.UserID into cdst
-                    from cd in cdst.DefaultIfEmpty()
-                    join c in _context.Classes on cd.ClassID equals c.ID
-                    select new { cd, st, c };
+                        join cd in _context.ClassDetails on st.Id equals cd.UserID into cdst
+                        from cd in cdst.DefaultIfEmpty()
+                        join c in _context.Classes on cd.ClassID equals c.ID
+                        select new { cd, st, c };
 
             if (request.ClassID != null)
             {
