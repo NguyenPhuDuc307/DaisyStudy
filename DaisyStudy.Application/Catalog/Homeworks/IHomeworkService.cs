@@ -9,5 +9,5 @@ public interface IHomeworkService
     Task<int> Update(HomeworkUpdateRequest request);
     Task<int> Delete(int ID);
     Task<HomeworkViewModel> GetById(int ID);
-    Task<PagedResult<HomeworkViewModel>> GetAllPaging(GetManageHomeworkPagingRequest request);
+    Task<ApiResult<PagedResult<HomeworkViewModel>>> GetAllPaging(GetManageHomeworkPagingRequest request);
 }

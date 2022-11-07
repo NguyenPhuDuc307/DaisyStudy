@@ -1,4 +1,5 @@
 ﻿using DaisyStudy.ApiIntegration.Common.Classes;
+using DaisyStudy.ApiIntegration.Common.Homeworks;
 using DaisyStudy.ApiIntegration.System.Roles;
 using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;
@@ -29,6 +30,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 builder.Services.AddTransient<IRoleApiClient, RoleApiClient>();
 builder.Services.AddTransient<IClassApiClient, ClassApiClient>();
+builder.Services.AddTransient<IHomeworkApiClient, HomeworkApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
 

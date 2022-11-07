@@ -31,7 +31,7 @@ namespace DaisyStudy.AdminApp.Controllers
             {
                 ViewBag.SuccessMsg = TempData["result"];
             }
-            return View(data);
+            return View(data.ResultObj);
         }
 
         [HttpGet]

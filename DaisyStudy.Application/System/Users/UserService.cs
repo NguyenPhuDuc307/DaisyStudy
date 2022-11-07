@@ -39,6 +39,55 @@ namespace DaisyStudy.Application.System.Users
                 return new ApiErrorResult<string>("Đăng nhập không đúng");
             }
             var roles = await _userManager.GetRolesAsync(user);
+
+            if(roles.Count == 0) return new ApiErrorResult<string>("Tài khoản không có quyền truy cập");
+
+            foreach (string r in roles)
+            {
+                if (r.Equals("admin"))
+                {
+                    break;
+                }
+                else
+                {
+                    return new ApiErrorResult<string>("Tài khoản không có quyền truy cập");
+                }
+            }
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.GivenName,user.FirstName),
+                new Claim(ClaimTypes.Role, string.Join(";",roles)),
+                new Claim(ClaimTypes.Name, request.UserName)
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_configuration["Tokens:Issuer"],
+                _configuration["Tokens:Issuer"],
+                claims,
+                expires: DateTime.Now.AddHours(3),
+                signingCredentials: creds);
+
+            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        public async Task<ApiResult<string>> Login(LoginRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<string>("Tài khoản không tồn tại");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
+            if (!result.Succeeded)
+            {
+                return new ApiErrorResult<string>("Đăng nhập không đúng");
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email,user.Email),
