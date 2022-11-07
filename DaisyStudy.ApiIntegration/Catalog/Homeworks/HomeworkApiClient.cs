@@ -1,14 +1,10 @@
-﻿using System.Net.Http.Headers;
-using DaisyStudy.ApiIntegration.Catalog;
-using DaisyStudy.Utilities.Constants;
-using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
+﻿using DaisyStudy.ApiIntegration.Common;
 using DaisyStudy.ViewModels.Catalog.Homeworks;
 using DaisyStudy.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace DaisyStudy.ApiIntegration.Common.Homeworks;
+namespace DaisyStudy.ApiIntegration.Catalog.Homeworks;
 public class HomeworkApiClient : BaseApiClient, IHomeworkApiClient
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

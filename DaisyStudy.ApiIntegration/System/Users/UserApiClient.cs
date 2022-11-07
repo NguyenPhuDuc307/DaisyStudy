@@ -1,4 +1,4 @@
-using DaisyStudy.ApiIntegration.Catalog;
+using DaisyStudy.ApiIntegration.Common;
 using DaisyStudy.ViewModels.Common;
 using DaisyStudy.ViewModels.System.Users;
 using Microsoft.AspNetCore.Http;

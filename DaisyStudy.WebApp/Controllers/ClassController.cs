@@ -1,4 +1,4 @@
-﻿using DaisyStudy.ApiIntegration.Common.Classes;
+﻿using DaisyStudy.ApiIntegration.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using Microsoft.AspNetCore.Mvc;
@@ -79,5 +79,14 @@ public class ClassController : BaseController
             filePath = _configuration["BaseAddress"] +  await _classApiClient.UploadImage(classImageCreateRequest);
         }
         return Json(new { url = filePath });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int ClassID)
+    {
+        var result = await _classApiClient.GetById(ClassID);
+        if(result.ResultObj.TeacherImage == "https://localhost:5001/")
+            result.ResultObj.TeacherImage = null;
+        return View(result.ResultObj);
     }
 }

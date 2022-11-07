@@ -1,5 +1,5 @@
 ﻿using System.Net.Http.Headers;
-using DaisyStudy.ApiIntegration.Catalog;
+using DaisyStudy.ApiIntegration.Common;
 using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.ClassImages;
@@ -7,7 +7,7 @@ using DaisyStudy.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace DaisyStudy.ApiIntegration.Common.Classes;
+namespace DaisyStudy.ApiIntegration.Catalog.Classes;
 public class ClassApiClient : BaseApiClient, IClassApiClient
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -101,5 +101,10 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
             return body;
         }
         return null;
+    }
+
+    public async Task<ApiResult<ClassViewModel>> GetById(int ClassID)
+    {
+        return await GetAsync<ApiResult<ClassViewModel>>($"/api/classes/{ClassID}");
     }
 }

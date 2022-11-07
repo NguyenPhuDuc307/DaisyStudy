@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Runtime.ExceptionServices;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.Data.EF;
 using DaisyStudy.Data.Entities;
@@ -182,7 +183,8 @@ namespace DaisyStudy.Application.Catalog.Classes
                 isPublic = x.c.isPublic,
                 Teacher = x.us.FirstName + " " + x.us.LastName,
                 Image = "https://localhost:5001/" + x.ci.ImagePath,
-                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()
+                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()-1,
+                TeacherImage = x.us.Avatar
 
             }).ToListAsync();
 
@@ -237,7 +239,8 @@ namespace DaisyStudy.Application.Catalog.Classes
                 isPublic = x.c.isPublic,
                 Teacher = x.us.FirstName + " " + x.us.LastName,
                 Image = "https://localhost:5001/" + x.ci.ImagePath,
-                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()
+                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count()-1,
+                TeacherImage = x.us.Avatar
 
             }).ToListAsync();
 
@@ -290,10 +293,16 @@ namespace DaisyStudy.Application.Catalog.Classes
             return pageResult;
         }
 
-        public async Task<ClassViewModel> GetById(int ID)
+        public async Task<ApiResult<ClassViewModel>> GetById(int ID)
         {
-            var _class = await _context.Classes.FindAsync(ID);
-            if (_class == null) throw new DaisyStudyException($"Cannot find a class {ID}");
+            var _class = _context.Classes.FirstOrDefault(x=> x.ID == ID);
+            var classDetail = _context.ClassDetails.FirstOrDefault(x=> x.ClassID == ID && x.IsTeacher == Teacher.Teacher);
+            var classImage = _context.ClassImages.FirstOrDefault(x=> x.ClassID == ID && x.IsDefault == true);
+            if(classDetail==null) throw new DaisyStudyException($"Cannot find a class detail {ID}");
+            if(classImage==null) throw new DaisyStudyException($"Cannot find a class image {ID}");
+            var user = await _userManager.Users.FirstOrDefaultAsync(x=> x.Id == classDetail.UserID);
+            if(user==null) throw new DaisyStudyException($"Cannot find a class {ID}");
+            if (_class == null) throw new DaisyStudyException($"Cannot find a teacher {ID}");
             var classViewModel = new ClassViewModel()
             {
                 ID = _class.ID,
@@ -309,9 +318,13 @@ namespace DaisyStudy.Application.Catalog.Classes
                 DateCreated = _class.DateCreated,
                 ViewCount = _class.ViewCount,
                 Status = _class.Status,
-                isPublic = _class.isPublic
+                isPublic = _class.isPublic,
+                Teacher = user.FirstName + " " + user.LastName,
+                Image = "https://localhost:5001/" + classImage.ImagePath,
+                StudentNumber = _context.ClassDetails.Where(c => c.ClassID == _class.ID).Count()-1,
+                TeacherImage = "https://localhost:5001/" + user.Avatar
             };
-            return classViewModel;
+            return new ApiSuccessResult<ClassViewModel>(classViewModel);
         }
 
         public async Task<ClassImageViewModel> GetImageById(int imageId)

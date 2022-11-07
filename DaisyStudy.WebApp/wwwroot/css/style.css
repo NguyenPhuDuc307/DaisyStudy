@@ -1,0 +1,21 @@
+.img-detail{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 20rem !important;
+    object-fit: cover;
+}
+
+.img-card{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.img-avatar{
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 20rem !important;
+    object-fit: cover;
+}

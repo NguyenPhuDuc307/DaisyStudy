@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace DaisyStudy.ApiIntegration.Catalog;
+namespace DaisyStudy.ApiIntegration.Common;
 
 public class BaseApiClient
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using DaisyStudy.Data.Entities;
+﻿using DaisyStudy.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

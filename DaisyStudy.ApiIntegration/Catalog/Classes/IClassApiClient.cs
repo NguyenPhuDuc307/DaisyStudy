@@ -2,7 +2,7 @@
 using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ApiIntegration.Common.Classes;
+namespace DaisyStudy.ApiIntegration.Catalog.Classes;
 
 public interface IClassApiClient
 {
@@ -10,4 +10,5 @@ public interface IClassApiClient
     Task<ApiResult<PagedResult<ClassViewModel>>> GetPublicClassPaging(GetManageClassPagingRequest request);
     Task<bool> CreateClass(ClassCreateRequest request);
     Task<string> UploadImage(ClassImageCreateRequest request);
+    Task<ApiResult<ClassViewModel>> GetById(int ClassID);
 }

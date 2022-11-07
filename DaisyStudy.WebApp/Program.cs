@@ -1,5 +1,5 @@
-﻿using DaisyStudy.ApiIntegration.Common.Classes;
-using DaisyStudy.ApiIntegration.Common.Homeworks;
+﻿using DaisyStudy.ApiIntegration.Catalog.Classes;
+using DaisyStudy.ApiIntegration.Catalog.Homeworks;
 using DaisyStudy.ApiIntegration.System.Roles;
 using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;

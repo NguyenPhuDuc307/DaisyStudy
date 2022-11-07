@@ -12,7 +12,7 @@ namespace DaisyStudy.Application.Catalog.Classes
         Task<string> UploadImage(ClassImageCreateRequest request);
         Task<int> Update(ClassUpdateRequest request);
         Task<int> Delete(int ID);
-        Task<ClassViewModel> GetById(int ID);
+        Task<ApiResult<ClassViewModel>> GetById(int ID);
         Task<bool> UpdateTuition(int ID, decimal tuition);
         Task<bool> UpdateStatus(int ID, Status status);
         Task<bool> UpdateIsPublic(int ID, IsPublic isPublic);

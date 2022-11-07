@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Net.Mime;
+using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
@@ -12,6 +13,9 @@ public class ClassViewModel
 
     [Display(Name = "Giáo viên")]
     public string? Teacher { set; get; }
+
+    [Display(Name = "Ảnh đại diện")]
+    public string? TeacherImage { set; get; }
 
     [Display(Name = "Số học viên")]
     public int StudentNumber { set; get; }

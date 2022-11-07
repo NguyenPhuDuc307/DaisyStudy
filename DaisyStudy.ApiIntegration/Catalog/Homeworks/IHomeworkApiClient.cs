@@ -1,7 +1,7 @@
 ﻿using DaisyStudy.ViewModels.Catalog.Homeworks;
 using DaisyStudy.ViewModels.Common;
 
-namespace DaisyStudy.ApiIntegration.Common.Homeworks;
+namespace DaisyStudy.ApiIntegration.Catalog.Homeworks;
 
 public interface IHomeworkApiClient
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DaisyStudy.WebApp.Models;
 using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ApiIntegration.Common.Classes;
+using DaisyStudy.ApiIntegration.Catalog.Classes;
 
 namespace DaisyStudy.WebApp.Controllers;
 
