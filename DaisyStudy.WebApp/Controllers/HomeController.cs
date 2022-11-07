@@ -15,6 +15,10 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        if (User.Identity != null)
+        {
+            var user = User.Identity.Name;
+        }
         return View();
     }
 

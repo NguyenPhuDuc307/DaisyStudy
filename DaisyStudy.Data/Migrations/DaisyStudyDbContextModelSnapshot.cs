@@ -331,6 +331,9 @@ namespace DaisyStudy.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.HasKey("ImageID");
 
                     b.HasIndex("ClassID");
@@ -550,6 +553,9 @@ namespace DaisyStudy.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NotificationID")
                         .HasColumnType("int");

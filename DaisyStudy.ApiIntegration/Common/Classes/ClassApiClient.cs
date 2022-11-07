@@ -61,13 +61,10 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
         return false;
     }
 
-    public async Task<PagedResult<ClassViewModel>> GetClassPaging(GetManageClassPagingRequest request)
+    public async Task<ApiResult<PagedResult<ClassViewModel>>> GetClassPaging(GetManageClassPagingRequest request)
     {
-        var data = await GetAsync<PagedResult<ClassViewModel>>(
-            $"/api/classes/paging?pageIndex={request.PageIndex}" +
-            $"&pageSize={request.PageSize}" +
-            $"&keyword={request.Keyword}");
-        return data;
+        return await GetAsync<ApiResult<PagedResult<ClassViewModel>>>("/api/classes/paging?pageIndex="+
+            $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
     }
 
     public async Task<string> UploadImage(ClassImageCreateRequest request)

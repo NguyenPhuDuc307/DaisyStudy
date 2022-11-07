@@ -70,7 +70,7 @@ public class HomeworksController : ControllerBase
     [HttpGet("paging")]
     public async Task<IActionResult> GetAllPaging([FromQuery]GetManageHomeworkPagingRequest request)
     {
-        var products = await _homeworkService.GetAllPaging(request);
-        return Ok(products);
+        var homeworks = await _homeworkService.GetAllPaging(request);
+        return Ok(homeworks);
     }
 }

@@ -24,6 +24,11 @@ public class UserApiClient : BaseApiClient, IUserApiClient
         return await PostAsync<ApiResult<string>>($"/api/users/authenticate", request);
     }
 
+    public async Task<ApiResult<string>> Login(LoginRequest request)
+    {
+        return await PostAsync<ApiResult<string>>($"/api/users/login", request);
+    }
+
     public async Task<ApiResult<UserViewModel>> GetById(Guid id)
     {
         return await GetAsync<ApiResult<UserViewModel>>($"/api/users/{id}");
@@ -37,7 +42,6 @@ public class UserApiClient : BaseApiClient, IUserApiClient
 
     public async Task<ApiResult<bool>> RegisterUser(RegisterRequest request)
     {
-
         return await PostAsync<ApiResult<bool>>($"/api/users", request);
     }
 

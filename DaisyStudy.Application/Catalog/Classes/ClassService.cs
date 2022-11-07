@@ -140,7 +140,7 @@ namespace DaisyStudy.Application.Catalog.Classes
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ClassViewModel>> GetAllClassPaging(GetManageClassPagingRequest request)
+        public async Task<ApiResult<PagedResult<ClassViewModel>>> GetAllClassPaging(GetManageClassPagingRequest request)
         {
             //1. Select
             var query = from c in _context.Classes select c;
@@ -183,7 +183,7 @@ namespace DaisyStudy.Application.Catalog.Classes
                 PageSize = request.PageSize,
                 Items = data
             };
-            return pageResult;
+            return new ApiSuccessResult<PagedResult<ClassViewModel>>(pageResult);
         }
 
         public async Task<PagedResult<ClassViewModel>> GetAll(GetPublicClassPagingRequest request)
