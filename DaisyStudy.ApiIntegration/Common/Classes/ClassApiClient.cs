@@ -61,7 +61,13 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
         return false;
     }
 
-    public async Task<ApiResult<PagedResult<ClassViewModel>>> GetClassPaging(GetManageClassPagingRequest request)
+    public async Task<ApiResult<PagedResult<ClassViewModel>>> GetManageClassPaging(GetManageClassPagingRequest request)
+    {
+        return await GetAsync<ApiResult<PagedResult<ClassViewModel>>>("/api/classes/manage/paging?pageIndex="+
+            $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
+    }
+
+    public async Task<ApiResult<PagedResult<ClassViewModel>>> GetPublicClassPaging(GetManageClassPagingRequest request)
     {
         return await GetAsync<ApiResult<PagedResult<ClassViewModel>>>("/api/classes/paging?pageIndex="+
             $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");

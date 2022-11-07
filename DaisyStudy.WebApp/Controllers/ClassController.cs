@@ -25,7 +25,7 @@ public class ClassController : BaseController
             PageIndex = pageIndex,
             PageSize = pageSize
         };
-        var data = await _classApiClient.GetClassPaging(request);
+        var data = await _classApiClient.GetPublicClassPaging(request);
         ViewBag.Keyword = keyword;
         if (TempData["result"] != null)
         {

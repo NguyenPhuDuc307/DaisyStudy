@@ -6,7 +6,8 @@ namespace DaisyStudy.ApiIntegration.Common.Classes;
 
 public interface IClassApiClient
 {
-    Task<ApiResult<PagedResult<ClassViewModel>>> GetClassPaging(GetManageClassPagingRequest request);
+    Task<ApiResult<PagedResult<ClassViewModel>>> GetManageClassPaging(GetManageClassPagingRequest request);
+    Task<ApiResult<PagedResult<ClassViewModel>>> GetPublicClassPaging(GetManageClassPagingRequest request);
     Task<bool> CreateClass(ClassCreateRequest request);
     Task<string> UploadImage(ClassImageCreateRequest request);
 }

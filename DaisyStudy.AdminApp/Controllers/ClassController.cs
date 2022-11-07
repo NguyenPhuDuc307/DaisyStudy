@@ -25,7 +25,7 @@ namespace DaisyStudy.AdminApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var data = await _classApiClient.GetClassPaging(request);
+            var data = await _classApiClient.GetManageClassPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {

@@ -20,11 +20,19 @@ namespace DaisyStudy.BackendApi.Controllers
             _classService = classService;
         }
 
-        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
-        [HttpGet("paging")]
+        // http://localhost:post/classes/manage/paging?pageIndex=1&pageSize=10
+        [HttpGet("manage/paging")]
         public async Task<IActionResult> GetAllClassPaging([FromQuery] GetManageClassPagingRequest request)
         {
-            var classes = await _classService.GetAllClassPaging(request);
+            var classes = await _classService.GetManageAllClassPaging(request);
+            return Ok(classes);
+        }
+
+        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetPublicAllClassPaging([FromQuery] GetManageClassPagingRequest request)
+        {
+            var classes = await _classService.GetManageAllClassPaging(request);
             return Ok(classes);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.Data.EF;
 using DaisyStudy.Data.Entities;
@@ -103,7 +104,8 @@ namespace DaisyStudy.Application.Catalog.Classes
                     new ClassImage()
                     {
                         ImageFileSize = request.ThumbnailImage.Length,
-                        ImagePath = await this.SaveFile(request.ThumbnailImage)
+                        ImagePath = await this.SaveFile(request.ThumbnailImage),
+                        IsDefault = true
                     }
                 };
             }
@@ -140,10 +142,56 @@ namespace DaisyStudy.Application.Catalog.Classes
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<ApiResult<PagedResult<ClassViewModel>>> GetAllClassPaging(GetManageClassPagingRequest request)
+        public async Task<ApiResult<PagedResult<ClassViewModel>>> GetManageAllClassPaging(GetManageClassPagingRequest request)
         {
             //1. Select
             var query = from c in _context.Classes select c;
+
+            //2. Filter
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                query = query.Where(x => x.ClassName.Contains(request.Keyword)
+                    || x.ClassID.Contains(request.Keyword)
+                    || x.Topic.Contains(request.Keyword));
+            }
+
+            //3. Paging
+            int totalRow = await query.CountAsync();
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(x => new ClassViewModel()
+            {
+                ID = x.ID,
+                ClassID = x.ClassID,
+                ClassName = x.ClassName,
+                Topic = x.Topic,
+                ClassRoom = x.ClassRoom,
+                Description = x.Description,
+                SEOClassName = x.SEOClassName,
+                SEODescriptione = x.SEODescriptione,
+                SEOAlias = x.SEOAlias,
+                Tuition = x.Tuition,
+                DateCreated = x.DateCreated,
+                ViewCount = x.ViewCount,
+                Status = x.Status,
+                isPublic = x.isPublic
+            }).ToListAsync();
+
+            //4. Select and projection
+            var pageResult = new PagedResult<ClassViewModel>()
+            {
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
+            };
+            return new ApiSuccessResult<PagedResult<ClassViewModel>>(pageResult);
+        }
+
+        public async Task<ApiResult<PagedResult<ClassViewModel>>> GetPublicAllClassPaging(GetManageClassPagingRequest request)
+        {
+            //1. Select
+            var query = from c in _context.Classes where c.isPublic == IsPublic.Public select c;
 
             //2. Filter
             if (!string.IsNullOrEmpty(request.Keyword))

@@ -8,7 +8,7 @@ namespace DaisyStudy.Data.Entities
         public Class? Class { set; get; }
         public string? ImagePath { set; get; }
         public long ImageFileSize { set; get; }
-        public bool IsDefault { get; set; }
+        public bool? IsDefault { get; set; }
     }
 }
 
