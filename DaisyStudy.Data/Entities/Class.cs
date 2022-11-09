@@ -6,6 +6,7 @@ namespace DaisyStudy.Data.Entities
         public int ID { set; get; }
         public String? ClassID { set; get; }
         public String? ClassName { set; get; }
+        public string? ImagePath { set; get; }
         public String? Topic { set; get; }
         public String? ClassRoom { set; get; }
         public String? Description { set; get; }
@@ -22,8 +23,6 @@ namespace DaisyStudy.Data.Entities
         public List<Notification>? Notifications { set; get; }
         public List<ExamSchedule>? ExamSchedules { set; get; }
         public List<Chat>? Chats { set; get; }
-        public List<ClassImage>? ClassImages { set; get; }
-
     }
 }
 

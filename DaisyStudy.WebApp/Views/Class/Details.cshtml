@@ -1,6 +1,5 @@
-﻿@using DaisyStudy.ViewModels.Common;
-@model DaisyStudy.ViewModels.Catalog.Classes.ClassViewModel
-
+﻿@model DaisyStudy.ViewModels.Catalog.Classes.ClassViewModel;
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
 @{
     ViewData["Title"] = @Html.DisplayFor(model => model.ClassName);
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,8 +10,18 @@
         $('#msgAlert').fadeOut('slow');
     }, 2000);
 </script>
-}
 
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        watchSlidesProgress: true,
+        slidesPerView: 3,
+    });
+</script>
+}
 
 <div class="container-fluid">
     <ol class="breadcrumb mb-4">
@@ -22,124 +31,241 @@
     </ol>
     <h1 class="mt-4">@Html.DisplayFor(model => model.ClassName)</h1>
 
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Thông tin lớp học</h6>
-        </div>
-        <div class="card-header">
-            <div style="padding: 0;" class="col-md-6 col-xs-12">
-                <a class="btn btn-success" asp-action="Create" asp-controller="Class">Nhấn để tham gia</a>
-            </div>
-        </div>
+    <div class="row">
 
-        <div style="padding-bottom: 0;" class="card-body">
-            <div class="row">
-                <!-- Pie Chart -->
-                <div class="col-xl-4 col-lg-5">
-                    <div class="card shadow mb-4">
-                        <!-- Card Header - Dropdown -->
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fa-solid fa-chalkboard-user me-2"></i>
-                                @Html.DisplayFor(model => model.Teacher)
-                            </h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
+        <!-- Area Chart -->
+        <div class="col-xl-8 col-lg-7">
+
+            @foreach (var item in Model.Notifications)
+            {
+                var url = "https://localhost:5001";
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        @if (Convert.ToString(Model.TeacherImage) == "")
+                        {
+                            <div>
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;"
+                            class="img-profile rounded-circle me-1" src="/img/undraw_profile.svg">
+                                <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
+                                <span class="mr-2 d-lg-inline text-gray-600 small">@Model.Teacher</span>
                             </div>
-                        </div>
-                        <!-- Card Body -->
-                        <div style="height: 22.5rem;" class="card-body">
-                            @if (Model.TeacherImage == null)
-                            {
-                                <img class="img-card" src="/img/undraw_profile.svg" alt="undraw_posting_photo" />
-                            }
-                            else
-                            {
-                                <img class="img-card img-avatar" src="@Model.TeacherImage" alt="@Model.TeacherImage" />
-                            }
-                        </div>
-                    </div>
-                </div>
-                <!-- Area Chart -->
-                <div class="col-xl-8 col-lg-7">
-                    <div class="card shadow mb-4">
-                        <!-- Card Header - Dropdown -->
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Lớp học</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                    aria-labelledby="dropdownMenuLink">
-                                    <div class="dropdown-header">Dropdown Header:</div>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;"
+                            class="img-profile rounded-circle me-1"
+                            src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                                <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
+                                <span class="mr-2 d-lg-inline text-gray-600 small">Cập nhật lúc: @item.DateTimeCreated</span>
                             </div>
-                        </div>
-                        <!-- Card Body -->
-                        <div style="height: 22.5rem;" class="card-body">
-                            <div class="font-weight-bold mb-1">
-                                <i class="fa-solid fa-house me-2"></i>@Html.DisplayNameFor(model => model.ClassID):
-                                @Html.DisplayFor(model => model.ClassID)
-                            </div>
-                            <div class="font-weight-bold mb-1">
-                                <i class="fa-solid fa-bookmark me-2"></i>@Html.DisplayNameFor(model => model.Topic):
-                                @Html.DisplayFor(model => model.Topic)
-                            </div>
-                            <div class="font-weight-bold mb-1">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>@Html.DisplayNameFor(model =>
-                                model.ClassRoom):
-                                @Html.DisplayFor(model => model.ClassRoom)
-                            </div>
-                            <div class="font-weight-bold mb-1">
-                                <i class="fa-regular fa-calendar-plus me-2"></i>@Html.DisplayNameFor(model =>
-                                model.DateCreated):
-                                @Html.DisplayFor(model => model.DateCreated)
-                            </div>
-                            <div class="font-weight-bold mb-1">
-                                <i class="fa-solid fa-layer-group me-2"></i>@Html.DisplayNameFor(model => model.Status):
-                                @Html.DisplayFor(model => model.Status)
-                            </div>
-                            <div class="font-weight-bold text-primary mb-1">
-                                <i class="fa-solid fa-eye me-2"></i>@Html.DisplayNameFor(model => model.ViewCount):
-                                @Html.DisplayFor(model => model.ViewCount)
-                            </div>
-                            <div class="font-weight-bold text-danger mb-1">
-                                <i class="fa-solid fa-sack-dollar me-2"></i>@Html.DisplayNameFor(model =>
-                                model.Tuition):
-                                @Html.DisplayFor(model => model.Tuition)
+                        }
+
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Dropdown Header:</div>
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
                             </div>
                         </div>
                     </div>
+                    <!-- Card Body -->
+                <div class="card-body">
+                        <h6 class="m-0 font-weight-bold text-primary">@item.Title</h6>
+
+
+                        <div class="card-group mt-2">
+                            @foreach (var image in item.NotificationImages)
+                            {
+                                <div class="card" style="margin: 0.25rem; border: none;">
+                                    @{
+                                        <a target="_blank" href="@url@image.ImagePath">
+                                            <img class="img-thumbnail" src="@url@image.ImagePath" alt="@url@image.ImagePath" />
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-2">
+                            @Html.Raw(item.Content)
+                        </div>
+
+                        <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+                        @foreach (var a in item.Comments)
+                        {
+                            <div class="d-flex mb-3 position-relative">
+
+                                @if (Convert.ToString(a.Avatar) == "")
+                                {
+                                    <div>
+                                        <img style="width: 32px; height: 32px; object-fit: cover;"
+                                class="img-profile rounded-circle me-3" src="/img/undraw_profile.svg">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <img style="width: 32px; height: 32px; object-fit: cover;"
+                                class="img-profile rounded-circle me-3" src="@(Configuration["BaseAddress"] + a.Avatar)"
+                                alt="@(a.Avatar)">
+                                    </div>
+                                }
+                                <div style="border: none; padding-bottom: 2rem;"
+                            class="card card-header bg-gray-100 shadow-sm position-relative">
+                                    <h6 class="m-0 font-weight-bold text-success mb-1">@a.FullName</h6>
+                                    @Html.Raw(a.Content)
+
+                                    <div class="card-group d-inline-flex">
+                                        @foreach (var image in a.CommentImages)
+                                        {
+                                            <div class="card" style="margin: 0.25rem; border: none; max-width: 30%;">
+                                                @{
+                                                    <a target="_blank" href="@url@image.ImagePath">
+                                                        <img class="img-thumbnail" src="@url@image.ImagePath"
+                                                alt="@url@image.ImagePath" />
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="position-absolute bottom-0 start-0 mx-3 my-2">
+                                        <a>
+                                            <i class="fa-solid fa-thumbs-up me-2"> @a.Likes</i>
+                                        </a>
+
+                                        <i class="fa-regular fa-thumbs-down"> @a.Dislikes</i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                    <form style="margin: 1rem; margin-top: 0;">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div>
-        <style>
-            img {
-                max-width: 100%;
             }
-        </style>
-        @Html.Raw(Model.Description)
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Mọi người</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <h6 class="m0 text-primary">Giáo viên</h6>
+                    @if (Convert.ToString(Model.TeacherImage) == "")
+                    {
+                        <div class="mb-3">
+                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                            src="/img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                            src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
+                        </div>
+                    }
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
+                    <h6 class="m0 text-primary">Học sinh</h6>
+                    @foreach (var item in Model.ClassDetails)
+                    {
+                        var url = "https://localhost:5001";
+                        @if (Convert.ToString(item.Avatar) == "" && item.IsTeacher ==
+                       DaisyStudy.Data.Entities.Teacher.Student)
+                        {
+                            <div class="mb-3">
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                            src="/img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                            </div>
+                        }
+                        else if (Convert.ToString(item.Avatar) != "" && item.IsTeacher ==
+                        DaisyStudy.Data.Entities.Teacher.Student)
+                        {
+                            <div class="mb-3">
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                            src="@url@item.Avatar" src="@url@item.Avatar">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Trò chuyện</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    
+                    <form style="margin: 1rem; margin-top: 0;">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa-regular fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>

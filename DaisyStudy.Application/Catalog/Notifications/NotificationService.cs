@@ -2,8 +2,6 @@
 using DaisyStudy.Data.Entities;
 using DaisyStudy.Utilities.Exceptions;
 using DaisyStudy.ViewModels.Common;
-using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.Homeworks;
 using Microsoft.EntityFrameworkCore;
 using DaisyStudy.ViewModels.Catalog.Notifications;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +43,7 @@ public class NotificationService : INotificationService
         return await _context.SaveChangesAsync();
     }
 
-    public async Task<NotificationViewModel> GetById(int NotificationID)
+    public async Task<ApiResult<NotificationViewModel>> GetById(int NotificationID)
     {
         var notification = await _context.Notifications.FindAsync(NotificationID);
         if (notification == null) throw new DaisyStudyException($"Cannot find a notification {NotificationID}");
@@ -62,7 +60,7 @@ public class NotificationService : INotificationService
             Content = notification.Content,
             DateTimeCreated = notification.DateTimeCreated
         };
-        return notificationViewModel;
+        return new ApiSuccessResult<NotificationViewModel>(notificationViewModel);
     }
 
     private async Task<string> SaveFile(IFormFile file)
@@ -82,22 +80,22 @@ public class NotificationService : INotificationService
             Content = request.Content,
             DateTimeCreated = DateTime.Now
         };
-
-        // Save file
-        if (request.ThumbnailImage != null)
-        {
-            notification.NotificationImages = new List<NotificationImage>()
-            {
-                new NotificationImage()
-                {
-                    ImageFileSize = request.ThumbnailImage.Length,
-                    ImagePath = await this.SaveFile(request.ThumbnailImage)
-                }
-            };
-        }
-
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
+        // Save file
+        if (request.ThumbnailImages != null)
+
+            foreach (var item in request.ThumbnailImages)
+            {
+                var image = new NotificationImage()
+                {
+                    NotificationID = notification.NotificationID,
+                    ImageFileSize = item.Length,
+                    ImagePath = await this.SaveFile(item)
+                };
+                _context.NotificationImages.Add(image);
+                await _context.SaveChangesAsync();
+            }
         return notification.NotificationID;
     }
 
@@ -109,8 +107,8 @@ public class NotificationService : INotificationService
         _context.Notifications.Remove(notification);
         return await _context.SaveChangesAsync();
     }
-
-    public async Task<PagedResult<NotificationViewModel>> GetAllPaging(GetManageNotificationPagingRequest request)
+    
+    public async Task<ApiResult<PagedResult<NotificationViewModel>>> GetAllPaging(GetManageNotificationPagingRequest request)
     {
         //1. Select join
         var query = from n in _context.Notifications
@@ -150,7 +148,7 @@ public class NotificationService : INotificationService
             PageIndex = request.PageIndex,
             Items = data
         };
-        return pagedResult;
+        return new ApiSuccessResult<PagedResult<NotificationViewModel>>(pagedResult);
     }
 }
 

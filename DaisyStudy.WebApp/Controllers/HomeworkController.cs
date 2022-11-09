@@ -1,7 +1,4 @@
-﻿using DaisyStudy.ApiIntegration.Catalog.Classes;
-using DaisyStudy.ApiIntegration.Catalog.Homeworks;
-using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
+﻿using DaisyStudy.ApiIntegration.Catalog.Homeworks;
 using DaisyStudy.ViewModels.Catalog.Homeworks;
 using Microsoft.AspNetCore.Mvc;
 

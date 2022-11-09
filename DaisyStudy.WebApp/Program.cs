@@ -1,5 +1,7 @@
 ﻿using DaisyStudy.ApiIntegration.Catalog.Classes;
+using DaisyStudy.ApiIntegration.Catalog.Comments;
 using DaisyStudy.ApiIntegration.Catalog.Homeworks;
+using DaisyStudy.ApiIntegration.Catalog.Notifications;
 using DaisyStudy.ApiIntegration.System.Roles;
 using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;
@@ -31,6 +33,8 @@ builder.Services.AddTransient<IUserApiClient, UserApiClient>();
 builder.Services.AddTransient<IRoleApiClient, RoleApiClient>();
 builder.Services.AddTransient<IClassApiClient, ClassApiClient>();
 builder.Services.AddTransient<IHomeworkApiClient, HomeworkApiClient>();
+builder.Services.AddTransient<INotificationApiClient, NotificationApiClient>();
+builder.Services.AddTransient<ICommentApiClient, CommentApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
 

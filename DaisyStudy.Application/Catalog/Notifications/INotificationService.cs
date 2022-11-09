@@ -8,6 +8,6 @@ public interface INotificationService
     Task<int> Create(NotificationCreateRequest request);
     Task<int> Update(NotificationUpdateRequest request);
     Task<int> Delete(int NotificationID);
-    Task<NotificationViewModel> GetById(int NotificationID);
-    Task<PagedResult<NotificationViewModel>> GetAllPaging(GetManageNotificationPagingRequest request);
+    Task<ApiResult<NotificationViewModel>> GetById(int NotificationID);
+    Task<ApiResult<PagedResult<NotificationViewModel>>> GetAllPaging(GetManageNotificationPagingRequest request);
 }

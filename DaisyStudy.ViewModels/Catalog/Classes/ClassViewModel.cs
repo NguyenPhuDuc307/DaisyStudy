@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
+using DaisyStudy.ViewModels.Catalog.Notifications;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
 
@@ -13,6 +14,8 @@ public class ClassViewModel
 
     [Display(Name = "Giáo viên")]
     public string? Teacher { set; get; }
+
+    public string? TeacherUserName { set; get; }
 
     [Display(Name = "Ảnh đại diện")]
     public string? TeacherImage { set; get; }
@@ -60,5 +63,8 @@ public class ClassViewModel
 
     [Display(Name = "Công khai")]
     public IsPublic isPublic { set; get; }
+
+    public List<ClassDetailViewModel>? ClassDetails { set; get; }
+    public List<NotificationViewModel>? Notifications { set; get; }
 }
 

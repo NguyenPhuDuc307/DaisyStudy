@@ -2,7 +2,6 @@
 using DaisyStudy.ApiIntegration.Common;
 using DaisyStudy.Utilities.Constants;
 using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
 using DaisyStudy.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -73,19 +72,19 @@ public class ClassApiClient : BaseApiClient, IClassApiClient
             $"{request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}");
     }
 
-    public async Task<string> UploadImage(ClassImageCreateRequest request)
+    public async Task<string> UploadImage(ClassImageUpdateRequest request)
     {
         var requestContent = new MultipartFormDataContent();
 
-        if (request.ImageFile != null)
+        if (request.ThumbnailImage != null)
         {
             byte[] data;
-            using (var br = new BinaryReader(request.ImageFile.OpenReadStream()))
+            using (var br = new BinaryReader(request.ThumbnailImage.OpenReadStream()))
             {
-                data = br.ReadBytes((int)request.ImageFile.OpenReadStream().Length);
+                data = br.ReadBytes((int)request.ThumbnailImage.OpenReadStream().Length);
             }
             ByteArrayContent bytes = new ByteArrayContent(data);
-            requestContent.Add(bytes, "imageFile", request.ImageFile.FileName);
+            requestContent.Add(bytes, "imageFile", request.ThumbnailImage.FileName);
         }
 
         var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
