@@ -102,7 +102,7 @@
                         <hr style="height:1px;border:none;color:#333;background-color:#333;" />
                         @foreach (var a in item.Comments)
                         {
-                            <div class="d-flex mb-3 position-relative">
+                            <div class="d-flex mb-3">
 
                                 @if (Convert.ToString(a.Avatar) == "")
                                 {
@@ -119,15 +119,14 @@
                                 alt="@(a.Avatar)">
                                     </div>
                                 }
-                                <div style="border: none; padding-bottom: 2rem;"
-                            class="card card-header bg-gray-100 shadow-sm position-relative">
+                                <div style="border: none" class="card card-header bg-gray-100 shadow-sm">
                                     <h6 class="m-0 font-weight-bold text-success mb-1">@a.FullName</h6>
                                     @Html.Raw(a.Content)
 
                                     <div class="card-group d-inline-flex">
                                         @foreach (var image in a.CommentImages)
                                         {
-                                            <div class="card" style="margin: 0.25rem; border: none; max-width: 30%;">
+                                            <div class="card" style="margin: 0.25rem; border: none; max-width: 33%;">
                                                 @{
                                                     <a target="_blank" href="@url@image.ImagePath">
                                                         <img class="img-thumbnail" src="@url@image.ImagePath"
@@ -136,13 +135,6 @@
                                                 }
                                             </div>
                                         }
-                                    </div>
-                                    <div class="position-absolute bottom-0 start-0 mx-3 my-2">
-                                        <a>
-                                            <i class="fa-solid fa-thumbs-up me-2"> @a.Likes</i>
-                                        </a>
-
-                                        <i class="fa-regular fa-thumbs-down"> @a.Dislikes</i>
                                     </div>
                                 </div>
 
@@ -252,11 +244,54 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    
+                    @foreach (var item in Model.Chats)
+                    {
+                        var url = "https://localhost:5001";
+                        <div class="d-flex mb-3">
+
+                            @if (Convert.ToString(item.Avatar) == "")
+                            {
+                                <div>
+                                    <img style="width: 32px; height: 32px; object-fit: cover;"
+                                class="img-profile rounded-circle me-3" src="/img/undraw_profile.svg">
+                                </div>
+                            }
+                            else
+                            {
+                                <div>
+                                    <img style="width: 32px; height: 32px; object-fit: cover;"
+                                class="img-profile rounded-circle me-3"
+                                src="@(Configuration["BaseAddress"] + item.Avatar)" alt="@(item.Avatar)">
+                                </div>
+                            }
+                            <div style="border: none; padding-bottom: 2rem;" class="card card-header bg-gray-100 shadow-sm position-relative">
+                                <h6 class="m-0 font-weight-bold text-success mb-1">@item.FullName</h6>
+                                @Html.Raw(item.Content)
+
+                                <div class="card-group d-inline-flex">
+                                    @foreach (var image in item.ChatImages)
+                                    {
+                                        <div class="card" style="margin: 0.25rem; border: none; max-width: 33%;">
+                                            @{
+                                                <a target="_blank" href="@url@image.ImagePath">
+                                                    <img class="img-thumbnail" src="@url@image.ImagePath"
+                                                alt="@url@image.ImagePath" />
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                 <div class="position-absolute bottom-0 start-0 mx-3">
+                                <i class="fa-solid fa-heart me-1"></i>@item.Likes
+                                <i class="fa-regular fa-thumbs-down mx-1"></i>@item.Dislikes
+                            </div>
+                            </div>
+                        </div>
+                    }
                     <form style="margin: 1rem; margin-top: 0;">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
-                            aria-label="Search" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control bg-light border-0 small"
+                                placeholder="Nhập tin nhắn..." aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fa-regular fa-paper-plane"></i>

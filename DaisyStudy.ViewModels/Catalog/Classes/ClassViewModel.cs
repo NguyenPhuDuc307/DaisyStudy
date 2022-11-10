@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModels.Catalog.Notifications;
+using DaisyStudy.ViewModels.Catalog.Chats;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
 
@@ -66,5 +67,6 @@ public class ClassViewModel
 
     public List<ClassDetailViewModel>? ClassDetails { set; get; }
     public List<NotificationViewModel>? Notifications { set; get; }
+    public List<ChatViewModel>? Chats { set; get; }
 }
 

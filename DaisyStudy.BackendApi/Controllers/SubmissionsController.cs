@@ -1,6 +1,4 @@
-using DaisyStudy.Application.Catalog.Homeworks;
 using DaisyStudy.Application.Catalog.Submissions;
-using DaisyStudy.ViewModels.Catalog.Homeworks;
 using DaisyStudy.ViewModels.Catalog.Submissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -90,7 +88,7 @@ public class SubmissionsController : ControllerBase
     [HttpGet("paging")]
     public async Task<IActionResult> GetAllPaging([FromQuery] GetManageSubmissionPagingRequest request)
     {
-        var products = await _submissionService.GetAllPaging(request);
-        return Ok(products);
+        var submissions = await _submissionService.GetAllPaging(request);
+        return Ok(submissions);
     }
 }

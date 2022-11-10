@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
 
-namespace DaisyStudy.ViewModels.Catalog.Comments;
+namespace DaisyStudy.ViewModels.Catalog.Chats;
 
-public class CommentViewModel
+public class ChatViewModel
 {
-    public int CommentID { set; get; }
-    public int NotificationID { set; get; }
+    public int ChatID { set; get; }
+    public int ClassID { set; get; }
     public Guid UserID { set; get; }
 
     [Display(Name = "Ảnh đại diện")]
@@ -22,6 +22,9 @@ public class CommentViewModel
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime DateTimeCreated { set; get; }
 
-    public List<CommentImage>? CommentImages { get; set; }
+    public int Likes { set; get; }
+    public int Dislikes { set; get; }
+
+    public List<ChatImage>? ChatImages { get; set; }
 }
 
