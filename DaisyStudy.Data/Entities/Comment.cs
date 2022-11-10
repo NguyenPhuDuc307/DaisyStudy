@@ -10,8 +10,6 @@ namespace DaisyStudy.Data.Entities
         public AppUser? AppUser { set; get; }
         public String? Content { set; get; }
         public DateTime DateTimeCreated { set; get; }
-        public int Likes { set; get; }
-        public int Dislikes { set; get; }
         public List<CommentImage>? CommentImages { set; get; }
     }
 }

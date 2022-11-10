@@ -38,8 +38,6 @@ public class CommentService : ICommentService
             UserID = comment.UserID,
             FullName = user.FirstName + " " + user.LastName,
             Content = comment.Content,
-            Likes = comment.Likes,
-            Dislikes = comment.Dislikes,
             DateTimeCreated = comment.DateTimeCreated
         };
         return new ApiSuccessResult<CommentViewModel>(commentViewModel);
@@ -70,9 +68,7 @@ public class CommentService : ICommentService
             NotificationID = request.NotificationID,
             UserID = user.Id,
             Content = request.Content,
-            DateTimeCreated = DateTime.Now,
-            Likes = 0,
-            Dislikes = 0
+            DateTimeCreated = DateTime.Now
         };
         _context.Comments.Add(comment);
         await _context.SaveChangesAsync();
@@ -126,8 +122,6 @@ public class CommentService : ICommentService
                 UserID = x.c.UserID,
                 FullName = x.u.FirstName + " " + x.u.LastName,
                 Content = x.c.Content,
-                Likes = x.c.Likes,
-                Dislikes = x.c.Dislikes,
                 DateTimeCreated = x.c.DateTimeCreated,
                 CommentImages = (_context.CommentImages.Where(p => p.CommentID == x.c.CommentID).ToList()) != null ? (_context.CommentImages.Where(p => p.CommentID == x.c.CommentID).ToList()) : null
             }).ToListAsync();

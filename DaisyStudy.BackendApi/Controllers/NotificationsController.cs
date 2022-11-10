@@ -72,7 +72,7 @@ public class NotificationsController : ControllerBase
     [HttpGet("paging")]
     public async Task<IActionResult> GetAllPaging([FromQuery]GetManageNotificationPagingRequest request)
     {
-        var products = await _notificationService.GetAllPaging(request);
-        return Ok(products);
+        var notifications = await _notificationService.GetAllPaging(request);
+        return Ok(notifications);
     }
 }
