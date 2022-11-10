@@ -71,7 +71,7 @@ public class HomeworkService : IHomeworkService
         return await _context.SaveChangesAsync();
     }
 
-    public async Task<PagedResult<HomeworkViewModel>> GetAllPaging(GetManageHomeworkPagingRequest request)
+    public async Task<ApiResult<PagedResult<HomeworkViewModel>>> GetAllPaging(GetManageHomeworkPagingRequest request)
     {
         //1. Select join
         var query = from hw in _context.Homeworks
@@ -112,7 +112,7 @@ public class HomeworkService : IHomeworkService
             PageIndex = request.PageIndex,
             Items = data
         };
-        return pagedResult;
+        return new ApiSuccessResult<PagedResult<HomeworkViewModel>>(pagedResult);
     }
 }
 

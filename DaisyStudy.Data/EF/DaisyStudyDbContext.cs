@@ -31,7 +31,6 @@ namespace DaisyStudy.Data.EF
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
-            modelBuilder.ApplyConfiguration(new ClassImageConfiguration());
             modelBuilder.ApplyConfiguration(new ChatImageConfiguration());
             modelBuilder.ApplyConfiguration(new CommentImageConfiguration());
             modelBuilder.ApplyConfiguration(new NotificationImageConfiguration());
@@ -60,7 +59,6 @@ namespace DaisyStudy.Data.EF
         public DbSet<StudentExamDetail> StudentExamDetails { set; get; }
         public DbSet<Submission> Submissions { set; get; }
         public DbSet<Transaction> Transactions { set; get; }
-        public DbSet<ClassImage> ClassImages { set; get; }
         public DbSet<ChatImage> ChatImages { set; get; }
         public DbSet<CommentImage> CommentImages { set; get; }
         public DbSet<NotificationImage> NotificationImages { set; get; }

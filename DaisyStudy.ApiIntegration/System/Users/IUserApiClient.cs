@@ -5,6 +5,7 @@ namespace DaisyStudy.ApiIntegration.System.Users;
 public interface IUserApiClient
 {
     Task<ApiResult<string>> Authenticate(LoginRequest request);
+    Task<ApiResult<string>> Login(LoginRequest request);
     Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request);
     Task<ApiResult<bool>> RegisterUser(RegisterRequest registerRequest);
     Task<ApiResult<bool>> UpdateUser(Guid id, UserUpdateRequest request);

@@ -1,7 +1,6 @@
 using DaisyStudy.Application.Catalog.Classes;
 using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,11 +19,19 @@ namespace DaisyStudy.BackendApi.Controllers
             _classService = classService;
         }
 
-        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
-        [HttpGet("paging")]
+        // http://localhost:post/classes/manage/paging?pageIndex=1&pageSize=10
+        [HttpGet("manage/paging")]
         public async Task<IActionResult> GetAllClassPaging([FromQuery] GetManageClassPagingRequest request)
         {
-            var classes = await _classService.GetAllClassPaging(request);
+            var classes = await _classService.GetManageAllClassPaging(request);
+            return Ok(classes);
+        }
+
+        // http://localhost:post/classes/paging?pageIndex=1&pageSize=10
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetPublicAllClassPaging([FromQuery] GetManageClassPagingRequest request)
+        {
+            var classes = await _classService.GetPublicAllClassPaging(request);
             return Ok(classes);
         }
 
@@ -79,7 +86,7 @@ namespace DaisyStudy.BackendApi.Controllers
 
         [HttpPost("uploadImage")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadImage([FromForm] ClassImageCreateRequest request)
+        public async Task<IActionResult> UploadImage([FromForm] ClassImageUpdateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -151,22 +158,6 @@ namespace DaisyStudy.BackendApi.Controllers
             return BadRequest();
         }
 
-        //Images
-        [HttpPost("images")]
-        public async Task<IActionResult> CreateImage(int classId, [FromForm] ClassImageCreateRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var imageId = await _classService.AddImage(classId, request);
-            if (imageId == 0)
-                return BadRequest();
-
-            var image = await _classService.GetImageById(imageId);
-
-            return CreatedAtAction(nameof(GetImageById), new { id = imageId }, image);
-        }
 
         [HttpPut("images/{imageId}")]
         public async Task<IActionResult> UpdateImage(int imageId, [FromForm] ClassImageUpdateRequest request)
@@ -180,29 +171,6 @@ namespace DaisyStudy.BackendApi.Controllers
                 return BadRequest();
 
             return Ok();
-        }
-
-        [HttpDelete("images/{imageId}")]
-        public async Task<IActionResult> RemoveImage(int imageId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var result = await _classService.RemoveImage(imageId);
-            if (result == 0)
-                return BadRequest();
-
-            return Ok();
-        }
-
-        [HttpGet("images/{imageId}")]
-        public async Task<IActionResult> GetImageById(int imageId)
-        {
-            var image = await _classService.GetImageById(imageId);
-            if (image == null)
-                return BadRequest("Cannot find class");
-            return Ok(image);
         }
     }
 }
