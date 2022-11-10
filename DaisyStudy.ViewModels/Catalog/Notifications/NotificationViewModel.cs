@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
+using DaisyStudy.ViewModels.Catalog.Comments;
 
 namespace DaisyStudy.ViewModels.Catalog.Notifications;
 
@@ -22,5 +23,9 @@ public class NotificationViewModel
     [Display(Name = "Ngày tạo")]
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime DateTimeCreated { set; get; }
+
+    public List<NotificationImage>? NotificationImages { get; set; }
+
+    public List<CommentViewModel>? Comments { get; set; }
 }
 

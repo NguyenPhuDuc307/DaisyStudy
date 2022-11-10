@@ -88,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Items != null)
+                        @if (Model != null)
                         {
                             @foreach (var item in Model.Items)
                             {
@@ -113,15 +113,15 @@
                                     </td>
                                     <td>
                                         <a style="text-decoration: none;"
-                                    href="@Url.Action("Details", "Class", new { id = item.ID })">
+                                    href="@Url.Action("OverView", "Class", new {ClassID = item.ID })">
                                             <i class="fa-solid fa-circle-info"></i>
                                         </a>
                                         <a style="text-decoration: none;"
-                                    href="@Url.Action("Edit", "Class", new { id = item.ID })">
+                                    href="@Url.Action("Edit", "Class", new { ClassID = item.ID })">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <a style="text-decoration: none;"
-                                    href="@Url.Action("Delete", "Class", new { id = item.ID })">
+                                    href="@Url.Action("Delete", "Class", new { ClassID = item.ID })">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>

@@ -16,6 +16,7 @@ using DaisyStudy.Application.System.Roles;
 using DaisyStudy.Application.Catalog.Homeworks;
 using DaisyStudy.Application.Catalog.Submissions;
 using DaisyStudy.Application.Catalog.Notifications;
+using DaisyStudy.Application.Catalog.Comments;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddTransient<IClassService, ClassService>();
 builder.Services.AddTransient<IHomeworkService, HomeworkService>();
 builder.Services.AddTransient<ISubmissionService, SubmissionService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

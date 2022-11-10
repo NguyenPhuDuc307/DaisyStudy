@@ -260,6 +260,11 @@ namespace DaisyStudy.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("SEOAlias")
                         .HasColumnType("nvarchar(max)");
 
@@ -310,35 +315,6 @@ namespace DaisyStudy.Data.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("ClassDetails", (string)null);
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ClassImage", b =>
-                {
-                    b.Property<int>("ImageID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"), 1L, 1);
-
-                    b.Property<int>("ClassID")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ImageFileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ImageID");
-
-                    b.HasIndex("ClassID");
-
-                    b.ToTable("ClassImages", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Comment", b =>
@@ -554,7 +530,7 @@ namespace DaisyStudy.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<bool>("IsDefault")
+                    b.Property<bool?>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<int>("NotificationID")
@@ -891,17 +867,6 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ClassImage", b =>
-                {
-                    b.HasOne("DaisyStudy.Data.Entities.Class", "Class")
-                        .WithMany("ClassImages")
-                        .HasForeignKey("ClassID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
-                });
-
             modelBuilder.Entity("DaisyStudy.Data.Entities.Comment", b =>
                 {
                     b.HasOne("DaisyStudy.Data.Entities.Notification", "Notification")
@@ -1085,8 +1050,6 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("Chats");
 
                     b.Navigation("ClassDetails");
-
-                    b.Navigation("ClassImages");
 
                     b.Navigation("ExamSchedules");
 

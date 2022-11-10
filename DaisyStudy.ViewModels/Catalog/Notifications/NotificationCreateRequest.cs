@@ -15,6 +15,6 @@ public class NotificationCreateRequest
     public string? Content { get; set; }
 
     [Display(Name = "Hình ảnh")]
-    public IFormFile? ThumbnailImage { get; set; }
+    public List<IFormFile>? ThumbnailImages { get; set; }
 }
 

@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Net.Mime;
+using System.ComponentModel.DataAnnotations;
 using DaisyStudy.Data.Entities;
+using DaisyStudy.ViewModels.Catalog.Notifications;
 
 namespace DaisyStudy.ViewModels.Catalog.Classes;
 
@@ -9,6 +11,20 @@ public class ClassViewModel
 
     [Display(Name = "Mã lớp học")]
     public string? ClassID { set; get; }
+
+    [Display(Name = "Giáo viên")]
+    public string? Teacher { set; get; }
+
+    public string? TeacherUserName { set; get; }
+
+    [Display(Name = "Ảnh đại diện")]
+    public string? TeacherImage { set; get; }
+
+    [Display(Name = "Số học viên")]
+    public int StudentNumber { set; get; }
+
+    [Display(Name = "Hình ảnh")]
+    public string? Image { set; get; }
 
     [Display(Name = "Tên lớp học")]
     public string? ClassName { set; get; }
@@ -32,7 +48,7 @@ public class ClassViewModel
     public string? SEOAlias { set; get; }
 
     [Display(Name = "Học phí")]
-    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N1}")]
+    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:N0} đ")]
     public decimal Tuition { set; get; }
 
     [Display(Name = "Ngày tạo")]
@@ -47,5 +63,8 @@ public class ClassViewModel
 
     [Display(Name = "Công khai")]
     public IsPublic isPublic { set; get; }
+
+    public List<ClassDetailViewModel>? ClassDetails { set; get; }
+    public List<NotificationViewModel>? Notifications { set; get; }
 }
 

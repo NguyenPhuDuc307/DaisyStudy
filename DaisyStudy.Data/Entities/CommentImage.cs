@@ -1,5 +1,4 @@
-﻿using System;
-namespace DaisyStudy.Data.Entities
+﻿namespace DaisyStudy.Data.Entities
 {
     public class CommentImage
     {

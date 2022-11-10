@@ -1,6 +1,5 @@
-﻿using DaisyStudy.ApiIntegration.Common.Classes;
+﻿using DaisyStudy.ApiIntegration.Catalog.Classes;
 using DaisyStudy.ViewModels.Catalog.Classes;
-using DaisyStudy.ViewModels.Catalog.ClassImages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaisyStudy.AdminApp.Controllers
@@ -25,7 +24,7 @@ namespace DaisyStudy.AdminApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
-            var data = await _classApiClient.GetClassPaging(request);
+            var data = await _classApiClient.GetManageClassPaging(request);
             ViewBag.Keyword = keyword;
             if (TempData["result"] != null)
             {
@@ -66,15 +65,15 @@ namespace DaisyStudy.AdminApp.Controllers
             string filePath = "";
             if (!ModelState.IsValid)
                 return View();
-            List<ClassImageCreateRequest> list = new List<ClassImageCreateRequest>() ;
+            List<ClassImageUpdateRequest> list = new List<ClassImageUpdateRequest>() ;
             foreach (IFormFile image in Request.Form.Files)
             {
-                ClassImageCreateRequest classImageCreateRequest = new ClassImageCreateRequest();
-                classImageCreateRequest.ImageFile = image;
+                ClassImageUpdateRequest classImageCreateRequest = new ClassImageUpdateRequest();
+                classImageCreateRequest.ThumbnailImage = image;
                 list.Add(classImageCreateRequest);
             }
 
-            foreach (ClassImageCreateRequest classImageCreateRequest in list)
+            foreach (ClassImageUpdateRequest classImageCreateRequest in list)
             {
                 filePath = _configuration["BaseAddress"] +  await _classApiClient.UploadImage(classImageCreateRequest);
             }
