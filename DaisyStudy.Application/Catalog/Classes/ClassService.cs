@@ -316,12 +316,8 @@ namespace DaisyStudy.Application.Catalog.Classes
         {
             //1. Select join
             var query = from n in _context.Notifications
-                        join c in _context.Comments on n.NotificationID equals c.NotificationID
                         where n.ClassID == ClassID
-                        select new { n, c };
-
-            //3. Paging
-            int totalRow = await query.CountAsync();
+                        select new { n };
 
             var data = await query.Select(x => new NotificationViewModel()
             {
@@ -400,10 +396,11 @@ namespace DaisyStudy.Application.Catalog.Classes
                 StudentNumber = _context.ClassDetails.Where(c => c.ClassID == _class.ID).Count() - 1,
                 TeacherImage = user.Avatar,
                 TeacherUserName = user.UserName,
-                ClassDetails = await GetAllStudentByClassID(_class.ID),
-                Notifications = await GetAllNotificationByClassID(_class.ID),
-                Chats = await GetAllChatByClassID(_class.ID)
             };
+
+            classViewModel.ClassDetails = await GetAllStudentByClassID(_class.ID);
+            classViewModel.Notifications = await GetAllNotificationByClassID(_class.ID);
+            classViewModel.Chats = await GetAllChatByClassID(_class.ID);
 
             await AddViewCount(ID);
             return new ApiSuccessResult<ClassViewModel>(classViewModel);

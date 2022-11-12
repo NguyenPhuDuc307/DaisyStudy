@@ -8,6 +8,7 @@ using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SignalRChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,7 @@ builder.Services.AddTransient<ICommentApiClient, CommentApiClient>();
 builder.Services.AddTransient<IChatApiClient, ChatApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -69,5 +71,6 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

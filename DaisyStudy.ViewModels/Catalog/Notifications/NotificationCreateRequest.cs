@@ -5,6 +5,8 @@ namespace DaisyStudy.ViewModels.Catalog.Notifications;
 
 public class NotificationCreateRequest
 {
+    public string? ReturnUrl { set; get; }
+    
     [Display(Name = "Mã lớp học")]
     public int ClassID { set; get; }
 

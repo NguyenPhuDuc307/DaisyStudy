@@ -41,7 +41,10 @@ public class ChatApiClient : BaseApiClient, IChatApiClient
 
         requestContent.Add(new StringContent(request.UserName.ToString()), "userName");
         requestContent.Add(new StringContent(request.ClassID.ToString()), "classID");
-        requestContent.Add(new StringContent(request.Content.ToString()), "Content");
+        if (request.Content != null)
+        {
+            requestContent.Add(new StringContent(request.Content.ToString()), "Content");
+        }
         
         var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
         var client = _httpClientFactory.CreateClient();

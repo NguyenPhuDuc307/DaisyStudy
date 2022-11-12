@@ -6,6 +6,7 @@ namespace DaisyStudy.ViewModels.Catalog.Chats;
 
 public class ChatCreateRequest
 {
+    public string? ReturnUrl { get; set; }
     public int ClassID { set; get; }
     public string? UserName { set; get; }
 
