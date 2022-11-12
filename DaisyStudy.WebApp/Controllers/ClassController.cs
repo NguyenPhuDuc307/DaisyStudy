@@ -93,6 +93,10 @@ public class ClassController : BaseController
     public async Task<IActionResult> Details(int ClassID)
     {
         var result = await _classApiClient.GetById(ClassID);
+        if (TempData["result"] != null)
+        {
+            ViewBag.SuccessMsg = TempData["result"];
+        }
         return View(result.ResultObj);
     }
 }

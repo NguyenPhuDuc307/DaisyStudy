@@ -13,7 +13,6 @@ namespace DaisyStudy.Data.Configurations
 
             builder.HasKey(x => x.ChatID);
 
-            builder.Property(x => x.Content).IsRequired();
             builder.Property(x => x.ClassID).IsRequired();
             builder.Property(x => x.UserID).IsRequired();
             builder.Property(x => x.Likes).IsRequired().HasDefaultValue(0);

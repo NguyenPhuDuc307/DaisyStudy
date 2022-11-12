@@ -41,7 +41,10 @@ public class CommentApiClient : BaseApiClient, ICommentApiClient
 
         requestContent.Add(new StringContent(request.UserName.ToString()), "userName");
         requestContent.Add(new StringContent(request.NotificationID.ToString()), "notificationID");
-        requestContent.Add(new StringContent(request.Content.ToString()), "Content");
+        if (request.Content != null)
+        {
+            requestContent.Add(new StringContent(request.Content.ToString()), "Content");
+        }
         
         var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
         var client = _httpClientFactory.CreateClient();

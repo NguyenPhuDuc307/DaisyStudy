@@ -36,13 +36,20 @@ public class NotificationApiClient : BaseApiClient, INotificationApiClient
                 }
                 ByteArrayContent bytes = new ByteArrayContent(data);
                 requestContent.Add(bytes, "thumbnailImages", item.FileName);
-            }  
+            }
+        }
+
+        if (request.Title != null)
+        {
+            requestContent.Add(new StringContent(request.Title.ToString()), "Title");
+        }
+        if (request.Content != null)
+        {
+            requestContent.Add(new StringContent(request.Content.ToString()), "Content");
         }
 
         requestContent.Add(new StringContent(request.ClassID.ToString()), "ClassID");
-        requestContent.Add(new StringContent(request.Title.ToString()), "Title");
-        requestContent.Add(new StringContent(request.Content.ToString()), "Content");
-        
+
         var sessions = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
         var client = _httpClientFactory.CreateClient();
 
@@ -50,7 +57,7 @@ public class NotificationApiClient : BaseApiClient, INotificationApiClient
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
         var response = await client.PostAsync($"/api/notifications", requestContent);
 
-         if (response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             return true;
         }

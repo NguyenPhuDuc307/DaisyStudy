@@ -39,6 +39,12 @@ public class HomeController : BaseController
         return View(data.ResultObj);
     }
 
+    public IActionResult Chat()
+    {
+        return View();
+    }
+
+
     public IActionResult Privacy()
     {
         return View();

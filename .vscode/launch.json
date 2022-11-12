@@ -79,9 +79,9 @@
         }
     ],
     "compounds": [
-        {
-            "name": "BackendApi | WebApp",
-            "configurations": ["BackendApi", "WebApp"]
-        }
+    {
+        "name": "BackendApi | WebApp",
+        "configurations": ["BackendApi", "WebApp"]
+    }
     ]
 }

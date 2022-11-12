@@ -6,6 +6,7 @@ namespace DaisyStudy.ViewModels.Catalog.Comments;
 
 public class CommentCreateRequest
 {
+    public string? ReturnUrl { get; set; }
     public int NotificationID { set; get; }
     public string? UserName { set; get; }
 
