@@ -18,6 +18,12 @@ using DaisyStudy.Application.Catalog.Submissions;
 using DaisyStudy.Application.Catalog.Notifications;
 using DaisyStudy.Application.Catalog.Comments;
 using DaisyStudy.Application.Catalog.Chats;
+using DaisyStudy.Application.Catalog.ExamSchedules;
+using DaisyStudy.Application.Catalog.Questions;
+using DaisyStudy.Application.Catalog.Answers;
+
+
+using DaisyStudy.Application.Catalog.Questions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +49,9 @@ builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IExamSchedulesService, ExamSchedulesService>();
+builder.Services.AddTransient<IQuestionService, QuestionService>();
+builder.Services.AddTransient<IAnswerService, AnswerService>();
 
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();

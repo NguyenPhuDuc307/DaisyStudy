@@ -80,8 +80,8 @@
     ],
     "compounds": [
         {
-            "name": "BackendApi | WebApp",
-            "configurations": ["BackendApi", "WebApp"]
+            "name": "BackendApi | AdminApp",
+            "configurations": ["BackendApi", "AdminApp"]
         }
     ]
 }
