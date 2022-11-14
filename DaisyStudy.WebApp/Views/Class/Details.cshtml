@@ -424,7 +424,9 @@
                                     <h6 class="m-0 font-weight-bold text-success mb-1">@a.FullName</h6>
                                     @Html.Raw(a.Content)
 
-                                    <div class="card-group d-inline-flex">
+                                <div class="card-group d-inline-flex">
+                                    @if (a.CommentImages != null)
+                                    {
                                         @foreach (var image in a.CommentImages)
                                         {
                                             <div class="card" style="margin: 0.25rem; margin-left: 0; border: none; max-width: 33%;">
@@ -446,7 +448,9 @@
                                                 }
                                             </div>
                                         }
-                                    </div>
+                                    }
+
+                                </div>
                                 </div>
 
                             </div>
@@ -513,162 +517,53 @@
                     </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    <h6 class="m0 text-primary">Giáo viên</h6>
-                    @if (Convert.ToString(Model.TeacherImage) == "")
-                    {
-                        <div class="mb-3">
-                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                                 src="/img/undraw_profile.svg">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="mb-3">
-                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                                 src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
-                        </div>
-                    }
-                    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
-
-                    <h6 class="m0 text-primary">Học sinh</h6>
-                    @foreach (var item in Model.ClassDetails)
-                    {
-                        var url = "https://localhost:5001";
-                        @if (Convert.ToString(item.Avatar) == "" && item.IsTeacher ==
-                      DaisyStudy.Data.Entities.Teacher.Student)
+                <div>
+                    <div class="card-body">
+                        <h6 class="m0 text-primary">Giáo viên</h6>
+                        @if (Convert.ToString(Model.TeacherImage) == "")
                         {
                             <div class="mb-3">
                                 <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
                                      src="/img/undraw_profile.svg">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
                             </div>
                         }
-                        else if (Convert.ToString(item.Avatar) != "" && item.IsTeacher ==
-                        DaisyStudy.Data.Entities.Teacher.Student)
+                        else
                         {
                             <div class="mb-3">
                                 <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                                     src="@url@item.Avatar" src="@url@item.Avatar">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                     src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
                             </div>
                         }
-                    }
-                </div>
-            </div>
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Trò chuyện</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                             aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
+                        <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
+                        <h6 class="m0 text-primary">Học sinh</h6>
+                        @foreach (var item in Model.ClassDetails)
+                        {
+                            var url = "https://localhost:5001";
+                            @if (Convert.ToString(item.Avatar) == "" && item.IsTeacher ==
+                         DaisyStudy.Data.Entities.Teacher.Student)
+                            {
+                                <div class="mb-3">
+                                    <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                         src="/img/undraw_profile.svg">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                </div>
+                            }
+                            else if (Convert.ToString(item.Avatar) != "" && item.IsTeacher ==
+                            DaisyStudy.Data.Entities.Teacher.Student)
+                            {
+                                <div class="mb-3">
+                                    <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                         src="@url@item.Avatar"/>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                </div>
+                            }
+                        }
                     </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    @foreach (var item in Model.Chats)
-                    {
-                        var url = "https://localhost:5001";
-                        <div class="d-flex mb-3">
-
-                            @if (Convert.ToString(item.Avatar) == "")
-                            {
-                                <div>
-                                    <img style="width: 32px; height: 32px; object-fit: cover;"
-                                         class="img-profile rounded-circle me-3" src="/img/undraw_profile.svg">
-                                </div>
-                            }
-                            else
-                            {
-                                <div>
-                                    <img style="width: 32px; height: 32px; object-fit: cover;"
-                                         class="img-profile rounded-circle me-3"
-                                         src="@(Configuration["BaseAddress"] + item.Avatar)" alt="@(item.Avatar)">
-                                </div>
-                            }
-                            <div style="border: none; padding-bottom: 2rem;"
-                                 class="card card-header bg-gray-100 shadow-sm position-relative">
-                                <h6 class="m-0 font-weight-bold text-success mb-1">@item.FullName</h6>
-                                @Html.Raw(item.Content)
-
-                                <div class="card-group d-inline-flex">
-                                    @foreach (var image in item.ChatImages)
-                                    {
-                                        <div class="card" style="border: none; max-width: 33%;">
-                                            @{
-                                                if (Convert.ToString(image.ImagePath).Contains(".png") || Convert.ToString(image.ImagePath).Contains(".jpeg") || Convert.ToString(image.ImagePath).Contains(".jpg") || Convert.ToString(image.ImagePath).Contains(".gif"))
-                                                {
-                                                    <a target="_blank" href="@url@image.ImagePath">
-                                                        <img class="img-thumbnail" src="@url@image.ImagePath" alt="@url@image.ImagePath" />
-                                                    </a>
-                                                }
-                                                else
-                                                {
-                                                    <a target="_blank" href="@url@image.ImagePath" download="@image.ImagePath">
-                                                        <iframe class="img-thumbnail" src="@url@image.ImagePath"
-                                                                alt="@url@image.ImagePath"></iframe>
-                                                    </a>
-                                                }
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                                <div class="position-absolute bottom-0 start-0 mx-3">
-                                    <i class="fa-solid fa-heart me-1"></i>@item.Likes
-                                    <i class="fa-regular fa-thumbs-down mx-1"></i>@item.Dislikes
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    <form asp-action="Create" asp-controller="Chat" enctype="multipart/form-data" method="post">
-                        <div class="input-group">
-                            <input name="UserName" value="@User.Identity.Name" multiple class="form-control" hidden />
-                            <input name="ClassID" value="@Model.ID" hidden class="form-control" />
-                            <input class="form-control mb-2" hidden name="ReturnUrl" value="@returnUrl" type="text">
-                            <input type="text" name="Content" class="form-control bg-light border-0 small"
-                                   placeholder="Nhập tin nhắn..." aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ci_@Model.ClassID" type="button">
-                                    <i class="fa-solid fa-paperclip"></i>
-                                </button>
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fa-regular fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Comment -->
-                        <div class="modal fade" id="ci_@Model.ClassID" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đính kèm tệp</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <input name="ChatImages" type="file" multiple class="form-control">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xong</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
-
     </div>
+</div>

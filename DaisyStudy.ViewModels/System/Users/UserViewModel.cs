@@ -6,6 +6,8 @@ public class UserViewModel
 {
     public Guid Id { get; set; }
 
+    public string? Avatar { get; set; }
+
     [Display(Name = "Tên")]
     public string? FirstName { get; set; }
 
@@ -25,5 +27,10 @@ public class UserViewModel
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime Dob { get; set; }
 
-    public IList<string> Roles { get; set; }
+    [Display(Name = "Thiết bị")]
+    public string? Device { get; set; }
+
+    public string? CurrentRoom { get; set; }
+
+    public IList<string>? Roles { get; set; }
 }

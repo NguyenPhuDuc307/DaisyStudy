@@ -12,7 +12,6 @@ using DaisyStudy.ViewModels.Catalog.Classes;
 using Microsoft.AspNetCore.Identity;
 using DaisyStudy.ViewModels.Catalog.Notifications;
 using DaisyStudy.ViewModels.Catalog.Comments;
-using DaisyStudy.ViewModels.Catalog.Chats;
 
 namespace DaisyStudy.Application.Catalog.Classes
 {
@@ -335,38 +334,6 @@ namespace DaisyStudy.Application.Catalog.Classes
 
             return data;
         }
-
-        public async Task<List<ChatViewModel>> GetAllChatByClassID(int ClassID)
-    {
-        //1. Select join
-        var query = from c in _context.Chats
-                    join u in _userManager.Users on c.UserID equals u.Id into cu
-                    from u in cu.DefaultIfEmpty()
-                    select new { u, c };
-        //2. filter
-        if (ClassID != null && ClassID != 0)
-        {
-            query = query.Where(p => p.c.ClassID == ClassID);
-        }
-
-        var data = await query
-            .Select(x => new ChatViewModel()
-            {
-                ChatID = x.c.ChatID,
-                ClassID = x.c.ClassID,
-                UserID = x.c.UserID,
-                Avatar = x.u.Avatar,
-                FullName = x.u.FirstName + " " + x.u.LastName,
-                Content = x.c.Content,
-                DateTimeCreated = x.c.DateTimeCreated,
-                Likes = x.c.Likes,
-                Dislikes = x.c.Dislikes,
-                ChatImages = (_context.ChatImages.Where(p => p.ChatID == x.c.ChatID).ToList()) != null ? (_context.ChatImages.Where(p => p.ChatID == x.c.ChatID).ToList()) : null
-            }).ToListAsync();
-
-        return data;
-    }
-
         public async Task<ApiResult<ClassViewModel>> GetById(int ID)
         {
             var _class = _context.Classes.FirstOrDefault(x => x.ID == ID);
@@ -400,7 +367,6 @@ namespace DaisyStudy.Application.Catalog.Classes
 
             classViewModel.ClassDetails = await GetAllStudentByClassID(_class.ID);
             classViewModel.Notifications = await GetAllNotificationByClassID(_class.ID);
-            classViewModel.Chats = await GetAllChatByClassID(_class.ID);
 
             await AddViewCount(ID);
             return new ApiSuccessResult<ClassViewModel>(classViewModel);

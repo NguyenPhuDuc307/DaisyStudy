@@ -22,7 +22,6 @@ namespace DaisyStudy.Data.Entities
         public List<Homework>? Homeworks { set; get; }
         public List<Notification>? Notifications { set; get; }
         public List<ExamSchedule>? ExamSchedules { set; get; }
-        public List<Chat>? Chats { set; get; }
     }
 }
 

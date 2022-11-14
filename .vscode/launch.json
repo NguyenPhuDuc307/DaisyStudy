@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DaisyStudy.BackendApi/bin/Debug/net6.0/DaisyStudy.BackendApi.dll",
+            "program": "${workspaceFolder}/DaisyStudy.BackendApi/bin/Debug/net7.0/DaisyStudy.BackendApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DaisyStudy.BackendApi",
             "stopAtEntry": false,
@@ -36,7 +36,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DaisyStudy.AdminApp/bin/Debug/net6.0/DaisyStudy.AdminApp.dll",
+            "program": "${workspaceFolder}/DaisyStudy.AdminApp/bin/Debug/net7.0/DaisyStudy.AdminApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DaisyStudy.AdminApp",
             "stopAtEntry": false,
@@ -51,8 +51,7 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
-        },
-        {
+        },{
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
@@ -61,7 +60,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DaisyStudy.WebApp/bin/Debug/net6.0/DaisyStudy.WebApp.dll",
+            "program": "${workspaceFolder}/DaisyStudy.WebApp/bin/Debug/net7.0/DaisyStudy.WebApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DaisyStudy.WebApp",
             "stopAtEntry": false,
@@ -79,9 +78,9 @@
         }
     ],
     "compounds": [
-    {
-        "name": "BackendApi | WebApp",
-        "configurations": ["BackendApi", "WebApp"]
-    }
+        {
+            "name": "BackendApi |  WebApp",
+            "configurations": ["BackendApi", "WebApp"]
+        }
     ]
 }
