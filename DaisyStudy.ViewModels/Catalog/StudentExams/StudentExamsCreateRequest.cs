@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace DaisyStudy.ViewModels.Catalog.StudentExams
 {
-    internal class StudentExamsCreateRequest
+    public class StudentExamsCreateRequest
     {
+        public int ExamScheduleID { set; get; }
+
+        public string? UserName { set; get; }
+
+        public float Mark { set; get; }
+
+        public string? Note { set; get; }
+
+        public DateTime DateTimeStudentExam { set; get; }
     }
 }

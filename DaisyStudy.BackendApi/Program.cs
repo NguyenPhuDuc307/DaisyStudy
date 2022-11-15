@@ -21,6 +21,7 @@ using DaisyStudy.Application.Catalog.Chats;
 using DaisyStudy.Application.Catalog.ExamSchedules;
 using DaisyStudy.Application.Catalog.Questions;
 using DaisyStudy.Application.Catalog.Answers;
+using DaisyStudy.Application.Catalog.StudentExams;
 
 
 using DaisyStudy.Application.Catalog.Questions;
@@ -52,6 +53,7 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IExamSchedulesService, ExamSchedulesService>();
 builder.Services.AddTransient<IQuestionService, QuestionService>();
 builder.Services.AddTransient<IAnswerService, AnswerService>();
+builder.Services.AddTransient<IStudentExamService, StudentExamService>();
 
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();

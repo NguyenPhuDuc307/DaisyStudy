@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace DaisyStudy.ViewModels.Catalog.StudentExams
 {
-    internal class StudentExamDetailsViewModel
+    public class StudentExamDetailsViewModel
     {
+        public int StudentExamDetailID { set; get; }
+
+        public int StudentExamID { set; get; }
+
+        public int AnswersID { set; get; }
     }
 }
