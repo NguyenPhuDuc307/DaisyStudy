@@ -22,6 +22,10 @@ using DaisyStudy.Application.Catalog.Messages;
 using DaisyStudy.BackendApi.Hubs;
 using DaisyStudy.Application.Catalog.Rooms;
 using DaisyStudy.Application.Catalog.Uploads;
+using DaisyStudy.Application.Catalog.ExamSchedules;
+using DaisyStudy.Application.Catalog.Questions;
+using DaisyStudy.Application.Catalog.Answers;
+using DaisyStudy.Application.Catalog.StudentExams;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
@@ -54,6 +58,12 @@ builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 builder.Services.AddTransient<IMessageService, MessageService>();
 builder.Services.AddTransient<IUploadImageService, UploadImageService>();
+builder.Services.AddTransient<IExamSchedulesService, ExamSchedulesService>();
+builder.Services.AddTransient<IQuestionService, QuestionService>();
+builder.Services.AddTransient<IAnswerService, AnswerService>();
+builder.Services.AddTransient<IStudentExamService, StudentExamService>();
+
+
 builder.Services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
