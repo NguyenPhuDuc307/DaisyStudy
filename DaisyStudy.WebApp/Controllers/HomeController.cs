@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using DaisyStudy.WebApp.Models;
 using DaisyStudy.ViewModels.Catalog.Classes;
 using DaisyStudy.ApiIntegration.Catalog.Classes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DaisyStudy.WebApp.Controllers;
-
+[Authorize]
 public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
@@ -41,6 +42,19 @@ public class HomeController : BaseController
 
     public IActionResult Chat()
     {
+        if (User.Identity != null)
+        {
+            var user = User.Identity.Name;
+        }
+        return View();
+    }
+
+    public IActionResult SignalRChat()
+    {
+        if (User.Identity != null)
+        {
+            var user = User.Identity.Name;
+        }
         return View();
     }
 

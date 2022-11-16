@@ -2,16 +2,13 @@
 using DaisyStudy.ApiIntegration.Catalog.Comments;
 using DaisyStudy.ApiIntegration.Catalog.Homeworks;
 using DaisyStudy.ApiIntegration.Catalog.Notifications;
-using DaisyStudy.ApiIntegration.Catalog.Chats;
 using DaisyStudy.ApiIntegration.System.Roles;
 using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SignalRChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddHttpClient();
 
@@ -24,7 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddFluentValidation(options => 
+builder.Services.AddFluentValidation(options =>
     options.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
 builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
@@ -37,9 +34,10 @@ builder.Services.AddTransient<IClassApiClient, ClassApiClient>();
 builder.Services.AddTransient<IHomeworkApiClient, HomeworkApiClient>();
 builder.Services.AddTransient<INotificationApiClient, NotificationApiClient>();
 builder.Services.AddTransient<ICommentApiClient, CommentApiClient>();
-builder.Services.AddTransient<IChatApiClient, ChatApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
+
+// SignalR
 builder.Services.AddSignalR();
 
 if (builder.Environment.IsDevelopment())
@@ -71,6 +69,5 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

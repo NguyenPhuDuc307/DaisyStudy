@@ -17,10 +17,13 @@ using DaisyStudy.Application.Catalog.Homeworks;
 using DaisyStudy.Application.Catalog.Submissions;
 using DaisyStudy.Application.Catalog.Notifications;
 using DaisyStudy.Application.Catalog.Comments;
-using DaisyStudy.Application.Catalog.Chats;
+using System.Text.Json.Serialization;
+using DaisyStudy.Application.Catalog.Messages;
+using DaisyStudy.BackendApi.Hubs;
+using DaisyStudy.Application.Catalog.Rooms;
+using DaisyStudy.Application.Catalog.Uploads;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(SystemConstants.MainConnectionString)
     ?? throw new InvalidOperationException("Connection string 'DaisyStudyDbContext' not found.")));
@@ -29,6 +32,17 @@ builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<DaisyStudyDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:5003")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST", "PUT", "DELETE")
+                .AllowCredentials();
+        });
+});
 // Declare DI
 builder.Services.AddTransient<IStorageService, FileStorageService>();
 
@@ -37,7 +51,9 @@ builder.Services.AddTransient<IHomeworkService, HomeworkService>();
 builder.Services.AddTransient<ISubmissionService, SubmissionService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
-builder.Services.AddTransient<IChatService, ChatService>();
+builder.Services.AddTransient<IRoomService, RoomService>();
+builder.Services.AddTransient<IMessageService, MessageService>();
+builder.Services.AddTransient<IUploadImageService, UploadImageService>();
 builder.Services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
@@ -47,9 +63,15 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
 
+
+
 // Add services to the container.
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -111,6 +133,7 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -121,7 +144,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 
 }
-
+app.UseCors();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -138,12 +161,12 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger DaisyStudy V1");
 });
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
+app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+
+app.MapHub<ChatHub>("/chatHub");
+ 
 
 app.Run();
 

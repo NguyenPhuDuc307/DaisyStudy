@@ -16,7 +16,6 @@ namespace DaisyStudy.Data.EF
         {
             modelBuilder.ApplyConfiguration(new AnswerConfiguration());
             modelBuilder.ApplyConfiguration(new AppConfigConfiguration());
-            modelBuilder.ApplyConfiguration(new ChatConfiguration());
             modelBuilder.ApplyConfiguration(new ClassConfiguration());
             modelBuilder.ApplyConfiguration(new ClassDetailConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
@@ -31,9 +30,10 @@ namespace DaisyStudy.Data.EF
             modelBuilder.ApplyConfiguration(new TransactionConfiguration());
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
-            modelBuilder.ApplyConfiguration(new ChatImageConfiguration());
             modelBuilder.ApplyConfiguration(new CommentImageConfiguration());
             modelBuilder.ApplyConfiguration(new NotificationImageConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
@@ -46,7 +46,6 @@ namespace DaisyStudy.Data.EF
 
         public DbSet<Answer> Answers { set; get; }
         public DbSet<AppConfig> AppConfigs { set; get; }
-        public DbSet<Chat> Chats { set; get; }
         public DbSet<Class> Classes { set; get; }
         public DbSet<ClassDetail> ClassDetails { set; get; }
         public DbSet<Comment> Comments { set; get; }
@@ -59,8 +58,9 @@ namespace DaisyStudy.Data.EF
         public DbSet<StudentExamDetail> StudentExamDetails { set; get; }
         public DbSet<Submission> Submissions { set; get; }
         public DbSet<Transaction> Transactions { set; get; }
-        public DbSet<ChatImage> ChatImages { set; get; }
         public DbSet<CommentImage> CommentImages { set; get; }
         public DbSet<NotificationImage> NotificationImages { set; get; }
+        public DbSet<Room> Rooms { set; get; }
+        public DbSet<Message> Messages { set; get; }
     }
 }

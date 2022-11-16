@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DaisyStudy.Data.Entities;
 
 namespace DaisyStudy.ViewModels.Catalog.Homeworks;
 

@@ -34,6 +34,11 @@ public class UserApiClient : BaseApiClient, IUserApiClient
         return await GetAsync<ApiResult<UserViewModel>>($"/api/users/{id}");
     }
 
+    public async Task<ApiResult<UserViewModel>> GetByName(string UserName)
+    {
+        return await GetAsync<ApiResult<UserViewModel>>($"/api/users/UserName/{UserName}");
+    }
+
     public async Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request)
     {
         return await GetAsync<ApiResult<PagedResult<UserViewModel>>>($"/api/users/paging?pageIndex=" +
