@@ -32,7 +32,7 @@ namespace DaisyStudy.Data.EF
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
             modelBuilder.ApplyConfiguration(new CommentImageConfiguration());
             modelBuilder.ApplyConfiguration(new NotificationImageConfiguration());
-            modelBuilder.ApplyConfiguration(new RoomChatConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomConfiguration());
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
@@ -60,7 +60,7 @@ namespace DaisyStudy.Data.EF
         public DbSet<Transaction> Transactions { set; get; }
         public DbSet<CommentImage> CommentImages { set; get; }
         public DbSet<NotificationImage> NotificationImages { set; get; }
-        public DbSet<RoomChat> RoomChats { set; get; }
+        public DbSet<Room> Rooms { set; get; }
         public DbSet<Message> Messages { set; get; }
     }
 }

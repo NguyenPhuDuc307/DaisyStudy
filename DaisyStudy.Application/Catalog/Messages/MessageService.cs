@@ -4,8 +4,12 @@ using DaisyStudy.Application.Common;
 using Microsoft.AspNetCore.Identity;
 using DaisyStudy.ViewModels.Catalog.Messages;
 using DaisyStudy.Utilities.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using DaisyStudy.ViewModels.Catalog.Uploads;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
+using DaisyStudy.Application.Common.Helpers;
 
 namespace DaisyStudy.Application.Catalog.Messages
 {
@@ -23,88 +27,82 @@ namespace DaisyStudy.Application.Catalog.Messages
             _userManager = userManager;
         }
 
-        public async Task<Message> GetById(int MessageID)
+        public async Task<Message> Get(int id)
         {
-            var message = await _context.Messages.FindAsync(MessageID);
+            var message = await _context.Messages.FindAsync(id);
+            if (message == null) throw new DaisyStudyException($"Cannot find a message {id}");
 
-            if (message == null) throw new DaisyStudyException($"Cannot find a message {MessageID}");
-
-            return message;
+            Message messageViewModel = new Message();
+            messageViewModel.Id = message.Id;
+            messageViewModel.Content = message.Content;
+            messageViewModel.Timestamp = message.Timestamp;
+            messageViewModel.ToRoomId = message.ToRoomId;
+            return messageViewModel;
         }
 
-        public async Task<int> Create(MessageViewModel request)
+        public async Task<IEnumerable<MessageViewModel>> GetMessages(string roomName)
         {
-            var user = await _userManager.FindByNameAsync(request.From);
-            if (user == null) throw new DaisyStudyException($"Cannot find a user {request.From}");
+            var room = _context.Rooms.FirstOrDefault(r => r.Name == roomName);
+            if (room == null) throw new DaisyStudyException($"Cannot find a room {roomName}");
 
-            var roomChat = _context.RoomChats.FirstOrDefault(r=> r.RoomChatName == request.RoomChatName);
+            var query = from m in _context.Messages where m.ToRoomId == room.Id select new { m };
 
-            if (roomChat == null) throw new DaisyStudyException($"Cannot find a room {request.RoomChatName}");
-
-            var message = new Message()
+            var messagesViewModels = await query
+            .Select(x => new MessageViewModel()
             {
-                FromUserID = user.Id,
-                ToRoomID = roomChat.RoomChatID,
-                Content = request.Content,
-                TimeStamp = DateTime.Now
-            };
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
-            return message.MessageID;
+                Id = x.m.Id,
+                Content = x.m.Content,
+                Timestamp = x.m.Timestamp,
+                Room = x.m.ToRoom.Name,
+                From = x.m.FromUser.FirstName + " "+ x.m.FromUser.LastName,
+                Avatar = x.m.FromUser.Avatar,
+                UserName = x.m.FromUser.UserName
+            }).ToListAsync();
+            
+            return messagesViewModels;
         }
 
-        public async Task<int> Delete(int MessageID)
+        public async Task<MessageViewModel> Create(MessageViewModel messageViewModel)
         {
-            var message = await _context.Messages.FindAsync(MessageID);
-            if (message == null) throw new DaisyStudyException($"Cannot find a message {MessageID}");
+            var user = _context.Users.FirstOrDefault(u => u.UserName == messageViewModel.UserName);
+            var room = _context.Rooms.FirstOrDefault(r => r.Name == messageViewModel.Room);
+            if (room == null) throw new DaisyStudyException($"Cannot find a room {messageViewModel.Room}");
+
+            var msg = new Message()
+            {
+                Content = BasicEmojis.ParseEmojis( Regex.Replace(messageViewModel.Content, @"<.*?>", string.Empty)),
+                FromUser = user,
+                ToRoom = room,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Messages.Add(msg);
+            await _context.SaveChangesAsync();
+
+            // Broadcast the message
+            MessageViewModel createdMessage = new MessageViewModel();
+            createdMessage.Id = msg.Id;
+            createdMessage.Content = msg.Content;
+            createdMessage.Timestamp = msg.Timestamp;
+            createdMessage.Room = room.Name;
+            createdMessage.From = user.FirstName + " " + user.LastName;
+
+            return createdMessage;
+        }
+        
+        public async Task<int> Delete(int id, string UserName)
+        {
+            var message = await _context.Messages
+                .Include(u => u.FromUser)
+                .Where(m => m.Id == id && m.FromUser.UserName == UserName)
+                .FirstOrDefaultAsync();
+
+            if (message == null) throw new DaisyStudyException($"Cannot find a message {id}");
+
             _context.Messages.Remove(message);
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<MessageViewModel>> GetAll(string roomName)
-        {
-            var roomChat = _context.RoomChats.FirstOrDefault(r=> r.RoomChatName == roomName);
-
-            var data = _context.Messages.Where(m=> m.ToRoomID == roomChat.RoomChatID)
-            .Take(20)
-            .Select(m=> new MessageViewModel(){
-                Content = m.Content,
-                TimeStamp = m.TimeStamp,
-                From = m.FromUser.LastName,
-                RoomChatName = m.ToRoom.RoomChatName,
-                Avatar = m.FromUser.Avatar
-
-            }).OrderByDescending(m => m.TimeStamp)
-                .AsEnumerable()
-                .Reverse()
-                .ToList();
-
-            return data;
-        }
-
-        private async Task<string> SaveFile(IFormFile file)
-        {
-            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
-            await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
-            return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
-        }
-
-        public async Task<int> UploadFile(UploadViewModel request)
-        {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) throw new DaisyStudyException($"Cannot find a user {request.UserName}");
-
-            var message = new Message()
-            {
-                FromUserID = user.Id,
-                ToRoomID = request.RoomId,
-                Content = await this.SaveFile(request.File),
-                TimeStamp = DateTime.Now
-            };
-            _context.Messages.Add(message);
             await _context.SaveChangesAsync();
-            return message.MessageID;
+
+            return id;
         }
     }
 }

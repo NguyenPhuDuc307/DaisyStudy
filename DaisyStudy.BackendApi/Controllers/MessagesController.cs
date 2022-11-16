@@ -1,90 +1,70 @@
 using DaisyStudy.Application.Catalog.Messages;
-using DaisyStudy.Application.Catalog.RoomChats;
+using DaisyStudy.Application.Catalog.Rooms;
 using DaisyStudy.BackendApi.Hubs;
+using DaisyStudy.Data.Entities;
 using DaisyStudy.ViewModels.Catalog.Messages;
+using DaisyStudy.ViewModels.Catalog.Rooms;
+using DaisyStudy.ViewModels.Catalog.Uploads;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaisyStudy.BackendApi.Controllers;
 
-// api/Messages
+// api/messages
+//[Authorize]
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
+
 public class MessagesController : ControllerBase
 {
-    private readonly IMessageService _MessageService;
-
-    private readonly IRoomChatService _roomChatService;
+    private readonly IMessageService _messageService;
+    private readonly IRoomService _roomService;
     private readonly IHubContext<ChatHub> _hubContext;
 
-    public MessagesController(IMessageService MessageService, IHubContext<ChatHub> hubContext, IRoomChatService roomChatService)
+    public MessagesController(IMessageService messageService, IRoomService roomService, IHubContext<ChatHub> hubContext)
     {
-        _MessageService = MessageService;
+        _messageService = messageService;
+        _roomService = roomService;
         _hubContext = hubContext;
-        _roomChatService = roomChatService;
     }
 
-    // http://localhost:post/Messages/1
-    [HttpGet("{MessageID}")]
-    public async Task<IActionResult> GetById(int MessageID)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Room>> Get(int id)
     {
-        var Message = await _MessageService.GetById(MessageID);
-        if (Message == null)
-            return BadRequest("Cannot find Message");
-        return Ok(Message);
+        var message = await _messageService.Get(id);
+        if (message == null)
+            return NotFound();
+
+        return Ok(message);
+    }
+
+    [HttpGet("Room/{roomName}")]
+    public async Task<ActionResult<IEnumerable<MessageViewModel>>> GetMessages(string roomName)
+    {
+        var messagesViewModel = await _messageService.GetMessages(roomName);
+        return Ok(messagesViewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromForm] MessageViewModel request)
+    public async Task<ActionResult<Message>> Create(MessageViewModel messageViewModel)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        var id = await _MessageService.Create(request);
+        var createdMessage = await _messageService.Create(messageViewModel);
+        var room = await _roomService.Get(messageViewModel.Room);
+        // Broadcast the message
+        await _hubContext.Clients.Group(room.Name).SendAsync("newMessage", createdMessage);
 
-        var room = await _roomChatService.GetByName(request.RoomChatName);
-        if (id == 0)
-            return BadRequest();
-
-        var Message = await _MessageService.GetById(id);
-
-        await _hubContext.Clients.Group(room.RoomChatName).SendAsync("newMessage", Message);
-
-        return CreatedAtAction(nameof(GetById), new { id = id }, Message);
+        return CreatedAtAction(nameof(Get), new { id = createdMessage.Id }, createdMessage);
     }
 
-    [HttpPost("upload")]
-    public async Task<IActionResult> UpLoadFile([FromForm] UploadViewModel request)
+    [HttpDelete("{id}/{userName}")]
+    public async Task<IActionResult> Delete(int id, string userName)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        var id = await _MessageService.UploadFile(request);
-        if (id == 0)
-            return BadRequest();
+        int Id = await _messageService.Delete(id, userName);
 
-        var Message = await _MessageService.GetById(id);
+        await _hubContext.Clients.All.SendAsync("removeChatMessage", Id);
 
-        return CreatedAtAction(nameof(GetById), new { id = id }, Message);
-    }
-
-    [HttpDelete("{MessageId}")]
-    public async Task<IActionResult> Delete(int MessageId)
-    {
-        var affectedResult = await _MessageService.Delete(MessageId);
-        if (affectedResult == 0)
-            return BadRequest();
-        return NoContent();
-    }
-
-    [HttpGet("roomName/{roomName}")]
-    public async Task<IActionResult> GetAll(string roomName)
-    {
-        var Messages = await _MessageService.GetAll(roomName);
-        return Ok(Messages);
+        return Ok();
     }
 }

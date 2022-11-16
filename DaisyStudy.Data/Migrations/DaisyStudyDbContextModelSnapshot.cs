@@ -408,29 +408,31 @@ namespace DaisyStudy.Data.Migrations
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Message", b =>
                 {
-                    b.Property<int>("MessageID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid>("FromUserID")
+                    b.Property<Guid?>("FromUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("TimeStamp")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ToRoomID")
+                    b.Property<int>("ToRoomId")
                         .HasColumnType("int");
 
-                    b.HasKey("MessageID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FromUserID");
+                    b.HasIndex("FromUserId");
 
-                    b.HasIndex("ToRoomID");
+                    b.HasIndex("ToRoomId");
 
                     b.ToTable("Messages", (string)null);
                 });
@@ -531,26 +533,27 @@ namespace DaisyStudy.Data.Migrations
                     b.ToTable("Questions", (string)null);
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.RoomChat", b =>
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
                 {
-                    b.Property<int>("RoomChatID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomChatID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("AdminID")
+                    b.Property<Guid>("AdminId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoomChatName")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("RoomChatID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AdminID");
+                    b.HasIndex("AdminId");
 
-                    b.ToTable("RoomChats", (string)null);
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>
@@ -872,14 +875,12 @@ namespace DaisyStudy.Data.Migrations
                 {
                     b.HasOne("DaisyStudy.Data.Entities.AppUser", "FromUser")
                         .WithMany("Messages")
-                        .HasForeignKey("FromUserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FromUserId");
 
-                    b.HasOne("DaisyStudy.Data.Entities.RoomChat", "ToRoom")
+                    b.HasOne("DaisyStudy.Data.Entities.Room", "ToRoom")
                         .WithMany("Messages")
-                        .HasForeignKey("ToRoomID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .HasForeignKey("ToRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FromUser");
@@ -920,11 +921,11 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("ExamSchedule");
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.RoomChat", b =>
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
                 {
                     b.HasOne("DaisyStudy.Data.Entities.AppUser", "Admin")
-                        .WithMany("RoomChats")
-                        .HasForeignKey("AdminID")
+                        .WithMany("Rooms")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1012,7 +1013,7 @@ namespace DaisyStudy.Data.Migrations
 
                     b.Navigation("Messages");
 
-                    b.Navigation("RoomChats");
+                    b.Navigation("Rooms");
 
                     b.Navigation("StudentExams");
 
@@ -1061,7 +1062,7 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("Answers");
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.RoomChat", b =>
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
                 {
                     b.Navigation("Messages");
                 });

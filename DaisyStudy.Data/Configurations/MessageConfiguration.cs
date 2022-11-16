@@ -10,12 +10,12 @@ namespace DaisyStudy.Data.Configurations
         {
             builder.ToTable("Messages");
 
-            builder.HasKey(x => x.MessageID);
+            builder.Property(s => s.Content).IsRequired().HasMaxLength(500);
 
-            builder.Property(x => x.MessageID).UseIdentityColumn();
-            
-            builder.HasOne(x => x.FromUser).WithMany(x => x.Messages).HasForeignKey(x => x.FromUserID);
-            builder.HasOne(x => x.ToRoom).WithMany(x => x.Messages).HasForeignKey(x => x.ToRoomID).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(s => s.ToRoom)
+                .WithMany(m => m.Messages)
+                .HasForeignKey(s => s.ToRoomId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

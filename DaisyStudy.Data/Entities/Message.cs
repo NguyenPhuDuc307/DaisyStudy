@@ -2,13 +2,12 @@ namespace DaisyStudy.Data.Entities
 {
     public class Message
     {
-        public int MessageID { set; get; }
-        public Guid FromUserID { set; get; }
-        public AppUser? FromUser { set; get; }
-        public int ToRoomID { set; get; }
-        public RoomChat? ToRoom { set; get; }
-        public string? Content { set; get; }
-        public DateTime TimeStamp { set; get; }
+        public int Id { get; set; }
+        public string? Content { get; set; }
+        public DateTime Timestamp { get; set; }
+        public AppUser? FromUser { get; set; }
+        public int ToRoomId { get; set; }
+        public Room? ToRoom { get; set; }
     }
 }
 

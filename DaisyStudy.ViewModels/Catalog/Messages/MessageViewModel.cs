@@ -4,11 +4,13 @@ namespace DaisyStudy.ViewModels.Catalog.Messages;
 
 public class MessageViewModel
 {
+    public int Id { get; set; }
     [Required]
     public string? Content { get; set; }
-    public DateTime? TimeStamp { get; set; }
+    public DateTime Timestamp { get; set; }
     public string? From { get; set; }
     [Required]
-    public string? RoomChatName { get; set; }
+    public string? Room { get; set; }
     public string? Avatar { get; set; }
+    public string? UserName { get; set; }
 }

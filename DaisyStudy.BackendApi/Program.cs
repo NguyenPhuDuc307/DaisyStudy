@@ -17,11 +17,11 @@ using DaisyStudy.Application.Catalog.Homeworks;
 using DaisyStudy.Application.Catalog.Submissions;
 using DaisyStudy.Application.Catalog.Notifications;
 using DaisyStudy.Application.Catalog.Comments;
-using DaisyStudy.Application.Catalog.RoomChats;
 using System.Text.Json.Serialization;
 using DaisyStudy.Application.Catalog.Messages;
 using DaisyStudy.BackendApi.Hubs;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using DaisyStudy.Application.Catalog.Rooms;
+using DaisyStudy.Application.Catalog.Uploads;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DaisyStudyDbContext>(options =>
@@ -39,7 +39,7 @@ builder.Services.AddCors(options =>
         {
             builder.WithOrigins("https://localhost:5003")
                 .AllowAnyHeader()
-                .WithMethods("GET", "POST")
+                .WithMethods("GET", "POST", "PUT", "DELETE")
                 .AllowCredentials();
         });
 });
@@ -51,8 +51,9 @@ builder.Services.AddTransient<IHomeworkService, HomeworkService>();
 builder.Services.AddTransient<ISubmissionService, SubmissionService>();
 builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
-builder.Services.AddTransient<IRoomChatService, RoomChatService>();
+builder.Services.AddTransient<IRoomService, RoomService>();
 builder.Services.AddTransient<IMessageService, MessageService>();
+builder.Services.AddTransient<IUploadImageService, UploadImageService>();
 builder.Services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

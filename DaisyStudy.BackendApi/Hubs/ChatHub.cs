@@ -1,165 +1,170 @@
-using System.Text.RegularExpressions;
+using DaisyStudy.Application.System.Users;
 using DaisyStudy.Data.EF;
 using DaisyStudy.ViewModels.Catalog.Messages;
 using DaisyStudy.ViewModels.System.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.RegularExpressions;
 
-namespace DaisyStudy.BackendApi.Hubs;
-
-public class ChatHub : Hub
+namespace DaisyStudy.BackendApi.Hubs
 {
-    public readonly static List<UserViewModel> _Connections = new List<UserViewModel>();
-
-    private readonly static Dictionary<string, string> _ConnectionsMap = new Dictionary<string, string>();
-
-
-    private readonly DaisyStudyDbContext _context;
-
-    public ChatHub(DaisyStudyDbContext context)
+    //[Authorize]
+    public class ChatHub : Hub
     {
-        _context = context;
-    }
+        public readonly static List<UserViewModel> _Connections = new List<UserViewModel>();
+        private readonly static Dictionary<string, string> _ConnectionsMap = new Dictionary<string, string>();
+        private readonly IUserService _userService;
 
-    private string IdentityName { get; set; }
-
-    public async Task SendPrivate(string receiverName, string message)
-    {
-        if (_ConnectionsMap.TryGetValue(receiverName, out string userId))
+        public ChatHub(IUserService userService)
         {
-            // Who is the sender;
-            var sender = _Connections.Where(u => u.UserName == IdentityName).First();
+            _userService = userService;
+        }
 
-            if (!string.IsNullOrEmpty(message.Trim()))
+        public async Task AddIdentityName(string UserName)
+        {
+            var user = await _userService.GetByName(UserName);
+            _ConnectionsMap.Add(Context.ConnectionId, user.ResultObj.UserName);
+
+            var usName = IdentityName;
+
+            await OnConnectedAsync();
+        }
+
+        public async Task SendPrivate(string receiverName, string message)
+        {
+            if (_ConnectionsMap.TryGetValue(receiverName, out string userId))
             {
-                // Build the message
-                var messageViewModel = new MessageViewModel()
+                // Who is the sender;
+                var sender = _Connections.Where(u => u.UserName == IdentityName).First();
+
+                if (!string.IsNullOrEmpty(message.Trim()))
                 {
-                    Content = Regex.Replace(message, @"<.*?>", string.Empty), // match bất kì kí tự nào
-                    From = sender.LastName,
-                    Avatar = sender.Avatar,
-                    RoomChatName = "",
-                    TimeStamp = DateTime.Now
-                };
+                    // Build the message
+                    var messageViewModel = new MessageViewModel()
+                    {
+                        Content = Regex.Replace(message, @"<.*?>", string.Empty),
+                        From = sender.FullName,
+                        Avatar = sender.Avatar,
+                        Room = "",
+                        Timestamp = DateTime.Now,
+                        UserName = sender.UserName
+                    };
 
-                // Send the message
-                await Clients.Client(userId).SendAsync("newMessage", messageViewModel);
-                await Clients.Caller.SendAsync("newMessage", messageViewModel);
+                    // Send the message
+                    await Clients.Client(userId).SendAsync("newMessage", messageViewModel);
+                    await Clients.Caller.SendAsync("newMessage", messageViewModel);
+                }
             }
         }
-    }
 
-    public async Task AddIdentityName(string UserName)
-    {
-        try
+        public async Task Join(string roomName)
         {
-            IdentityName = UserName;
-        }
-        catch (Exception ex)
-        {
-            await Clients.Caller.SendAsync(ex.Message);
-        }
-    }
-
-    public async Task Join(string roomName, string userName)
-    {
-        try
-        {
-            var user = _Connections.Where(u => u.UserName == userName).FirstOrDefault();
-            if (user != null && user.CurrentRoom != roomName)
+            try
             {
-                // Remove user from others list
-                if (!string.IsNullOrEmpty(user.CurrentRoom))
-                    await Clients.OthersInGroup(user.CurrentRoom).SendAsync("removeUser", user);
+                var user = _Connections.Where(u => u.UserName == IdentityName).FirstOrDefault();
+                if (user != null && user.CurrentRoom != roomName)
+                {
+                    // Remove user from others list
+                    if (!string.IsNullOrEmpty(user.CurrentRoom))
+                        await Clients.OthersInGroup(user.CurrentRoom).SendAsync("removeUser", user);
 
-                // Join to new chat room
-                await Leave(user.CurrentRoom);
-                await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-                user.CurrentRoom = roomName;
+                    // Join to new chat room
+                    await Leave(user.CurrentRoom);
+                    await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+                    user.CurrentRoom = roomName;
 
-                // Tell others to update their list of users
-                await Clients.OthersInGroup(roomName).SendAsync("addUser", user);
+                    // Tell others to update their list of users
+                    await Clients.OthersInGroup(roomName).SendAsync("addUser", user);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("onError", "You failed to join the chat room!" + ex.Message);
             }
         }
-        catch (Exception ex)
+
+        public async Task Leave(string roomName)
         {
-            await Clients.Caller.SendAsync("onError", "You failed to join the chat room!" + ex.Message);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
         }
-    }
-    public async Task Leave(string roomName)
-    {
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
-    }
 
-    public Task OnConnectedAsync()
-    {
-        try
+        public IEnumerable<UserViewModel> GetUsers(string roomName)
         {
-            var user = _context.Users.Where(u => u.UserName == IdentityName).FirstOrDefault();
+            return _Connections.Where(u => u.CurrentRoom == roomName).ToList();
+        }
 
-            var userViewModel = new UserViewModel()
+        public override async Task<Task> OnConnectedAsync()
+        {
+            if (IdentityName is null)
             {
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                UserName = user.UserName,
-                FirstName = user.FirstName,
-                Id = user.Id,
-                Dob = user.Dob,
-                LastName = user.LastName
-            };
-
-            userViewModel.Device = GetDevice();
-            userViewModel.CurrentRoom = "";
-
-            if (!_Connections.Any(u => u.UserName == IdentityName))
+                return base.OnConnectedAsync();
+            }
+            try
             {
-                _Connections.Add(userViewModel);
-                _ConnectionsMap.Add(IdentityName, Context.ConnectionId);
+                var user = await _userService.GetByName(IdentityName);
+                var userViewModel = new UserViewModel();
+
+                userViewModel.Avatar = user.ResultObj.Avatar;
+                userViewModel.FullName = user.ResultObj.FullName;
+                userViewModel.UserName = user.ResultObj.UserName;
+                userViewModel.Dob = user.ResultObj.Dob;
+                userViewModel.Id = user.ResultObj.Id;
+
+                userViewModel.Device = GetDevice();
+                userViewModel.CurrentRoom = "";
+
+                if (!_Connections.Any(u => u.UserName == IdentityName))
+                {
+                    _Connections.Add(userViewModel);
+                    _ConnectionsMap.Add(IdentityName, Context.ConnectionId);
+                }
+
+                Clients.Caller.SendAsync("getProfileInfo", user.ResultObj.FullName, user.ResultObj.Avatar);
+            }
+            catch (Exception ex)
+            {
+                Clients.Caller.SendAsync("onError", "OnConnected:" + ex.Message);
+            }
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            try
+            {
+                var user = _Connections.Where(u => u.UserName == IdentityName).First();
+                _Connections.Remove(user);
+
+                // Tell other users to remove you from their list
+                Clients.OthersInGroup(user.CurrentRoom).SendAsync("removeUser", user);
+
+                // Remove mapping
+                _ConnectionsMap.Remove(user.UserName);
+            }
+            catch (Exception ex)
+            {
+                Clients.Caller.SendAsync("onError", "OnDisconnected: " + ex.Message);
             }
 
-            Clients.Caller.SendAsync("getProfileInfo", user.LastName, user.Avatar);
+            return base.OnDisconnectedAsync(exception);
         }
-        catch (Exception ex)
+
+        private string IdentityName
         {
-            Clients.Caller.SendAsync("onError", "OnConnected:" + ex.Message);
+            get
+            {
+                var user = _ConnectionsMap.FirstOrDefault(x => x.Key == Context.ConnectionId);
+                return user.Value;
+            }
         }
-        return base.OnConnectedAsync();
-    }
 
-    public override Task OnDisconnectedAsync(Exception exception)
-    {
-        try
+        private string GetDevice()
         {
-            var user = _Connections.Where(u => u.UserName == IdentityName).First();
-            _Connections.Remove(user);
+            var device = Context.GetHttpContext().Request.Headers["Device"].ToString();
+            if (!string.IsNullOrEmpty(device) && (device.Equals("Desktop") || device.Equals("Mobile")))
+                return device;
 
-            // Tell other users to remove you from their list
-            Clients.OthersInGroup(user.CurrentRoom).SendAsync("removeUser", user);
-
-            // Remove mapping
-            _ConnectionsMap.Remove(user.UserName);
+            return "Web";
         }
-        catch (Exception ex)
-        {
-            Clients.Caller.SendAsync("onError", "OnDisconnected: " + ex.Message);
-        }
-
-        return base.OnDisconnectedAsync(exception);
     }
-
-
-    public IEnumerable<UserViewModel> GetUsers(string roomName)
-    {
-        return _Connections.Where(u => u.CurrentRoom == roomName).ToList();
-    }
-
-
-    private string GetDevice()
-    {
-        var device = Context.GetHttpContext().Request.Headers["Device"].ToString();
-        if (!string.IsNullOrEmpty(device) && (device.Equals("Desktop") || device.Equals("Mobile")))
-            return device;
-
-        return "Web";
-    }
-
 }

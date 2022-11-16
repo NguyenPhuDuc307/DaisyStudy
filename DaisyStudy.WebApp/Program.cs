@@ -5,7 +5,6 @@ using DaisyStudy.ApiIntegration.Catalog.Notifications;
 using DaisyStudy.ApiIntegration.System.Roles;
 using DaisyStudy.ApiIntegration.System.Users;
 using DaisyStudy.ViewModels.System.Users;
-using DaisyStudy.WebApp.Hubs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -70,6 +69,5 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

@@ -40,7 +40,7 @@ namespace DaisyStudy.Application.System.Users
             }
             var roles = await _userManager.GetRolesAsync(user);
 
-            if(roles.Count == 0) return new ApiErrorResult<string>("Tài khoản không có quyền truy cập");
+            if (roles.Count == 0) return new ApiErrorResult<string>("Tài khoản không có quyền truy cập");
 
             foreach (string r in roles)
             {
@@ -87,7 +87,7 @@ namespace DaisyStudy.Application.System.Users
                 return new ApiErrorResult<string>("Đăng nhập không đúng");
             }
             var roles = await _userManager.GetRolesAsync(user);
-            
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email,user.Email),
@@ -134,6 +134,30 @@ namespace DaisyStudy.Application.System.Users
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 FirstName = user.FirstName,
+                Dob = user.Dob,
+                Id = user.Id,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Roles = roles
+            };
+            return new ApiSuccessResult<UserViewModel>(userViewModel);
+        }
+
+        public async Task<ApiResult<UserViewModel>> GetByName(string UserName)
+        {
+            var user = await _userManager.FindByNameAsync(UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<UserViewModel>("Tài khoản không tồn tại");
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            var userViewModel = new UserViewModel()
+            {
+                Email = user.Email,
+                Avatar = user.Avatar,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                FullName = user.FirstName + " " + user.LastName,
                 Dob = user.Dob,
                 Id = user.Id,
                 LastName = user.LastName,
