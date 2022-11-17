@@ -6,11 +6,16 @@ public class UserViewModel
 {
     public Guid Id { get; set; }
 
+    public string? Avatar { get; set; }
+
     [Display(Name = "Tên")]
     public string? FirstName { get; set; }
 
     [Display(Name = "Họ")]
     public string? LastName { get; set; }
+
+    [Display(Name = "Họ tên")]
+    public string? FullName { get; set; }
 
     [Display(Name = "Số điện thoại")]
     public string? PhoneNumber { get; set; }
@@ -25,5 +30,13 @@ public class UserViewModel
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime Dob { get; set; }
 
-    public IList<string> Roles { get; set; }
+    [Display(Name = "Thiết bị")]
+    public string? Device { get; set; }
+
+    [Display(Name = "Phòng hiện tại")]
+    public string? CurrentRoom { get; set; }
+
+    public string? ConnectionId { get; set; }
+
+    public IList<string>? Roles { get; set; }
 }

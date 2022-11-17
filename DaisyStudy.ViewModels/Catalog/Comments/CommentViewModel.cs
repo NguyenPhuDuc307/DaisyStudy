@@ -22,12 +22,6 @@ public class CommentViewModel
     [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
     public DateTime DateTimeCreated { set; get; }
 
-    [Display(Name = "Số người thích")]
-    public int Likes { set; get; }
-
-    [Display(Name = "Số không thích")]
-    public int Dislikes { set; get; }
-    
     public List<CommentImage>? CommentImages { get; set; }
 }
 

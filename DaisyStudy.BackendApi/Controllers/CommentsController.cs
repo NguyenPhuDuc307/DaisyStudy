@@ -8,7 +8,7 @@ namespace DaisyStudy.BackendApi.Controllers;
 // api/comments
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class CommentsController : ControllerBase
 {
     private readonly ICommentService _commentService;
@@ -72,7 +72,7 @@ public class CommentsController : ControllerBase
     [HttpGet("paging")]
     public async Task<IActionResult> GetAllPaging([FromQuery] GetManageCommentPagingRequest request)
     {
-        var products = await _commentService.GetAllPaging(request);
-        return Ok(products);
+        var comments = await _commentService.GetAllPaging(request);
+        return Ok(comments);
     }
 }

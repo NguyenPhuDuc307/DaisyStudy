@@ -4,23 +4,255 @@
     ViewData["Title"] = @Html.DisplayFor(model => model.ClassName);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @section Scripts{
-<script>
-    setTimeout(function () {
-        $('#msgAlert').fadeOut('slow');
-    }, 2000);
-</script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.3.0/super-build/ckeditor.js"></script>
 
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script>
+    class MyUploadAdapter {
+        constructor(loader) {
+            // The file loader instance to use during the upload.
+            this.loader = loader;
+        }
 
-<!-- Initialize Swiper -->
-<script>
-    var swiper = new Swiper(".mySwiper", {
-        watchSlidesProgress: true,
-        slidesPerView: 3,
-    });
-</script>
+        // Starts the upload process.
+        upload() {
+            return this.loader.file
+                .then(file => new Promise((resolve, reject) => {
+                    this._initRequest();
+                    this._initListeners(resolve, reject, file);
+                    this._sendRequest(file);
+                }));
+        }
+
+        // Aborts the upload process.
+        abort() {
+            if (this.xhr) {
+                this.xhr.abort();
+            }
+        }
+
+        // Initializes the XMLHttpRequest object using the URL passed to the constructor.
+        _initRequest() {
+            const xhr = this.xhr = new XMLHttpRequest();
+
+            // Note that your request may look different. It is up to you and your editor
+            // integration to choose the right communication channel. This example uses
+            // a POST request with JSON as a data structure but your configuration
+            // could be different.
+            xhr.open('POST', '@Url.Action("UploadImage", "Class")', true);
+            xhr.responseType = 'json';
+        }
+
+        // Initializes XMLHttpRequest listeners.
+        _initListeners(resolve, reject, file) {
+            const xhr = this.xhr;
+            const loader = this.loader;
+            const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+            xhr.addEventListener('error', () => reject(genericErrorText));
+            xhr.addEventListener('abort', () => reject());
+            xhr.addEventListener('load', () => {
+                const response = xhr.response;
+
+                // This example assumes the XHR server's "response" object will come with
+                // an "error" which has its own "message" that can be passed to reject()
+                // in the upload promise.
+                //
+                // Your integration may handle upload errors in a different way so make sure
+                // it is done properly. The reject() function must be called when the upload fails.
+                if (!response || response.error) {
+                    return reject(response && response.error ? response.error.message : genericErrorText);
+                }
+
+                // If the upload is successful, resolve the upload promise with an object containing
+                // at least the "default" URL, pointing to the image on the server.
+                // This URL will be used to display the image in the content. Learn more in the
+                // UploadAdapter#upload documentation.
+                resolve({
+                    default: response.url
+                });
+            });
+
+            // Upload progress when it is supported. The file loader has the #uploadTotal and #uploaded
+            // properties which are used e.g. to display the upload progress bar in the editor
+            // user interface.
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', evt => {
+                    if (evt.lengthComputable) {
+                        loader.uploadTotal = evt.total;
+                        loader.uploaded = evt.loaded;
+                    }
+                });
+            }
+        }
+
+        // Prepares the data and sends the request.
+        _sendRequest(file) {
+            // Prepare the form data.
+            const data = new FormData();
+
+            data.append('upload', file);
+
+            // Important note: This is the right place to implement security mechanisms
+            // like authentication and CSRF protection. For instance, you can use
+            // XMLHttpRequest.setRequestHeader() to set the request headers containing
+            // the CSRF token generated earlier by your application.
+
+            // Send the request.
+            this.xhr.send(data);
+        }
+    }
+
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            // Configure the URL to the upload script in your back-end here!
+            return new MyUploadAdapter(loader);
+        };
+    }
+    // ...
+
+    CKEDITOR.ClassicEditor.create(document.getElementById("editor"), {
+        toolbar: {
+            items: [
+                'exportPDF', 'exportWord', '|',
+                'findAndReplace', 'selectAll', '|',
+                'heading', '|',
+                'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                'bulletedList', 'numberedList', 'todoList', '|',
+                'outdent', 'indent', '|',
+                'undo', 'redo',
+
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                'alignment', '|',
+                'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                '-',
+                'textPartLanguage', '|',
+                'sourceEditing'
+            ],
+            shouldNotGroupWhenFull: true
+        },
+        // Changing the language of the interface requires loading the language file using the <script> tag.
+        // language: 'es',
+        list: {
+            properties: {
+                styles: true,
+                startIndex: true,
+                reversed: true
+            }
+        },
+        // https://ckeditor.com/docs/ckeditor5/latest/features/headings.html#configuration
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
+                { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
+                { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
+            ]
+        },
+        // https://ckeditor.com/docs/ckeditor5/latest/features/editor-placeholder.html#using-the-editor-configuration
+        placeholder: 'Nhập nội dung...',
+        // https://ckeditor.com/docs/ckeditor5/latest/features/font.html#configuring-the-font-family-feature
+        fontFamily: {
+            options: [
+                'default',
+                'Arial, Helvetica, sans-serif',
+                'Courier New, Courier, monospace',
+                'Georgia, serif',
+                'Lucida Sans Unicode, Lucida Grande, sans-serif',
+                'Tahoma, Geneva, sans-serif',
+                'Times New Roman, Times, serif',
+                'Trebuchet MS, Helvetica, sans-serif',
+                'Verdana, Geneva, sans-serif'
+            ],
+            supportAllValues: true
+        },
+        // https://ckeditor.com/docs/ckeditor5/latest/features/font.html#configuring-the-font-size-feature
+        fontSize: {
+            options: [10, 12, 14, 'default', 18, 20, 22],
+            supportAllValues: true
+        },
+        // Be careful with the setting below. It instructs CKEditor to accept ALL HTML markup.
+        // https://ckeditor.com/docs/ckeditor5/latest/features/general-html-support.html#enabling-all-html-features
+        htmlSupport: {
+            allow: [
+                {
+                    name: /.*/,
+                    attributes: true,
+                    classes: true,
+                    styles: true
+                }
+            ]
+        },
+        // Be careful with enabling previews
+        // https://ckeditor.com/docs/ckeditor5/latest/features/html-embed.html#content-previews
+        htmlEmbed: {
+            showPreviews: true
+        },
+        // https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html#configuration
+        mention: {
+            feeds: [
+                {
+                    marker: '@@',
+                    feed: [
+                        '@@apple', '@@bears', '@@brownie', '@@cake', '@@cake', '@@candy', '@@canes', '@@chocolate', '@@cookie', '@@cotton', '@@cream',
+                        '@@cupcake', '@@danish', '@@donut', '@@dragée', '@@fruitcake', '@@gingerbread', '@@gummi', '@@ice', '@@jelly-o',
+                        '@@liquorice', '@@macaroon', '@@marzipan', '@@oat', '@@pie', '@@plum', '@@pudding', '@@sesame', '@@snaps', '@@soufflé',
+                        '@@sugar', '@@sweet', '@@topping', '@@wafer'
+                    ],
+                    minimumCharacters: 1
+                }
+            ]
+        },
+        // The "super-build" contains more premium features that require additional configuration, disable them below.
+        // Do not turn them on unless you read the documentation and know how to configure them and setup the editor.
+        removePlugins: [
+            // These two are commercial, but you can try them out without registering to a trial.
+            // 'ExportPdf',
+            // 'ExportWord',
+            'CKBox',
+            'CKFinder',
+            'EasyImage',
+            // This sample uses the Base64UploadAdapter to handle image uploads as it requires no configuration.
+            // https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/base64-upload-adapter.html
+            // Storing images as Base64 is usually a very bad idea.
+            // Replace it on production website with other solutions:
+            // https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html
+            // 'Base64UploadAdapter',
+            'RealTimeCollaborativeComments',
+            'RealTimeCollaborativeTrackChanges',
+            'RealTimeCollaborativeRevisionHistory',
+            'PresenceList',
+            'Comments',
+            'TrackChanges',
+            'TrackChangesData',
+            'RevisionHistory',
+            'Pagination',
+            'WProofreader',
+            // Careful, with the Mathtype plugin CKEditor will not load when loading this sample
+            // from a local file system (file://) - load this site via HTTP server if you enable MathType
+            'MathType'
+        ]
+    }, {
+        extraPlugins: [MyCustomUploadAdapterPlugin],
+
+        // ...
+    })
+        .catch(error => {
+            console.log(error);
+        });
+    </script>
+    <script>setTimeout(function () {
+            $('#msgAlert').fadeOut('slow');
+        }, 2000);</script>
+}
+
+@{
+    var returnUrl = Context.Request.Path + "?ClassID=" + @Model.ID;
 }
 
 <div class="container-fluid">
@@ -29,24 +261,83 @@
         <li class="breadcrumb-item"><a href="/Class">Lớp học</a></li>
         <li class="breadcrumb-item active">@Html.DisplayFor(model => model.ClassName)</li>
     </ol>
+    <div>
+        @if (ViewBag.SuccessMsg != null)
+        {
+            <div id="msgAlert" class="alert alert-success" role="alert">
+                @ViewBag.SuccessMsg
+            </div>
+        }
+    </div>
     <h1 class="mt-4">@Html.DisplayFor(model => model.ClassName)</h1>
 
     <div class="row">
-
         <!-- Area Chart -->
         <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h4 class="m-0 font-weight-bold text-success">Thêm thông báo cho lớp học</h4>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                             aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Dropdown Header:</div>
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    @if (Convert.ToString(Model.TeacherImage) == "")
+                    {
+                        <div>
+                            <img style="width: 2rem; height: 2rem; object-fit: cover;"
+                                 class="img-profile rounded-circle me-1" src="/img/undraw_profile.svg">
+                            <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
+                            <span class="mr-2 d-lg-inline text-gray-600 small">@Model.Teacher</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <img style="width: 2rem; height: 2rem; object-fit: cover;"
+                                 class="img-profile rounded-circle me-1"
+                                 src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                            <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
+                            <span class="mr-2 d-lg-inline text-gray-600 small">Cập nhật lúc: @DateTime.Now</span>
+                        </div>
+                    }
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+                    <form asp-action="Create" asp-controller="Notification" enctype="multipart/form-data" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input class="form-control mb-2" hidden name="ClassID" value="@Model.ID" type="text">
+                        <input class="form-control mb-2" hidden name="ReturnUrl" value="@returnUrl" type="text">
+                        <input class="form-control mb-2" name="Title" type="text" placeholder="Tiêu đề">
+                        <textarea id="editor" name="Content" class="form-control"></textarea>
+                        <input class="form-control my-2" name="ThumbnailImages" type="file" placeholder="Thêm tệp"
+                               multiple>
+                        <button class="btn btn-primary">Tải lên thông báo</button>
+                    </form>
+                </div>
+            </div>
 
             @foreach (var item in Model.Notifications)
             {
                 var url = "https://localhost:5001";
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         @if (Convert.ToString(Model.TeacherImage) == "")
                         {
                             <div>
                                 <img style="width: 2rem; height: 2rem; object-fit: cover;"
-                            class="img-profile rounded-circle me-1" src="/img/undraw_profile.svg">
+                                     class="img-profile rounded-circle me-1" src="/img/undraw_profile.svg">
                                 <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
                                 <span class="mr-2 d-lg-inline text-gray-600 small">@Model.Teacher</span>
                             </div>
@@ -55,8 +346,8 @@
                         {
                             <div>
                                 <img style="width: 2rem; height: 2rem; object-fit: cover;"
-                            class="img-profile rounded-circle me-1"
-                            src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                                     class="img-profile rounded-circle me-1"
+                                     src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
                                 <span class="mr-2 d-lg-inline text-primary">@Model.Teacher</span>
                                 <span class="mr-2 d-lg-inline text-gray-600 small">Cập nhật lúc: @item.DateTimeCreated</span>
                             </div>
@@ -64,11 +355,11 @@
 
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
+                               aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
+                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header">Dropdown Header:</div>
                                 <a class="dropdown-item" href="#">Action</a>
                                 <a class="dropdown-item" href="#">Another action</a>
@@ -78,7 +369,7 @@
                         </div>
                     </div>
                     <!-- Card Body -->
-                <div class="card-body">
+                    <div class="card-body">
                         <h6 class="m-0 font-weight-bold text-primary">@item.Title</h6>
 
 
@@ -87,9 +378,19 @@
                             {
                                 <div class="card" style="margin: 0.25rem; border: none;">
                                     @{
-                                        <a target="_blank" href="@url@image.ImagePath">
-                                            <img class="img-thumbnail" src="@url@image.ImagePath" alt="@url@image.ImagePath" />
-                                        </a>
+                                        if (Convert.ToString(image.ImagePath).Contains(".png") || Convert.ToString(image.ImagePath).Contains(".jpeg") || Convert.ToString(image.ImagePath).Contains(".jpg") || Convert.ToString(image.ImagePath).Contains(".gif"))
+                                        {
+                                            <a target="_blank" href="@url@image.ImagePath">
+                                                <img class="img-thumbnail" src="@url@image.ImagePath" alt="@url@image.ImagePath" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a target="_blank" href="@url@image.ImagePath" download="@image.ImagePath">
+                                                <iframe class="img-thumbnail" src="@url@image.ImagePath"
+                                                        alt="@url@image.ImagePath"></iframe>
+                                            </a>
+                                        }
                                     }
                                 </div>
                             }
@@ -102,61 +403,91 @@
                         <hr style="height:1px;border:none;color:#333;background-color:#333;" />
                         @foreach (var a in item.Comments)
                         {
-                            <div class="d-flex mb-3 position-relative">
+                            <div class="d-flex mb-3">
 
                                 @if (Convert.ToString(a.Avatar) == "")
                                 {
                                     <div>
                                         <img style="width: 32px; height: 32px; object-fit: cover;"
-                                class="img-profile rounded-circle me-3" src="/img/undraw_profile.svg">
+                                             class="img-profile rounded-circle me-3" src="/img/undraw_profile.svg">
                                     </div>
                                 }
                                 else
                                 {
                                     <div>
                                         <img style="width: 32px; height: 32px; object-fit: cover;"
-                                class="img-profile rounded-circle me-3" src="@(Configuration["BaseAddress"] + a.Avatar)"
-                                alt="@(a.Avatar)">
+                                             class="img-profile rounded-circle me-3" src="@(Configuration["BaseAddress"] + a.Avatar)"
+                                             alt="@(a.Avatar)">
                                     </div>
                                 }
-                                <div style="border: none; padding-bottom: 2rem;"
-                            class="card card-header bg-gray-100 shadow-sm position-relative">
+                                <div style="border: none" class="card card-header bg-gray-100 shadow-sm">
                                     <h6 class="m-0 font-weight-bold text-success mb-1">@a.FullName</h6>
                                     @Html.Raw(a.Content)
 
-                                    <div class="card-group d-inline-flex">
+                                <div class="card-group d-inline-flex">
+                                    @if (a.CommentImages != null)
+                                    {
                                         @foreach (var image in a.CommentImages)
                                         {
-                                            <div class="card" style="margin: 0.25rem; border: none; max-width: 30%;">
+                                            <div class="card" style="margin: 0.25rem; margin-left: 0; border: none; max-width: 33%;">
                                                 @{
-                                                    <a target="_blank" href="@url@image.ImagePath">
-                                                        <img class="img-thumbnail" src="@url@image.ImagePath"
-                                                alt="@url@image.ImagePath" />
-                                                    </a>
+                                                    if (Convert.ToString(image.ImagePath).Contains(".png") || Convert.ToString(image.ImagePath).Contains(".jpeg") || Convert.ToString(image.ImagePath).Contains(".jpg") || Convert.ToString(image.ImagePath).Contains(".gif"))
+                                                    {
+                                                        <a target="_blank" href="@url@image.ImagePath">
+                                                            <img class="img-thumbnail" src="@url@image.ImagePath" alt="@url@image.ImagePath" />
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a target="_blank" href="@url@image.ImagePath" download="@image.ImagePath">
+                                                            <iframe class="img-thumbnail" src="@url@image.ImagePath"
+                                                                    alt="@url@image.ImagePath"></iframe>
+                                                        </a>
+                                                    }
+
                                                 }
                                             </div>
                                         }
-                                    </div>
-                                    <div class="position-absolute bottom-0 start-0 mx-3 my-2">
-                                        <a>
-                                            <i class="fa-solid fa-thumbs-up me-2"> @a.Likes</i>
-                                        </a>
+                                    }
 
-                                        <i class="fa-regular fa-thumbs-down"> @a.Dislikes</i>
-                                    </div>
+                                </div>
                                 </div>
 
                             </div>
                         }
                     </div>
-                    <form style="margin: 1rem; margin-top: 0;">
+                    <form asp-controller="Comment" asp-action="Create" enctype="multipart/form-data" method="post" style="margin: 1rem; margin-top: 0;">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
-                            aria-label="Search" aria-describedby="basic-addon2">
+                            <input name="UserName" value="@User.Identity.Name" multiple class="form-control" hidden />
+                            <input value="@item.NotificationID" hidden name="NotificationID" class="form-control" />
+                            <input class="form-control mb-2" hidden name="ReturnUrl" value="@returnUrl" type="text">
+                            <input type="text" name="Content" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
+                                   aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#ni_@item.NotificationID" type="button">
+                                    <i class="fa-solid fa-paperclip"></i>
+                                </button>
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fa-regular fa-paper-plane"></i>
                                 </button>
+
+                            </div>
+                        </div>
+                        <!-- Comment -->
+                        <div class="modal fade" id="ni_@item.NotificationID" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Đính kèm tệp</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="CommentImages" type="file" multiple class="form-control">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xong</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -172,11 +503,11 @@
                     <h6 class="m-0 font-weight-bold text-primary">Mọi người</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
+                           aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
+                             aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header">Dropdown Header:</div>
                             <a class="dropdown-item" href="#">Action</a>
                             <a class="dropdown-item" href="#">Another action</a>
@@ -186,86 +517,53 @@
                     </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    <h6 class="m0 text-primary">Giáo viên</h6>
-                    @if (Convert.ToString(Model.TeacherImage) == "")
-                    {
-                        <div class="mb-3">
-                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                            src="/img/undraw_profile.svg">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="mb-3">
-                            <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                            src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
-                        </div>
-                    }
-                    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+                <div>
+                    <div class="card-body">
+                        <h6 class="m0 text-primary">Giáo viên</h6>
+                        @if (Convert.ToString(Model.TeacherImage) == "")
+                        {
+                            <div class="mb-3">
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                     src="/img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                     src="@(Configuration["BaseAddress"] + Model.TeacherImage)" alt="@Model.TeacherImage">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@Model.Teacher</span>
+                            </div>
+                        }
+                        <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 
-                    <h6 class="m0 text-primary">Học sinh</h6>
-                    @foreach (var item in Model.ClassDetails)
-                    {
-                        var url = "https://localhost:5001";
-                        @if (Convert.ToString(item.Avatar) == "" && item.IsTeacher ==
-                       DaisyStudy.Data.Entities.Teacher.Student)
+                        <h6 class="m0 text-primary">Học sinh</h6>
+                        @foreach (var item in Model.ClassDetails)
                         {
-                            <div class="mb-3">
-                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                            src="/img/undraw_profile.svg">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
-                            </div>
+                            var url = "https://localhost:5001";
+                            @if (Convert.ToString(item.Avatar) == "" && item.IsTeacher ==
+                         DaisyStudy.Data.Entities.Teacher.Student)
+                            {
+                                <div class="mb-3">
+                                    <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                         src="/img/undraw_profile.svg">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                </div>
+                            }
+                            else if (Convert.ToString(item.Avatar) != "" && item.IsTeacher ==
+                            DaisyStudy.Data.Entities.Teacher.Student)
+                            {
+                                <div class="mb-3">
+                                    <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
+                                         src="@url@item.Avatar"/>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
+                                </div>
+                            }
                         }
-                        else if (Convert.ToString(item.Avatar) != "" && item.IsTeacher ==
-                        DaisyStudy.Data.Entities.Teacher.Student)
-                        {
-                            <div class="mb-3">
-                                <img style="width: 2rem; height: 2rem; object-fit: cover;" class="img-profile rounded-circle"
-                            src="@url@item.Avatar" src="@url@item.Avatar">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@item.FirstName @item.LastName</span>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Trò chuyện</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
                     </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    
-                    <form style="margin: 1rem; margin-top: 0;">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Nhập bình luận..."
-                            aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fa-regular fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
-
     </div>
+</div>

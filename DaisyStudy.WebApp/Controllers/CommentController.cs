@@ -49,16 +49,18 @@ public class CommentController : BaseController
     {
         if (!ModelState.IsValid)
             return View(request);
-            
+
 
         var result = await _commentApiClient.CreateComment(request);
         if (result)
         {
-            TempData["result"] = "Thêm mới thông báo thành công";
+            TempData["result"] = "Bạn vừa bình luận vào bài viết";
+            if (request.ReturnUrl != null)
+                return Redirect(request.ReturnUrl);
             return RedirectToAction("Index");
         }
 
-        ModelState.AddModelError("", "Thêm thông báo thất bại");
+        ModelState.AddModelError("", "Bình luận thất bại");
         return View(request);
     }
 }

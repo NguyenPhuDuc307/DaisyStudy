@@ -116,5 +116,12 @@ namespace DaisyStudy.BackendApi.Controllers
             var user = await _userService.GetById(id);
             return Ok(user);
         }
+
+        [HttpGet("UserName/{userName}")]
+        public async Task<IActionResult> GetByName(string userName)
+        {
+            var user = await _userService.GetByName(userName);
+            return Ok(user);
+        }
     }
 }

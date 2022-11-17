@@ -14,6 +14,9 @@ namespace DaisyStudy.Data.Entities
         public List<Submission>? Submissions { get; set; }
         public List<Transaction>? Transactions { get; set; }
         public List<Comment>? Comments { get; set; }
-        public List<Chat>? Chats { get; set; }
+        public ICollection<Room>? Rooms { get; set; }
+        public ICollection<Message>? Messages { get; set; }
+
+
     }
 }

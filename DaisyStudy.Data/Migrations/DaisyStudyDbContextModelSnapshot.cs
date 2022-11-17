@@ -17,10 +17,10 @@ namespace DaisyStudy.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.Answer", b =>
                 {
@@ -28,7 +28,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnswerID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnswerID"));
 
                     b.Property<string>("AnswerString")
                         .IsRequired()
@@ -168,79 +168,13 @@ namespace DaisyStudy.Data.Migrations
                     b.ToTable("AppUsers", (string)null);
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.Chat", b =>
-                {
-                    b.Property<int>("ChatID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatID"), 1L, 1);
-
-                    b.Property<int>("ClassID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateTimeCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Dislikes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("Likes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ChatID");
-
-                    b.HasIndex("ClassID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Chats", (string)null);
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ChatImage", b =>
-                {
-                    b.Property<int>("ImageID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"), 1L, 1);
-
-                    b.Property<int>("ChatID")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ImageFileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("ImageID");
-
-                    b.HasIndex("ChatID");
-
-                    b.ToTable("ChatImages", (string)null);
-                });
-
             modelBuilder.Entity("DaisyStudy.Data.Entities.Class", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("ClassID")
                         .IsRequired()
@@ -323,7 +257,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentID"));
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -331,16 +265,6 @@ namespace DaisyStudy.Data.Migrations
 
                     b.Property<DateTime>("DateTimeCreated")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Dislikes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("Likes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<int>("NotificationID")
                         .HasColumnType("int");
@@ -363,7 +287,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"));
 
                     b.Property<int>("CommentID")
                         .HasColumnType("int");
@@ -389,7 +313,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContactID"));
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -424,7 +348,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamScheduleID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamScheduleID"));
 
                     b.Property<int>("ClassID")
                         .HasColumnType("int");
@@ -458,7 +382,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HomeworkID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HomeworkID"));
 
                     b.Property<int>("ClassID")
                         .HasColumnType("int");
@@ -482,13 +406,44 @@ namespace DaisyStudy.Data.Migrations
                     b.ToTable("Homeworks", (string)null);
                 });
 
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("FromUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ToRoomId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("ToRoomId");
+
+                    b.ToTable("Messages", (string)null);
+                });
+
             modelBuilder.Entity("DaisyStudy.Data.Entities.Notification", b =>
                 {
                     b.Property<int>("NotificationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationID"));
 
                     b.Property<int>("ClassID")
                         .HasColumnType("int");
@@ -520,7 +475,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"));
 
                     b.Property<long>("ImageFileSize")
                         .HasColumnType("bigint");
@@ -549,7 +504,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"));
 
                     b.Property<int>("ExamScheduleID")
                         .HasColumnType("int");
@@ -578,13 +533,36 @@ namespace DaisyStudy.Data.Migrations
                     b.ToTable("Questions", (string)null);
                 });
 
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("AdminId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("Rooms", (string)null);
+                });
+
             modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>
                 {
                     b.Property<int>("StudentExamID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExamID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExamID"));
 
                     b.Property<int>("ExamScheduleID")
                         .HasColumnType("int");
@@ -616,7 +594,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExamDetailID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentExamDetailID"));
 
                     b.Property<int>("AnswerID")
                         .HasColumnType("int");
@@ -674,7 +652,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionID"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -716,7 +694,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -738,7 +716,7 @@ namespace DaisyStudy.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -761,12 +739,14 @@ namespace DaisyStudy.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderKey")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
@@ -794,9 +774,11 @@ namespace DaisyStudy.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
@@ -816,36 +798,6 @@ namespace DaisyStudy.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.Chat", b =>
-                {
-                    b.HasOne("DaisyStudy.Data.Entities.Class", "Class")
-                        .WithMany("Chats")
-                        .HasForeignKey("ClassID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "AppUser")
-                        .WithMany("Chats")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("DaisyStudy.Data.Entities.ChatImage", b =>
-                {
-                    b.HasOne("DaisyStudy.Data.Entities.Chat", "Chat")
-                        .WithMany("ChatImages")
-                        .HasForeignKey("ChatID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.ClassDetail", b =>
@@ -919,6 +871,23 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("Class");
                 });
 
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Message", b =>
+                {
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "FromUser")
+                        .WithMany("Messages")
+                        .HasForeignKey("FromUserId");
+
+                    b.HasOne("DaisyStudy.Data.Entities.Room", "ToRoom")
+                        .WithMany("Messages")
+                        .HasForeignKey("ToRoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("ToRoom");
+                });
+
             modelBuilder.Entity("DaisyStudy.Data.Entities.Notification", b =>
                 {
                     b.HasOne("DaisyStudy.Data.Entities.Class", "Class")
@@ -950,6 +919,17 @@ namespace DaisyStudy.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("ExamSchedule");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
+                {
+                    b.HasOne("DaisyStudy.Data.Entities.AppUser", "Admin")
+                        .WithMany("Rooms")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Admin");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>
@@ -1027,11 +1007,13 @@ namespace DaisyStudy.Data.Migrations
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.AppUser", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("ClassDetails");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Messages");
+
+                    b.Navigation("Rooms");
 
                     b.Navigation("StudentExams");
 
@@ -1040,15 +1022,8 @@ namespace DaisyStudy.Data.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("DaisyStudy.Data.Entities.Chat", b =>
-                {
-                    b.Navigation("ChatImages");
-                });
-
             modelBuilder.Entity("DaisyStudy.Data.Entities.Class", b =>
                 {
-                    b.Navigation("Chats");
-
                     b.Navigation("ClassDetails");
 
                     b.Navigation("ExamSchedules");
@@ -1085,6 +1060,11 @@ namespace DaisyStudy.Data.Migrations
             modelBuilder.Entity("DaisyStudy.Data.Entities.Question", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("DaisyStudy.Data.Entities.Room", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("DaisyStudy.Data.Entities.StudentExam", b =>

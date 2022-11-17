@@ -51,6 +51,8 @@ public class NotificationController : BaseController
         if (result)
         {
             TempData["result"] = "Thêm mới thông báo thành công";
+            if(request.ReturnUrl != null)
+                return Redirect(request.ReturnUrl);
             return RedirectToAction("Index");
         }
 

@@ -9,7 +9,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddHttpClient();
 
@@ -22,7 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddFluentValidation(options => 
+builder.Services.AddFluentValidation(options =>
     options.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
 builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
@@ -37,6 +36,9 @@ builder.Services.AddTransient<INotificationApiClient, NotificationApiClient>();
 builder.Services.AddTransient<ICommentApiClient, CommentApiClient>();
 
 var mvcBuilder = builder.Services.AddRazorPages();
+
+// SignalR
+builder.Services.AddSignalR();
 
 if (builder.Environment.IsDevelopment())
 {

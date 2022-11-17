@@ -154,7 +154,7 @@ namespace DaisyStudy.Application.Catalog.Classes
                 Teacher = x.us.FirstName + " " + x.us.LastName,
                 Image = x.c.ImagePath,
                 StudentNumber = _context.ClassDetails.Where(c => c.ClassID == x.c.ID).Count() - 1,
-                TeacherImage =  x.us.Avatar,
+                TeacherImage = x.us.Avatar,
                 TeacherUserName = x.us.UserName
 
             }).ToListAsync();
@@ -281,7 +281,7 @@ namespace DaisyStudy.Application.Catalog.Classes
             return data;
         }
 
-        public List<CommentViewModel> GetCommentsById(int NotificationID)
+        public async Task<List<CommentViewModel>> GetCommentsById(int NotificationID)
         {
             //1. Select join
             var query = from c in _context.Comments
@@ -294,7 +294,7 @@ namespace DaisyStudy.Application.Catalog.Classes
                 query = query.Where(p => p.c.NotificationID == NotificationID);
             }
 
-            var data = query
+            var data = await query
                 .Select(x => new CommentViewModel()
                 {
                     CommentID = x.c.CommentID,
@@ -303,11 +303,9 @@ namespace DaisyStudy.Application.Catalog.Classes
                     Avatar = x.u.Avatar,
                     FullName = x.u.FirstName + " " + x.u.LastName,
                     Content = x.c.Content,
-                    Likes = x.c.Likes,
-                    Dislikes = x.c.Dislikes,
                     DateTimeCreated = x.c.DateTimeCreated,
                     CommentImages = (_context.CommentImages.Where(p => p.CommentID == x.c.CommentID).ToList()) != null ? (_context.CommentImages.Where(p => p.CommentID == x.c.CommentID).ToList()) : null
-                }).ToList();
+                }).ToListAsync();
 
 
             return data;
@@ -317,12 +315,8 @@ namespace DaisyStudy.Application.Catalog.Classes
         {
             //1. Select join
             var query = from n in _context.Notifications
-                        join c in _context.Comments on n.NotificationID equals c.NotificationID
                         where n.ClassID == ClassID
-                        select new { n, c };
-
-            //3. Paging
-            int totalRow = await query.CountAsync();
+                        select new { n };
 
             var data = await query.Select(x => new NotificationViewModel()
             {
@@ -333,13 +327,13 @@ namespace DaisyStudy.Application.Catalog.Classes
                 NotificationImages = _context.NotificationImages.Where(p => p.NotificationID == x.n.NotificationID).ToList()
             }).ToListAsync();
 
-            foreach(var item in data){
-                item.Comments = GetCommentsById(item.NotificationID);
+            foreach (var item in data)
+            {
+                item.Comments = await GetCommentsById(item.NotificationID);
             }
 
             return data;
         }
-
         public async Task<ApiResult<ClassViewModel>> GetById(int ID)
         {
             var _class = _context.Classes.FirstOrDefault(x => x.ID == ID);
@@ -369,9 +363,10 @@ namespace DaisyStudy.Application.Catalog.Classes
                 StudentNumber = _context.ClassDetails.Where(c => c.ClassID == _class.ID).Count() - 1,
                 TeacherImage = user.Avatar,
                 TeacherUserName = user.UserName,
-                ClassDetails = await GetAllStudentByClassID(_class.ID),
-                Notifications = await GetAllNotificationByClassID(_class.ID)
             };
+
+            classViewModel.ClassDetails = await GetAllStudentByClassID(_class.ID);
+            classViewModel.Notifications = await GetAllNotificationByClassID(_class.ID);
 
             await AddViewCount(ID);
             return new ApiSuccessResult<ClassViewModel>(classViewModel);
